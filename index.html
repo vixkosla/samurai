@@ -22,6 +22,7 @@
 
     <script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ola"></script>
 
     <style>
 
@@ -29,6 +30,21 @@
 </head>
 
 <body>
+    <div class="cursor-container">
+        <div class="cursor">
+            <svg viewBox="0 0 70 70" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="35" cy="35" r="7.5" fill="lightgrey" />
+                <g class="cursor-bigPart">
+                    <circle class="point" cx="35" cy="35" r="35" fill="#A48BFF" />
+                    <rect class="line-v" x="34" y="20" width="3" height="30" fill="black" />
+                    <rect class="line-h" x="50" y="34" width="3" height="30" transform="rotate(90 50 34)"
+                        fill="black" />
+                </g>
+            </svg>
+
+        </div>
+
+    </div>
     <div class="model-container">
         <div class="model"></div>
     </div>
@@ -87,6 +103,32 @@
     let isPlayed = 0
     let isPlaying = 0
 
+    model.addEventListener('mouseenter', function (e) {
+        // cursorBigPart.style.opacity = '1'
+
+        cursorBigPart.style.transform = `scale(1)`
+        if (isPlayed) {
+            cursorBigPart.style.transform += `rotate(135deg)`
+        }
+    })
+
+    model.addEventListener('mouseleave', function (e) {
+        // cursorBigPart.style.opacity = '0'
+        cursorBigPart.style.transform = `scale(0)`
+    })
+
+    const cursor = document.querySelector('.cursor')
+    const cursorBigPart = document.querySelector('.cursor-bigPart')
+
+    const position = Ola({ x: 0, y: 0 }, 50)
+
+    window.addEventListener('mousemove', function (e) {
+        position.set({ x: event.pageX, y: event.pageY })
+
+        cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
+    })
+
+
 
     function modelMoving(direction) {
 
@@ -94,7 +136,7 @@
 
         if (direction == 'right') {
             sign = 0.2
-        } 
+        }
 
         if (direction == 'left') {
             sign = -1
@@ -142,9 +184,16 @@
 
     model.addEventListener('click', function () {
 
+
+        if (!isPlayed) {
+            cursorBigPart.style.transform += 'rotate(135deg)'
+
+        } else {
+            // cursorBigPart.style.transform += 'rotate(0deg)'
+        }
         // if ( )
 
-        // tweenText.play()
+        tweenText.play()
 
         // model.style.transform = `translateX(-300px)`
         if (!isPlayed && !isPlaying) {
@@ -281,6 +330,8 @@
     };
 
     animate();
+
+
 </script>
 
 </html>
