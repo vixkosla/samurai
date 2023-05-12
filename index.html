@@ -9,16 +9,16 @@
 
     <link rel="stylesheet" href="./style.css">
 
-    <!-- <script defer src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <!-- <script defer src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script> 
 
     <script type="importmap-shim">
       {
         "imports": {
-          "three": "https://unpkg.com/three@132/build/three.module.js",
-          "three/examples/jsm": "https://unpkg.com/three@0.142.0/examples/jsm"
+          "three": "https://threejsfundamentals.org/threejs/resources/threejs/r122/build/three.module.js",
+          "three/examples/jsm": "https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm"
         }
       }
-    </script> -->
+    </script>  -->
 
     <script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
@@ -130,6 +130,9 @@
 
         console.log(box)
 
+        const height = box.max.y - box.min.y 
+        const width = box.max.x = box.min.x
+
         return model
     }
 
@@ -225,9 +228,9 @@
 
 
 
+    function clickHandler() {
 
-
-    model.addEventListener('click', function () {
+        console.log('jdk')
 
 
         if (!isPlayed) {
@@ -253,7 +256,11 @@
 
             isPlayed = 0
         }
-    })
+    }
+
+
+
+    model.addEventListener('click', clickHandler)
 
     const fov = 45
     const aspect = 2
@@ -331,14 +338,24 @@
 
     }
 
-    window.addEventListener('wheel', function (e) {
-
+    function wheelHandler(e) {
         if (e.deltaY > 30 && e.deltaY < 50 && !isMoving) {
             cameraMoving('up')
-
+            if (isPlayed) {
+                clickHandler()
+            }
         } else if (e.deltaY < -30 && e.deltaY < -50 && !isMoving) {
             cameraMoving('down')
+            if (isPlayed) {
+                clickHandler()
+            }
         }
+    }
+
+    window.addEventListener('wheel', function (e) {
+
+        // console.log('hey')
+        wheelHandler(e)
     })
 
     // Our Javascript will go here.
@@ -371,14 +388,14 @@
 
     const pointLight = new THREE.PointLight(0x404040, 1)
 
-    const ambientLight = new THREE.AmbientLight(0x404040, 5)
+    const ambientLight = new THREE.AmbientLight(0x404040, 15)
 
 
-    pointLight.position.set(20, 20, 55)
-    ambientLight.position.set(-20, 20, 55)
+    pointLight.position.set(0, 10, 10)
+    ambientLight.position.set(0, 10, 10)
 
 
-    pointLight.intensity = 2
+    pointLight.intensity = 15
     // pointLight.intensity = 1
 
     scene.add(pointLight);
@@ -477,26 +494,26 @@
 
     const ninjaesObject = {
         rafhael: loadModel({
-            x: 0,
-            y: step * 1 - hM/2,
-            scale: 0.015,
-            url: './models/ninja.glb'
+            x: 0.5,
+            y: step * 1 - hM / 2 + 0.5,
+            scale: 0.1,
+            url: './models/armadura.glb'
         }),
         donatello: loadModel({
             x: 0,
-            y: step * 2 - hM/2,
+            y: step * 2 - hM / 2,
             scale: 0.015,
             url: './models/ninja.glb'
         }),
         michelangelo: loadModel({
             x: 0,
-            y: step * 3 - hM/2,
+            y: step * 3 - hM / 2,
             scale: 0.015,
             url: './models/ninja.glb'
         }),
         leonardo: loadModel({
             x: 0,
-            y: step * 4 - hM/2,
+            y: step * 4 - hM / 2,
             scale: 0.015,
             url: './models/ninja.glb'
         }),
