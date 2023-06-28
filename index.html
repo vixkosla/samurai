@@ -9,9 +9,16 @@
 
     <link rel="stylesheet" href="./style.css">
 
+    <!-- ola -->
     <script src="https://cdn.jsdelivr.net/npm/ola"></script>
+
+    <!-- gsap min -->
     <script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
 
+    <!-- tween -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+
+    <!-- three -->
     <script type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
@@ -112,16 +119,16 @@
     const modelContainer = document.querySelector('.model-container')
 
     const fov = 45
-    const aspect = 2
+    const aspect = model.clientWidth / model.clientHeight - 0.15
     const near = 0.1
     const far = 100
 
-    const camera = new THREE.PerspectiveCamera(40, model.clientWidth / model.clientHeight, 0.1, 3);
+    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
     camera.position.z = 0;
     camera.position.y = 1
-    camera.position.x = 4.5
-    camera.rotation.y = Math.PI / 2
+    camera.position.x = 0
+    camera.rotation.y = Math.PI / 2 + Math.PI / 3
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(model.clientWidth, model.clientHeight)
@@ -188,7 +195,7 @@
         y: undefined
     }
 
-    const position = Ola({ x: 0, y: 0 }, 50) // new CDN
+    const position = Ola({ x: 0, y: 0 }, 5) // new CDN
 
     const cursor = document.querySelector('.cursor')
     const cursorBigPart = document.querySelector('.cursor-bigPart')
@@ -225,7 +232,7 @@
         let tweenModel = gsap.to('.model', {
             duration: 2,
             x: () => modelContainer.offsetWidth * 0.25 * sign,
-            ease: "power1",
+            easy: "Power1.easyInOut",
             paused: true,
             onStart: function () {
                 isPlaying = 1
@@ -295,6 +302,7 @@
 
     // WHEEL EVENT
 
+    let tween = undefined
 
     function groupRotate(direction) {
 
@@ -310,27 +318,47 @@
             sign = -1
         }
 
-        console.log(groupNinja.rotation)
+        // console.log(groupNinja.rotation)
 
         // groupNinja.rotation.y = groupRotation.y + Math.PI 
         // groupRotation.y = groupNinja.rotation.y
 
+        // let groupRotation = {y: 0}
 
-        TweenMax.to(groupNinja.rotation, {
-            y: groupRotation.y + (omega * sign),
-            duration: 3,
-            // paused: true,
-            easy: 'power4.easyOut',
-            onStart: () => isMoving = 1,
-            onComplete: () => {
-                groupRotation.y = groupNinja.rotation.y
+        tween = new TWEEN.Tween(groupRotation, false)
+            .to({ y: groupRotation.y + (omega * sign) }, 3000)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onUpdate(() => {
+                groupRotationRound.set({y: groupRotation.y})
+                groupNinja.rotation.y = groupRotationRound.y
+                // console.log(isMoving)
+            })
+            .start() // Start the tween immediately.
+            .onStart(() => isMoving = 1)
+            .onComplete(() => {
+                // groupRotation.y = groupNinja.rotation.y
 
                 level = level + (sign * 1)
 
                 console.log(level)
                 isMoving = 0
-            }
-        })
+            })
+
+        // TweenMax.to(groupNinja.rotation, {
+        //     y: groupRotation.y + (omega * sign),
+        //     duration: 3,
+        //     // paused: true,
+        //     easy: 'expo.easyInOut',
+        //     onStart: () => isMoving = 1,
+        //     onComplete: () => {
+        //         groupRotation.y = groupNinja.rotation.y
+
+        //         level = level + (sign * 1)
+
+        //         console.log(level)
+        //         isMoving = 0
+        //     }
+        // })
     }
 
     window.addEventListener('wheel', wheelHandler)
@@ -430,7 +458,7 @@
             points.push({
                 x: x(i),
                 y: y(i),
-                ry: Math.PI / 2 - omega * i
+                ry: Math.PI / 2 - omega * i + Math.PI
             })
         }
 
@@ -441,7 +469,7 @@
 
     const ninjaesObject = {
         donatello: loadModel({
-            x: points[0].x - 0.5,
+            x: points[0].x,
             y: 0.5,
             z: points[0].y,
             ry: points[0].ry,
@@ -449,9 +477,9 @@
             url: 'shogun_5.glb'
         }),
         michelangelo: loadModel({
-            x: points[1].x + 0.4,
+            x: points[1].x,
             y: 0,
-            z: points[1].y - 0.5,
+            z: points[1].y,
             ry: points[1].ry,
             scale: 1,
             url: 'smtv_42_p.glb'
@@ -472,6 +500,10 @@
     const groupRotation = {
         y: groupNinja.rotation.y
     }
+
+    const groupRotationRound = Ola({
+        y: groupNinja.rotation.y
+    }, 500)
 
     const ninjaes = []
 
@@ -497,6 +529,12 @@
             for (let i = 0; i < mixers.length; i++) (
                 mixers[i].update(clocks[i].getDelta())
             )
+        }
+
+
+        //  animation of group
+        if (tween) {
+            tween.update()
         }
 
         // binding model to mouse
