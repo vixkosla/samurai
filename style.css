@@ -1,4 +1,6 @@
-canvas {
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Raleway:wght@400;700&display=swap');
+
+canvas {  
     /* position: absolute; */
     /* z-index: -1; */
 }
@@ -84,9 +86,20 @@ nav {
     z-index: 1;
 }
 
+.images-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: lemonchiffon;
+    opacity: 0.1;
+}
+
 .model {
     width: 100%;
     height: 100%;
+
+    /* visibility: hidden; */
     /* border: 2px solid red; */
 
     /* top: 50%; */
@@ -145,9 +158,14 @@ nav {
     font-style: bold;
     letter-spacing: 0.1rem;
     margin-bottom: 30px;
-    margin-top: 50px;
     /* text-transform: uppercase; */
     /* position: absolute; */
+
+    font-family: 'Orbitron', sans-serif;
+    font-size: 7.5rem;
+    margin-top: 96px;
+    margin-bottom: 50px;
+    text-transform: uppercase;
 }
 
 
@@ -161,9 +179,11 @@ nav {
     width: 50%;
     padding-right: 4vw;
 
+    font-family: 'Raleway', sans-serif;
 }
 
 .text-block p {
+    font-size: 1.5rem;
     line-height: 2rem;
     margin-bottom: 35px;
     opacity: 0.9;
@@ -173,22 +193,23 @@ nav {
 
 .block_image {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     flex-direction: row;
 }
 
 .image-box {
-    width: 25%;
+    width: 30%;
 }
 
 .image-box span {
     margin-top: 1rem;
     text-align: left;
     font-size: 12px;
+    font-family: ;
     display: block;
     line-height: 1.5rem;
-    font-weight: 200;
+    font-weight: 400;
     font-style: normal;
     letter-spacing: 0.1rem;
     color: lightgrey;
@@ -196,7 +217,7 @@ nav {
 }
 
 .box {
-    width: 80%;
+    width: 140px;
     aspect-ratio: 1;
     /* margin: 0 auto; */
 
@@ -216,15 +237,16 @@ nav {
 }
 
 button {
-    width: 150px;
-    height: 50px;
+    width: 280px;
+    height: 60px;
     border-radius: 20px;
     border: 0;
     margin-top: 50px;
-    background-color: #A48BFF;
+    background-color: #EAFC52;
     color: black;
 
-    font-weight: 600;
-    letter-spacing: 0.2rem;
-    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-size: 1.3rem;
 }

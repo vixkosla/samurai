@@ -41,7 +41,7 @@
             <svg viewBox="0 0 70 70" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="35" cy="35" r="7.5" fill="lightgrey" />
                 <g class="cursor-bigPart">
-                    <circle class="point" cx="35" cy="35" r="35" fill="#A48BFF" />
+                    <circle class="point" cx="35" cy="35" r="35" fill="#EAFC52" />
                     <rect class="line-v" x="34" y="20" width="3" height="30" fill="black" />
                     <rect class="line-h" x="50" y="34" width="3" height="30" transform="rotate(90 50 34)"
                         fill="black" />
@@ -55,44 +55,57 @@
         <div class="model"></div>
     </div>
 
+    <div class="image-container">
+        <div class="image"></div>
+    </div>
+
     <div class="container">
         <div class="empty-block"></div>
         <!-- <h1>Очень важная информация</h1> -->
         <div class="text-block">
-            <h1> Music for top 1% fans</h1>
+            <h1>Shinobi</h1>
             <p>Crew brings people closer through fandom while giving artists new ways to engage and monetize their most
                 passionate fans. Connect Spotify or Apple Music
             </p>
             <div class="block_image">
                 <div class="image-box">
                     <div class="box">
-                        <img src="https://www.fromscout.com/images/features/crewArrow.svg" alt="">
+                        <svg width="37" height="37" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <circle cx="5" cy="5" r="5" fill="#EAFC52" style="" />
+                        </svg>
+                        <!-- <img src="https://www.fromscout.com/images/features/crewArrow.svg" alt=""> -->
                     </div>
-                    <span>Connect Spotify or Apple Music</span>
+                    <span>Connect Spotify</span>
                 </div>
                 <div class="image-box">
+                    <div class="box">
+                        <svg width="37" height="37" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <circle cx="5" cy="5" r="5" fill="#EAFC52" style="" />
+                        </svg>
+                    </div>
+                    <span>Connect Spotify</span>
+                </div>
+                <div class="image-box">
+                    <div class="box">
+                        <svg width="37" height="37" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <circle cx="5" cy="5" r="5" fill="#EAFC52" style="" />
+                        </svg>
+                    </div>
+                    <span>Connect Spotify</span>
+                </div>
+                <!-- <div class="image-box">
                     <div class="box">
                         <img src="https://www.fromscout.com/images/features/crewArrow.svg" alt="">
                     </div>
                     <span>Connect Spotify or Apple Music</span>
-                </div>
-                <div class="image-box">
-                    <div class="box">
-                        <img src="https://www.fromscout.com/images/features/crewArrow.svg" alt="">
-                    </div>
-                    <span>Connect Spotify or Apple Music</span>
-                </div>
-                <div class="image-box">
-                    <div class="box">
-                        <img src="https://www.fromscout.com/images/features/crewArrow.svg" alt="">
-                    </div>
-                    <span>Connect Spotify or Apple Music</span>
-                </div>
+                </div> -->
             </div>
 
             <button>
-                visit crew
-            </button>
+                Подробнее </button>
 
         </div>
     </div>
@@ -140,7 +153,7 @@
     let clocks = []
 
     let isMoving = 0
-    let level = 1
+    let level = 3
 
     const scene = new THREE.Scene();
 
@@ -190,10 +203,20 @@
 
     //  CUSTOM CURSOR
 
-    const mouse = {
+    const mouse = Ola({
+        x: undefined,
+        y: undefined
+    }, 5)
+
+    const mousePrev = {
         x: undefined,
         y: undefined
     }
+
+    const mouseDiff = Ola({
+        x: undefined,
+        y: undefined
+    }, 10)
 
     const position = Ola({ x: 0, y: 0 }, 5) // new CDN
 
@@ -202,10 +225,18 @@
 
     window.addEventListener('mousemove', function (e) {
 
+        mousePrev.x = position.x
+        mousePrev.y = position.y
+
         position.set({ x: event.pageX, y: event.pageY })
 
-        mouse.x = (position.x / model.clientWidth) * 2 - 1
-        mouse.y = (position.y / model.clientHeight) * 2 - 1
+        mouse.set({
+            x: event.pageX - model.clientWidth / 2 - 1,
+            y: event.pageY / model.clientHeight * 2
+        })
+
+        mouseDiff.set({ x: (event.pageX - mousePrev.x) })
+        // console.log(mouseDiff.x)
 
         cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
     })
@@ -304,6 +335,17 @@
 
     let tween = undefined
 
+    function levelDetection(direction, sign) {
+
+        if (level == 3 && direction == 'left') {
+            level = 1
+        } else if (level == 1 && direction == "right") {
+            level = 3
+        } else {
+            level = level + (sign * 1)
+        }
+    }
+
     function groupRotate(direction) {
 
         let sign = undefined
@@ -329,7 +371,7 @@
             .to({ y: groupRotation.y + (omega * sign) }, 3000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                groupRotationRound.set({y: groupRotation.y})
+                groupRotationRound.set({ y: groupRotation.y })
                 groupNinja.rotation.y = groupRotationRound.y
                 // console.log(isMoving)
             })
@@ -337,8 +379,7 @@
             .onStart(() => isMoving = 1)
             .onComplete(() => {
                 // groupRotation.y = groupNinja.rotation.y
-
-                level = level + (sign * 1)
+                levelDetection(direction, sign)
 
                 console.log(level)
                 isMoving = 0
@@ -508,9 +549,9 @@
     const ninjaes = []
 
 
-    promises.forEach(promise => {
+    promises.forEach((promise, index) => {
         promise.then(ninja => {
-            ninjaes.push(ninja)
+            ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
         })
     })
@@ -541,11 +582,17 @@
 
         for (const ninja of ninjaes) {
 
-            gsap.to(ninja.rotation, {
-                // y: mouse.x * 0.05,
-                // x: mouse.y * 0.15,
-                duration: 3
-            })
+            console.log()
+
+            if (!isMoving && level == ninja.id) {
+                // console.log(ninja.id)
+                // console.log(mouse.y)
+                gsap.to(ninja.model.rotation, {
+                    // y: ninja.model.rotation.y + mouseDiff.x * 10,
+                    // x: mouse.y * 0.15,
+                    duration: 3
+                })
+            }
         }
 
         renderer.render(scene, camera);
