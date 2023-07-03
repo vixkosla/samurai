@@ -12,6 +12,9 @@
     <!-- ola -->
     <script src="https://cdn.jsdelivr.net/npm/ola"></script>
 
+    <!-- threejs interaction -->
+    <!-- <script src="https://cdn.skypack.dev/three.interactive"></script> -->
+
     <!-- gsap min -->
     <script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
 
@@ -25,7 +28,9 @@
             "three/addons/": "https://threejs.org/examples/jsm/"
         }
     }</script><!-- Remove this when import maps will be widely supported -->
+
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
 
     <!-- <script src="./js/libs/basis/basis_transcoder.js"></script> -->
 
@@ -44,8 +49,9 @@
                     <circle class="point" cx="35" cy="35" r="35" fill="#EAFC52" />
                     <!-- <rect class="line-v" x="34" y="20" width="3" height="30" fill="black" /> -->
                     <!-- <rect class="line-h" x="50" y="34" width="3" height="30" transform="rotate(90 50 34)" -->
-                        fill="black" />
-                    <polygon points="20.5 24 36.5 48 52.5 24 36.5 34 20.5 24" fill="black" transform="rotate(90 35 35)" style=""/>
+                    fill="black" />
+                    <polygon points="20.5 24 36.5 48 52.5 24 36.5 34 20.5 24" fill="black" transform="rotate(90 35 35)"
+                        style="" />
                 </g>
             </svg>
 
@@ -117,14 +123,27 @@
 <script type="module">
 
     import * as THREE from 'three'
+
+
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
     import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import Stats from 'three/addons/libs/stats.module.js';
+
     import {
         OrbitControls
     } from 'three/addons/controls/OrbitControls.js';
+
+    // import { InteractionManager } from './js/three.interaction.module.js';
+    // import { InteractionManager } from "three.interactive";
+    // import InteractionManager from 'https://cdn.skypack.dev/three.interactive';
+
+    // let orbit 
+
+
+    
 
     // import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/build/three.module.js';
     // import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/loaders/GLTFLoader.js';
@@ -149,18 +168,23 @@
     camera.rotation.y = Math.PI / 2 + Math.PI / 3
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    let stats = new Stats()
     renderer.setSize(model.clientWidth, model.clientHeight)
     // renderer.setClearColor(0x000, 1.0);
 
     model.appendChild(renderer.domElement);
+    model.appendChild(stats.dom);
 
     let mixers = []
     let clocks = []
+
 
     let isMoving = 0
     let level = 3
 
     const scene = new THREE.Scene();
+
+    // const interaction = new InteractionManager(renderer, scene, camera);
 
     const exposure = 1.8
 
@@ -205,6 +229,15 @@
 
     // scene.add(cube)
 
+    // RAYCASTER
+
+
+    let raycaster = new THREE.Raycaster()
+    let pointer = new THREE.Vector2()
+    let sceneMeshes = []
+    let sceneBoxes = []
+    let skeletons = []
+
 
     //  CUSTOM CURSOR
 
@@ -229,6 +262,7 @@
     const cursorBigPart = document.querySelector('.cursor-bigPart')
 
     window.addEventListener('mousemove', function (e) {
+        event.preventDefault();
 
         mousePrev.x = position.x
         mousePrev.y = position.y
@@ -236,9 +270,14 @@
         position.set({ x: event.pageX, y: event.pageY })
 
         mouse.set({
-            x: event.pageX - model.clientWidth / 2 - 1,
-            y: event.pageY / model.clientHeight * 2
+            x: event.pageX / window.innerWidth * 2 - 1,
+            y: event.pageY / window.innerHeight * 2 + 1
         })
+
+        pointer.x = (event.pageX / window.innerWidth) * 2 - 1
+        pointer.y = (event.pageY / window.innerHeight) * 2 + 1
+
+        // console.log(mouse.x)
 
         mouseDiff.set({ x: (event.pageX - mousePrev.x) })
         // console.log(mouseDiff.x)
@@ -296,7 +335,7 @@
     function clickHandler() {
 
         if (!isPlayed) {
-            cursorBigPart.style.transform += 'rotate(135deg)'
+            cursorBigPart.style.transform += 'rotate(90deg)'
         }
 
         tweenText.play()
@@ -355,7 +394,7 @@
 
         let sign = undefined
 
-        console.log('check')
+        // console.log('check')
 
         if (direction === 'left') {
             sign = 1
@@ -376,8 +415,9 @@
             .to({ y: groupRotation.y + (omega * sign) }, 3000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                groupRotationRound.set({ y: groupRotation.y })
                 groupNinja.rotation.y = groupRotationRound.y
+
+                groupRotationRound.set({ y: groupRotation.y })
                 // console.log(isMoving)
             })
             .start() // Start the tween immediately.
@@ -386,7 +426,7 @@
                 // groupRotation.y = groupNinja.rotation.y
                 levelDetection(direction, sign)
 
-                console.log(level)
+                // console.log(level)
                 isMoving = 0
             })
 
@@ -456,9 +496,12 @@
         //detect size of model
 
         const box = new THREE.Box3().setFromObject(model);
+        // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+
+        // scene.add(boxHelper)
         const size = box.getSize(new THREE.Vector3());
 
-        console.log(box)
+        // console.log(box)
 
         const height = box.max.y - box.min.y
         const width = box.max.x = box.min.x
@@ -468,6 +511,32 @@
         if (gltf.animations.length) {
             loadAnimation(gltf)
         }
+
+        // traverse model
+        sceneBoxes.push(box)
+
+
+        model.traverse(function (child) {
+            if (child.isMesh) {
+                console.log(child)
+                sceneMeshes[child.name] = child
+
+                const box = new THREE.Box3().setFromObject(child);
+                const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+
+                scene.add(boxHelper)
+
+                // let aabb = new THREE.Box3().set
+            }
+        })
+
+        // skeleton helper 
+
+        let skeleton = new THREE.SkeletonHelper(model);
+        skeleton.visible = true;
+
+        skeletons.push(skeleton)
+        scene.add(skeleton);
 
         return model
     }
@@ -561,18 +630,54 @@
 
     promises.forEach((promise, index) => {
         promise.then(ninja => {
+            ninja.cursos = 'pointer'
+
+            ninja.on('mouseover', function(ev) {})
+
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
         })
     })
 
     scene.add(groupNinja)
+    // console.log(scene)
+    // console.log(scene.children[3].children)
+
+    // RAYCASTING (MOUSE OVER)
+
+    function stopAnimationModel() {
+
+
+
+
+    }
 
 
     // RENDER LOOP
 
+    let INTERSECTED = 0
+
     function animate() {
         requestAnimationFrame(animate);
+
+        stopAnimationModel()
+
+        // console.log('INTERSECTED')
+        // console.log(INTERSECTED)
+
+
+        raycaster.setFromCamera(pointer, camera);
+
+
+        const intersects = raycaster.intersectObjects(scene.children, false);
+
+
+        if (intersects.length > 0) {
+            console.log("intersect")
+            INTERSECTED++
+        }
+
+        stats.update();
 
         // animation of model 
 
@@ -592,15 +697,17 @@
 
         for (const ninja of ninjaes) {
 
-            console.log()
+            // console.log()
 
             if (!isMoving && level == ninja.id) {
                 // console.log(ninja.id)
                 // console.log(mouse.y)
                 gsap.to(ninja.model.rotation, {
+                    y: ninja.model.rotation.y + mouse.x * 0.25,
                     // y: ninja.model.rotation.y + mouseDiff.x * 10,
                     // x: mouse.y * 0.15,
-                    duration: 3
+                    duration: 3,
+                    easy: "Power1.easyIn",
                 })
             }
         }
