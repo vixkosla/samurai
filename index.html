@@ -26,7 +26,7 @@
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
             "three/addons/": "https://threejs.org/examples/jsm/",
-            "interaction": "./js/three.interaction.module.js"
+            "interaction": "./js/three.interaction.js"
         }
     }</script><!-- Remove this when import maps will be widely supported -->
 
@@ -138,7 +138,7 @@
         OrbitControls
     } from 'three/addons/controls/OrbitControls.js';
 
-    import { Interaction } from './js/three.interaction.module.js';
+    // import { interactionManager } from 'interaction';
     // import { InteractionManager } from "three.interactive";
     // import InteractionManager from './three.interaction.module.js';
 
@@ -213,7 +213,7 @@
 
     const scene = new THREE.Scene();
 
-    // const interactionManager = new Interaction(renderer, scene, camera);
+    // const interactionThree = new InteractionLayer(renderer, scene, camera);
 
     const exposure = 1.5
 
@@ -226,7 +226,7 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
 
-    
+
     // renderer.outputColorSpace = THREE.sRGBEncoding
     // THREE.ColorManagement.enabled = true;
     // renderer.outputColorSpace = THREE.LinearSRGBColorSpace ;
@@ -277,6 +277,7 @@
 
 
     let raycaster = new THREE.Raycaster()
+    let ray = new THREE.Ray()
     let pointer = new THREE.Vector2()
     let sceneMeshes = []
     let sceneBoxes = []
@@ -324,13 +325,19 @@
             y: event.pageY / window.innerHeight * 2 + 1
         })
 
-        pointer.x = (event.pageX / window.innerWidth) * 2 - 1
-        pointer.y = (event.pageY / window.innerHeight) * 2 + 1
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+        pointer.y = - (event.clientY / window.innerHeight) * 2 + 1
 
         // console.log(mouse.x)
 
         mouseDiff.set({ x: (event.pageX - mousePrev.x) })
         // console.log(mouseDiff.x)
+
+        if (INTERSECTED) {
+            enterMouseHandler()
+        } else if (!INTERSECTED) {
+            leaveMouseHandler()
+        }
 
         cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
     })
@@ -343,6 +350,7 @@
     let isPlaying = 0
 
     let moveX = undefined
+    let moveZ = undefined
 
     function cameraMoving(direction) {
 
@@ -356,6 +364,24 @@
             sign = -1
         }
 
+        switch (level) {
+            case 1:
+                moveX = model.clientWidth / 1200 * 1
+                moveZ = - model.clientWidth / 1200 * 1.5
+                break;
+            case 2:
+                moveX = model.clientWidth / 1200 * 1
+                moveZ = - model.clientWidth / 1200 * 1.5
+                break;
+            case 3:
+                moveX = model.clientWidth / 1200 * 1
+                moveZ = - model.clientWidth / 1200 * 1.5
+                break;
+
+            default:
+                break;
+        }
+
         // let to = {
         //     x: posX,
         //     y: posY,
@@ -363,34 +389,38 @@
         // }
         console.log('d')
 
-        moveX = model.clientWidth / 1200 * 2.5
+        // moveX = model.clientWidth / 1200 * 1
+        // moveZ = - model.clientWidth / 1200 * 1.5
 
-        // tweenCamPosition = new TWEEN.Tween(camers.position, false)
-        //     .to({ x: group.position.x + moveX * sign}, 2000)
-        //     .easing(TWEEN.Easing.Exponential.InOut)
-        //     .onUpdate(() => {
-        //         console.log(groupNinja.position)
-        //         groupNinja.position.x = groupPosition.x
-
-        //         // camera.position.set(this.x, this.y, this.z)
-        //         // console.log(isMoving)
-        //     })
-        //     .start() // Start the tween immediately.
-        //     .onStart(() => isPlaying = 1)
-        //     .onComplete(() => {
-        //         // groupRotation.y = groupNinja.rotation.y
-        //         // levelDetection(direction, sign)
-
-        //         // console.log(level)
-        //         isPlaying = 0
-        //     })
-
-        tweenPosition = new TWEEN.Tween(groupPosition, false)
-            .to({ x: groupPosition.x + moveX * sign}, 2000)
+        tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
+            .to({ x: camera.position.x - moveX * sign, z: camera.position.z + moveZ * sign }, 1000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                console.log(groupNinja.position)
-                groupNinja.position.x = groupPosition.x
+                // console.log(groupNinja.position)
+                camera.position.x = cameraPosition.x
+                camera.position.z = cameraPosition.z
+
+                // camera.position.set(this.x, this.y, this.z)
+                // console.log(isMoving)
+            })
+            .start() // Start the tween immediately.
+            .onStart(() => isPlaying = 1)
+            .onComplete(() => {
+                // groupRotation.y = groupNinja.rotation.y
+                // levelDetection(direction, sign)
+
+                // console.log(level)
+                isPlaying = 0
+            })
+
+        tweenPosition = new TWEEN.Tween(groupPosition, false)
+            .to({ x: groupPosition.x + moveX * sign }, 2000)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onUpdate(() => {
+                // console.log(groupNinja.position)
+                groupNinja.position.x = groupPositionRound.x
+
+                groupPositionRound.set({ x: groupPosition.x })
 
                 // camera.position.set(this.x, this.y, this.z)
                 // console.log(isMoving)
@@ -470,8 +500,8 @@
         cursorBigPart.style.transform = `scale(0)`
     }
 
-    model.addEventListener('mouseenter', enterMouseHandler)
-    model.addEventListener('mouseleave', leaveMouseHandler)
+    // model.addEventListener('mouseenter', enterMouseHandler)
+    // model.addEventListener('mouseleave', leaveMouseHandler)
 
     // DOM ELEMENT add two listnerers for enter and for leave 
 
@@ -479,6 +509,8 @@
 
     let tweenRotation = undefined
     let tweenPosition = undefined
+
+    let tweenCamPosition = undefined
 
     function levelDetection(direction, sign) {
 
@@ -531,6 +563,24 @@
                 isMoving = 0
             })
 
+        // tweenRotation = new TWEEN.Tween(cameraRotation, false)
+        //     .to({ y: cameraRotation.y + (omega * sign) }, 3000)
+        //     .easing(TWEEN.Easing.Exponential.InOut)
+        //     .onUpdate(() => {
+        //         groupNinja.rotation.y = groupRotationRound.y
+
+        //         groupRotationRound.set({ y: groupRotation.y })
+        //         // console.log(isMoving)
+        //     })
+        //     .start() // Start the tween immediately.
+        //     .onStart(() => isMoving = 1)
+        //     .onComplete(() => {
+        //         // groupRotation.y = groupNinja.rotation.y
+        //         levelDetection(direction, sign)
+
+        //         // console.log(level)
+        //         isMoving = 0
+        //     })
         // TweenMax.to(groupNinja.rotation, {
         //     y: groupRotation.y + (omega * sign),
         //     duration: 3,
@@ -585,8 +635,7 @@
 
 
 
-  
-
+    const groupNinja = new THREE.Group()
 
     async function loadModel({ x, y, z, ry, scale, url }) {
 
@@ -601,19 +650,33 @@
 
         //detect size of model
 
-        const box = new THREE.Box3().setFromObject(model, true);
-        const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+        const box = new THREE.Box3().setFromObject(model);
+        // box.applyMatrix4(model.matrixWorld)
 
+        // groupNinja.add(box)
+        // box = calculateAABB(model, )
+
+
+
+
+        // sceneBoxes.push(box)
+        // 
+        const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+        groupNinja.add(boxHelper)
         scene.add(boxHelper)
-        const size = box.getSize(new THREE.Vector3());
+
+        // Body_Low003
+        // groupNinja.add(box)
+        // groupNinja.add(boxHelper)
+        // const size = box.getSize(new THREE.Vector3());
 
         // console.log(box)
 
 
 
-        const height = box.max.y - box.min.y
-        const width = box.max.x - box.min.x
-        const deep = box.max.z - box.min.z
+        // const height = box.max.y - box.min.y
+        // const width = box.max.x - box.min.x
+        // const deep = box.max.z - box.min.z
 
         // box.applyMatrix4(model.matrixWorld)
 
@@ -634,60 +697,64 @@
         let aabb = new THREE.Box3()
         let skinned = new THREE.Vector3()
 
+        console.log(model)
+
 
         model.traverse(function (child) {
-            if (child.textures)
-
-                if (child.Mesh) {
-                    console.log('pock')
-                }
+            if (child.isMesh) {
+                console.log('mesh')
+                child.visible = true
+            }
             if ((child.isMesh && child.material.metalness == 1)) {
-                console.log('puck')
+                console.log('metal Mesh')
 
                 // child.material.envmap = envmap
                 // child.material.envMapIntensity = 0.7
                 child.material.color.convertSRGBToLinear();
             }
-            // if (child.isSkinnedMesh) { 
-            //         // console.log(child)
-            //         // child.frustumCulled = false
-            //         // sceneMeshes[child.name] = child
+            if (child.isSkinnedMesh) {
+                console.log('skinnedmesh')
+                console.log(child.name)
+                //         // console.log(child)
+                //         // child.frustumCulled = false
+                //         // sceneMeshes[child.name] = child
 
 
 
-            //         aabb.makeEmpty()
+                aabb.makeEmpty()
 
 
-            //         // let boxx = child.geometry.computeBoundingBox()
-            //         let geometry = child.geometry
-            //         let position = geometry.attributes.position
+                //         // let boxx = child.geometry.computeBoundingBox()
+                let geometry = child.geometry
+                let position = geometry.attributes.position
 
-            //         // aabb.computeBoundingBox()
+                //         // aabb.computeBoundingBox()
 
 
-            //         for (let i = 0; i < position.count; i++) {
-            //             // skinned.fromBufferAttribute(position, i)
-            //             child.boneTransform(i, skinned)
-            //             child.localToWorld(skinned)
-            //             aabb.expandByPoint(skinned)
-            //         }
+                for (let i = 0; i < position.count; i++) {
+                    //             // skinned.fromBufferAttribute(position, i)
+                    child.applyBoneTransform(i, skinned)
+                    child.localToWorld(skinned)
+                    aabb.expandByPoint(skinned)
+                }
 
-            //         child.updateWorldMatrix(false, false)
-            //         skinned.setFromMatrixPosition(child.matrixWorld)
-            //         aabb.applyMatrix4(child.matrixWorld)
+                child.updateWorldMatrix(false, false)
+                skinned.setFromMatrixPosition(child.matrixWorld)
+                aabb.applyMatrix4(child.matrixWorld)
 
-            //         // const box = new THREE.Box3().setFromObject(child);
-            //         // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-            //         const boxHelper = new THREE.Box3Helper(aabb, 0x00ff00)
-            //         // const boxHelper1 = new THREE.Box3Helper(boxx, 0x00ffCC)
-            //         // aabb.position.set(x, y + 2, z)
-            //         // aabb.rotation.set(0, ry, 0)
+                //         // const box = new THREE.Box3().setFromObject(child);
+                //         // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+                const boxHelper = new THREE.Box3Helper(aabb, 0x00ff00)
+                //         // const boxHelper1 = new THREE.Box3Helper(boxx, 0x00ffCC)
+                //         // aabb.position.set(x, y + 2, z)
+                //         // aabb.rotation.set(0, ry, 0)
 
-            //         // scene.add(boxHelper)
-            //         // scene.add(boxHelper1)
+                // groupNinja.add(boxHelper)
+                //         // scene.add(boxHelper1)
 
-            //         // let aabb = new THREE.Box3().set
-            //     }
+                //         // let aabb = new THREE.Box3().set
+                //     }
+            }
         })
 
         // skeleton helper 
@@ -777,7 +844,6 @@
     }
 
     const promises = Object.values(ninjaesObject)
-    const groupNinja = new THREE.Group()
 
     const groupRotation = {
         y: groupNinja.rotation.y
@@ -816,6 +882,7 @@
     })
 
     scene.add(groupNinja)
+    console.log(ninjaes)
     // console.log(scene)
     // console.log(scene.children[3].children)
 
@@ -831,7 +898,12 @@
 
     // RENDER LOOP
 
-    let INTERSECTED = 0
+    let INTERSECTED = null
+
+    raycaster.setFromCamera(pointer, camera);
+    // ray.setFromCamera(pointer,camera)
+    // var lookAtVector = new THREE.Vector3(0,0, -1);
+    //   lookAtVector.applyQuaternion(camera.quaternion);
 
     function animate() {
         requestAnimationFrame(animate);
@@ -842,21 +914,58 @@
         // console.log(INTERSECTED)
 
 
-        raycaster.setFromCamera(pointer, camera);
 
 
-        const intersects = raycaster.intersectObjects(scene.children, false);
 
-        for (let i = 0; i < intersects.length; i++) {
-            console.log(intersects)
-            intersects[i].object.material.color.set( 0xff0000 );
+
+
+        if (ninjaes.length > 0) {
+            const intersects = raycaster.intersectObjects(scene.children, true);
+
+            // console.log(ninjaes)
+            if (intersects.length > 0) {
+
+                console.log(raycaster.params)
+                console.log('intersect')
+                console.log(intersects)
+
+                INTERSECTED = intersects
+
+            } else {
+                INTERSECTED = null
+            }
         }
 
 
-        if (intersects.length > 0) {
-            console.log("intersect")
-            INTERSECTED++
-        }
+
+        // for (let j = 0; j < sceneBoxes.length; j++) {
+        //     const intersects = raycaster.intersectObjects(sceneBoxes[j]);
+
+        //     for (let i = 0; i < intersects.length; i++) {
+        //         console.log(intersects)
+        //         // intersects[i].object.material.color.set(0xff0000);
+        //     }
+        // }
+
+
+
+        // if (intersects.length > 0) {
+        //     // console.log("intersect")
+        //     // console.log(intersect)
+        //     console.log('INTERSECTED')
+
+        //     for (let i = 0; i < intersects.length; i++) {
+        //         console.log(intersects)
+        //         console.log(intersects[i])
+        //         // intersects[i].object.material.color.set(0xff0000);
+        //     }
+
+        //     INTERSECTED++
+        // }
+
+        // if (!intersects.length) {
+        //     console.log('not INTERSECTED')
+        // }
 
         stats.update();
 
@@ -875,7 +984,12 @@
         }
 
         if (tweenPosition) {
-            tweenPosition.update()
+            // tweenPosition.update()
+            // console.log(camera.position)
+        }
+
+        if (tweenCamPosition) {
+            tweenCamPosition.update()
             // console.log(camera.position)
         }
 
