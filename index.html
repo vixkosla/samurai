@@ -134,9 +134,7 @@
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import Stats from 'three/addons/libs/stats.module.js';
 
-    import {
-        OrbitControls
-    } from 'three/addons/controls/OrbitControls.js';
+
 
     // import { interactionManager } from 'interaction';
     // import { InteractionManager } from "three.interactive";
@@ -199,7 +197,7 @@
         camera.aspect = model.clientWidth / model.clientHeight
         camera.updateProjectionMatrix()
         renderer.render(scene, camera);
-        console.log('rerender pls')
+        // console.log('rerender pls')
 
         updateConstants()
     }
@@ -233,18 +231,18 @@
     // THREE.ColorManagement.enabled = true;
 
 
-    const envmap = new RGBELoader().load("./assets/abandoned_games_room_01_1k.hdr");
-    envmap.mapping = THREE.EquirectangularReflectionMapping
+    // const envmap = new RGBELoader().load("./assets/abandoned_games_room_01_1k.hdr");
+    // envmap.mapping = THREE.EquirectangularReflectionMapping
     // scene.environment = envmap;
 
 
-    const color = 0x322b35;
-    const intensity = 1350;
-    const width = 12;
-    const height = 4;
-    const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
-    RAlight.position.set(0, -4, -10);
-    RAlight.rotation.x = THREE.MathUtils.degToRad(135);
+    // const color = 0x322b35;
+    // const intensity = 1350;
+    // const width = 12;
+    // const height = 4;
+    // const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
+    // RAlight.position.set(0, -4, -10);
+    // RAlight.rotation.x = THREE.MathUtils.degToRad(135);
     // scene.add(RAlight);
 
     const pointLight = new THREE.PointLight(0xf0f8ff, 1.6);
@@ -281,10 +279,14 @@
     let pointer = new THREE.Vector2()
     let sceneMeshes = []
     let sceneBoxes = []
+
+    let skeleton
     let skeletons = []
 
     let containerObj = new THREE.Object3D()
 
+    let boxes = []
+    let vectors = []
 
     // let controls = new OrbitControls(camera, renderer.domElement)
     // controls.target.set(5, 5, 20)
@@ -312,6 +314,9 @@
     const cursor = document.querySelector('.cursor')
     const cursorBigPart = document.querySelector('.cursor-bigPart')
 
+    let INTERSECTED = null
+
+
     window.addEventListener('mousemove', function (e) {
         event.preventDefault();
 
@@ -325,8 +330,7 @@
             y: event.pageY / window.innerHeight * 2 + 1
         })
 
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-        pointer.y = - (event.clientY / window.innerHeight) * 2 + 1
+
 
         // console.log(mouse.x)
 
@@ -340,7 +344,23 @@
         }
 
         cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
+
+        // intersectHandler(e)
+
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+        pointer.y = - (event.clientY / window.innerHeight) * 2 + 1
+
+        raycaster.setFromCamera(pointer, camera);
     })
+
+    // let intersects = undefined
+
+    function intersectHandler(event) {
+
+        // console.log(raycaster)
+
+
+    }
 
     // TEXT BLOCK and cursor animation  
 
@@ -351,6 +371,7 @@
 
     let moveX = undefined
     let moveZ = undefined
+    let moveY = undefined
 
     function cameraMoving(direction) {
 
@@ -366,40 +387,46 @@
 
         switch (level) {
             case 1:
-                moveX = model.clientWidth / 1200 * 1
-                moveZ = - model.clientWidth / 1200 * 1.5
+                moveX = model.clientWidth / 1200 * 3
+                moveZ = model.clientWidth / 1200 * -5.5
+                moveY = -0.5
                 break;
             case 2:
-                moveX = model.clientWidth / 1200 * 1
-                moveZ = - model.clientWidth / 1200 * 1.5
+                moveX = model.clientWidth / 1200 * 1.7
+                moveZ = - model.clientWidth / 1200 * 4.5
+                moveY = 0.1
                 break;
             case 3:
-                moveX = model.clientWidth / 1200 * 1
-                moveZ = - model.clientWidth / 1200 * 1.5
+                moveX = - model.clientWidth / 1200 * 0.8
+                moveZ = - model.clientWidth / 1200 * 1.0
+                moveY = 0.05
                 break;
 
             default:
                 break;
         }
 
+        // console.log(moveX, moveZ)
+
         // let to = {
         //     x: posX,
         //     y: posY,
         //     z: posZ
         // }
-        console.log('d')
+        // console.log('d')
 
         // moveX = model.clientWidth / 1200 * 1
         // moveZ = - model.clientWidth / 1200 * 1.5
 
         tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
-            .to({ x: camera.position.x - moveX * sign, z: camera.position.z + moveZ * sign }, 1000)
+            .to({ x: camera.position.x + moveX * sign, z: camera.position.z + moveZ * sign, y: camera.position.y + moveY * sign }, 1000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
                 // console.log(groupNinja.position)
                 camera.position.x = cameraPosition.x
                 camera.position.z = cameraPosition.z
-
+                camera.position.y = cameraPosition.y
+                console.log(camera.position)
                 // camera.position.set(this.x, this.y, this.z)
                 // console.log(isMoving)
             })
@@ -413,27 +440,27 @@
                 isPlaying = 0
             })
 
-        tweenPosition = new TWEEN.Tween(groupPosition, false)
-            .to({ x: groupPosition.x + moveX * sign }, 2000)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(() => {
-                // console.log(groupNinja.position)
-                groupNinja.position.x = groupPositionRound.x
+        // tweenPosition = new TWEEN.Tween(groupPosition, false)
+        //     .to({ x: groupPosition.x + moveX * sign }, 2000)
+        //     .easing(TWEEN.Easing.Exponential.InOut)
+        //     .onUpdate(() => {
+        //         // console.log(groupNinja.position)
+        //         groupNinja.position.x = groupPositionRound.x
 
-                groupPositionRound.set({ x: groupPosition.x })
+        //         groupPositionRound.set({ x: groupPosition.x })
 
-                // camera.position.set(this.x, this.y, this.z)
-                // console.log(isMoving)
-            })
-            .start() // Start the tween immediately.
-            .onStart(() => isPlaying = 1)
-            .onComplete(() => {
-                // groupRotation.y = groupNinja.rotation.y
-                // levelDetection(direction, sign)
+        //         // camera.position.set(this.x, this.y, this.z)
+        //         // console.log(isMoving)
+        //     })
+        //     .start() // Start the tween immediately.
+        //     .onStart(() => isPlaying = 1)
+        //     .onComplete(() => {
+        //         // groupRotation.y = groupNinja.rotation.y
+        //         // levelDetection(direction, sign)
 
-                // console.log(level)
-                isPlaying = 0
-            })
+        //         // console.log(level)
+        //         isPlaying = 0
+        //     })
 
         // let tweenModel = gsap.to('.model', {
         //     duration: 2,
@@ -637,7 +664,7 @@
 
     const groupNinja = new THREE.Group()
 
-    async function loadModel({ x, y, z, ry, scale, url }) {
+    async function loadModel({ x, y, z, ry, scale, url, animation }) {
 
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
@@ -650,7 +677,7 @@
 
         //detect size of model
 
-        const box = new THREE.Box3().setFromObject(model);
+        // const box = new THREE.Box3().setFromObject(model);
         // box.applyMatrix4(model.matrixWorld)
 
         // groupNinja.add(box)
@@ -661,9 +688,9 @@
 
         // sceneBoxes.push(box)
         // 
-        const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-        groupNinja.add(boxHelper)
-        scene.add(boxHelper)
+        // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+        // groupNinja.add(boxHelper)
+        // scene.add(boxHelper)
 
         // Body_Low003
         // groupNinja.add(box)
@@ -682,7 +709,7 @@
 
         // animation start
 
-        if (gltf.animations.length) {
+        if (gltf.animations.length && animation) {
             loadAnimation(gltf)
         }
 
@@ -694,79 +721,92 @@
         // let geometry = 
 
         // skinned = model.)
-        let aabb = new THREE.Box3()
-        let skinned = new THREE.Vector3()
+        // let aabb = new THREE.Box3()
+        // let skinned = new THREE.Vector3()
 
-        console.log(model)
+        // console.log(model)
 
 
         model.traverse(function (child) {
             if (child.isMesh) {
-                console.log('mesh')
-                child.visible = true
+                // console.log('mesh')
+                // child.visible = true
+                child.castShadow = true
+                child.material.color.convertSRGBToLinear();
+
             }
             if ((child.isMesh && child.material.metalness == 1)) {
-                console.log('metal Mesh')
+                // console.log('metal Mesh')
 
                 // child.material.envmap = envmap
                 // child.material.envMapIntensity = 0.7
-                child.material.color.convertSRGBToLinear();
             }
             if (child.isSkinnedMesh) {
-                console.log('skinnedmesh')
-                console.log(child.name)
+                // console.log('skinnedmesh')
+                // console.log(child.name)
                 //         // console.log(child)
                 //         // child.frustumCulled = false
                 //         // sceneMeshes[child.name] = child
 
 
 
-                aabb.makeEmpty()
+                // aabb.makeEmpty()
 
 
                 //         // let boxx = child.geometry.computeBoundingBox()
-                let geometry = child.geometry
-                let position = geometry.attributes.position
+                // let geometry = child.geometry
+                // let position = geometry.attributes.position
 
                 //         // aabb.computeBoundingBox()
 
 
-                for (let i = 0; i < position.count; i++) {
-                    //             // skinned.fromBufferAttribute(position, i)
-                    child.applyBoneTransform(i, skinned)
-                    child.localToWorld(skinned)
-                    aabb.expandByPoint(skinned)
-                }
+                // for (let i = 0; i < position.count; i++) {
+                //     skinned.fromBufferAttribute(position, i)
+                //     child.applyBoneTransform(i, skinned)
+                // child.localToWorld(skinned)
+                // aabb.expandByPoint(skinned)
+                // }
 
-                child.updateWorldMatrix(false, false)
-                skinned.setFromMatrixPosition(child.matrixWorld)
-                aabb.applyMatrix4(child.matrixWorld)
+                // child.updateWorldMatrix(false, false)
+                // skinned.setFromMatrixPosition(child.matrixWorld)
+                // aabb.applyMatrix4(child.matrixWorld)
 
                 //         // const box = new THREE.Box3().setFromObject(child);
                 //         // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-                const boxHelper = new THREE.Box3Helper(aabb, 0x00ff00)
-                //         // const boxHelper1 = new THREE.Box3Helper(boxx, 0x00ffCC)
+                // const boxHelper = new THREE.Box3Helper(aabb, 0x00ff00)
+                // const boxHelper1 = new THREE.Box3Helper(boxx, 0x00ffCC)
                 //         // aabb.position.set(x, y + 2, z)
                 //         // aabb.rotation.set(0, ry, 0)
 
                 // groupNinja.add(boxHelper)
-                //         // scene.add(boxHelper1)
+                // scene.add(boxHelper)
 
                 //         // let aabb = new THREE.Box3().set
                 //     }
             }
         })
 
+        // boxes.push(aabb)
+        // vectors.push(skinned)
+        // scene.add()
+
         // skeleton helper 
 
-        // let skeleton = new THREE.SkeletonHelper(model);
-        // let boxSkeleton = new THREE.setFromObject(skeleton)
-        // skeleton.visible = true;
+        // skeleton = new THREE.SkeletonHelper(model);
+        // let boxSkeleton = new THREE.Box3().setFromObject(skeleton)
+        // skeleton.visible = false;
+        // skeleton.material.linewidth = 7
 
         // skeletons.push(skeleton)
-        // scene.add(new THREE.Box3Helper(boxSkeleton, 0x00ff17));
+        // scene.add( skeleton )
+        // let boxSkeletonHelper = new THREE.Box3Helper(boxSkeleton, 0xffff17)
+        // scene.add(boxSkeletonHelper);
 
         return model
+    }
+
+    function createBoundingBox() {
+
     }
 
     function loadAnimation(gltf) {
@@ -819,11 +859,12 @@
     const ninjaesObject = {
         donatello: loadModel({
             x: points[0].x,
-            y: 0.5,
+            y: 0,
             z: points[0].y,
             ry: points[0].ry,
             scale: 0.1,
-            url: 'shogun_5.glb'
+            url: './shogun_5.glb',
+            animation: false
         }),
         michelangelo: loadModel({
             x: points[1].x,
@@ -831,7 +872,8 @@
             z: points[1].y,
             ry: points[1].ry,
             scale: 1,
-            url: 'smtv_42_p.glb'
+            url: 'smtv_42_p.glb',
+            animation: true
         }),
         rafhael: loadModel({
             x: points[2].x,
@@ -839,7 +881,8 @@
             z: points[2].y,
             ry: points[2].ry,
             scale: 1,
-            url: './new/samur.gltf'
+            url: './samur_2.glb',
+            animation: true
         })
     }
 
@@ -878,6 +921,7 @@
 
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
+            // scene.add(ninja)
         })
     })
 
@@ -890,7 +934,10 @@
 
     function stopAnimationModel() {
 
+        for (let i = 0; i < boxes.length; i++) {
+            // boxes[i].copy( vectors[i].geometry.boundingBox ).applyMatrix4( vectors.matrixWorld );
 
+        }
 
 
     }
@@ -898,43 +945,70 @@
 
     // RENDER LOOP
 
-    let INTERSECTED = null
 
-    raycaster.setFromCamera(pointer, camera);
+    // raycaster.setFromCamera(pointer, camera);
     // ray.setFromCamera(pointer,camera)
     // var lookAtVector = new THREE.Vector3(0,0, -1);
     //   lookAtVector.applyQuaternion(camera.quaternion);
 
     function animate() {
         requestAnimationFrame(animate);
+        renderer.render(scene, camera);
 
-        stopAnimationModel()
+
+
+        // stopAnimationModel()
 
         // console.log('INTERSECTED')
         // console.log(INTERSECTED)
 
+        const intersects = raycaster.intersectObjects(scene.children)
 
-
-
-
-
-
-        if (ninjaes.length > 0) {
-            const intersects = raycaster.intersectObjects(scene.children, true);
-
-            // console.log(ninjaes)
-            if (intersects.length > 0) {
-
-                console.log(raycaster.params)
-                console.log('intersect')
-                console.log(intersects)
-
-                INTERSECTED = intersects
-
-            } else {
-                INTERSECTED = null
-            }
+        if (intersects.length) {
+            INTERSECTED = true
+            // for (let i = 0; i < intersects.length; i++) {
+            //     // console.log(intersects[i])
+            //     INTERSECTED = i
+            //     console.log('intersected', i)
+            // }
+        } else if (intersects.length == 0) {
+            INTERSECTED = null
         }
+
+
+        // ANOTHER CODE WITH non workoble part
+
+        // for (let j = 0; j < boxes.length; j++) {
+        //     if (ninjaes.length > 0 && boxes.length > 0) {
+        //         const intersects = raycaster.intersectObjects(scene.children)
+        //         // console.log('clicked')
+        //         // console.log(intersects)
+
+        //         // console.log(ninjaes)
+        //         if (intersects.length > 0) {
+        //             // console.log(intersects)
+
+        //             console.log('intersect')
+
+
+        //             // for (let i = 0; i < intersects.length; i++) {
+        //             //     console.log(intersects[i])
+        //             //     if (i == 0) {
+        //             //         INTERSECTED = intersects[i]
+        //             //     }
+        //             // }
+        //             // console.log(raycaster.params)
+        //             // console.log(intersect)
+
+
+
+        //         } else {
+        //             INTERSECTED = null
+        //         }
+        //     }
+
+        // }
+
 
 
 
@@ -967,7 +1041,7 @@
         //     console.log('not INTERSECTED')
         // }
 
-        stats.update();
+        // stats.update();
 
         // animation of model 
 
@@ -983,10 +1057,10 @@
             tweenRotation.update()
         }
 
-        if (tweenPosition) {
+        // if (tweenPosition) {
             // tweenPosition.update()
             // console.log(camera.position)
-        }
+        // }
 
         if (tweenCamPosition) {
             tweenCamPosition.update()
@@ -999,23 +1073,24 @@
 
         for (const ninja of ninjaes) {
 
+            ninja.model.updateMatrixWorld()
+
             // console.log()
 
-            if (!isMoving && level == ninja.id) {
+            // if (!isMoving && level == ninja.id) {
                 // console.log(ninja.id)
                 // console.log(mouse.y)
-                gsap.to(ninja.model.rotation, {
-                    // y: ninja.model.rotation.y + mouse.x * 0.25,
-                    // y: ninja.model.rotation.y + mouseDiff.x * 10,
-                    // x: mouse.y * 0.15,
-                    duration: 3,
-                    easy: "Power1.easyIn",
-                })
-            }
+                // gsap.to(ninja.model.rotation, {
+                //     // y: ninja.model.rotation.y + mouse.x * 0.25,
+                //     // y: ninja.model.rotation.y + mouseDiff.x * 10,
+                //     // x: mouse.y * 0.15,
+                //     duration: 3,
+                //     easy: "Power1.easyIn",
+                // })
+            // }
         }
 
         // controls.update()
-        renderer.render(scene, camera);
     };
 
     animate();
