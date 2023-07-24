@@ -63,10 +63,6 @@
         <div class="model"></div>
     </div>
 
-    <div class="image-container">
-        <div class="image"></div>
-    </div>
-
     <div class="container">
 
         <div class="text-block">
@@ -125,6 +121,9 @@
 
     import * as THREE from 'three'
 
+    import {
+        OrbitControls
+    } from 'three/addons/controls/OrbitControls.js';
 
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
@@ -134,38 +133,33 @@
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import Stats from 'three/addons/libs/stats.module.js';
 
-
-
-    // import { interactionManager } from 'interaction';
-    // import { InteractionManager } from "three.interactive";
-    // import InteractionManager from './three.interaction.module.js';
-
-
-
-
-
-
-    // import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/build/three.module.js';
-    // import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/loaders/GLTFLoader.js';
-    // import { KTX2Loader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/loaders/KTX2Loader.js'
-    // import { MeshoptDecoder } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/meshopt_decoder.module.js'
-
     // BASIC
 
     const model = document.querySelector(".model")
     const modelContainer = document.querySelector('.model-container')
 
     const fov = 45
-    const aspect = model.clientWidth / model.clientHeight
+    let aspect = model.clientWidth / model.clientHeight
+    let aspectM = aspect
+
+    function updateAspectRatio() {
+        aspect = model.clientWidth / model.clientHeight
+
+        if (!isPlayed) {
+            aspectM = aspect
+        }
+    }
+
     const near = 0.1
     const far = 100
 
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    camera.position.z = 0;
+    camera.position.z = 0
     camera.position.y = 1
     camera.position.x = 0
-    camera.rotation.y = Math.PI / 2 + Math.PI / 3
+    camera.rotation.y = - Math.PI / 2
+    // camera.rotation.x = 0
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -177,29 +171,24 @@
     // renderer.shadowMap.enabled = true;
     // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    let stats = new Stats()
+    // let stats = new Stats()
     renderer.setSize(model.clientWidth, model.clientHeight)
     // renderer.setClearColor(0x000, 1.0);
 
     model.appendChild(renderer.domElement);
-    model.appendChild(stats.dom);
+    // model.appendChild(stats.dom);
 
 
     window.addEventListener('resize', onWindowResize, false)
 
-    function updateConstants() {
-        moveX = model.clientWidth / 1200 * 2.5
-    }
-
     function onWindowResize() {
         renderer.setSize(model.clientWidth, model.clientHeight)
 
-        camera.aspect = model.clientWidth / model.clientHeight
+        updateAspectRatio()
+
+        camera.aspect = aspect
         camera.updateProjectionMatrix()
         renderer.render(scene, camera);
-        // console.log('rerender pls')
-
-        updateConstants()
     }
 
     let mixers = []
@@ -207,11 +196,13 @@
 
 
     let isMoving = 0
-    let level = 3
+    let level = 1
+
+    const LEVELMAX = 5
+    const LEVELMIN = 1
 
     const scene = new THREE.Scene();
 
-    // const interactionThree = new InteractionLayer(renderer, scene, camera);
 
     const exposure = 1.5
 
@@ -275,6 +266,9 @@
 
 
     let raycaster = new THREE.Raycaster()
+    // raycaster.layers.set(2)
+
+
     let ray = new THREE.Ray()
     let pointer = new THREE.Vector2()
     let sceneMeshes = []
@@ -316,12 +310,17 @@
 
     let INTERSECTED = null
 
+    let mouseX = undefined
+    let mouseY = undefined
+
 
     window.addEventListener('mousemove', function (e) {
         event.preventDefault();
 
-        mousePrev.x = position.x
-        mousePrev.y = position.y
+
+
+        // mousePrev.x = position.x
+        // mousePrev.y = position.y
 
         position.set({ x: event.pageX, y: event.pageY })
 
@@ -330,11 +329,15 @@
             y: event.pageY / window.innerHeight * 2 + 1
         })
 
+        mouseX = event.clientX - window.innerWidth / 2;
+        mouseY = event.clientY - window.innerHeight / 2;
+
+
 
 
         // console.log(mouse.x)
 
-        mouseDiff.set({ x: (event.pageX - mousePrev.x) })
+        // mouseDiff.set({ x: (event.pageX - mousePrev.x) })
         // console.log(mouseDiff.x)
 
         if (INTERSECTED) {
@@ -350,7 +353,6 @@
         pointer.x = (event.clientX / window.innerWidth) * 2 - 1
         pointer.y = - (event.clientY / window.innerHeight) * 2 + 1
 
-        raycaster.setFromCamera(pointer, camera);
     })
 
     // let intersects = undefined
@@ -385,50 +387,47 @@
             sign = -1
         }
 
+        updateAspectRatio()
+
         switch (level) {
             case 1:
-                moveX = model.clientWidth / 1200 * 3
-                moveZ = model.clientWidth / 1200 * -5.5
-                moveY = -0.5
+                moveX = -5.5 * 0.25 * aspectM
+                moveZ = 4.25 * 0.25 * aspectM
+                moveY = 0.1
                 break;
             case 2:
-                moveX = model.clientWidth / 1200 * 1.7
-                moveZ = - model.clientWidth / 1200 * 4.5
+                moveX = -2 * 0.25 * aspectM
+                moveZ = 2 * 0.25 * aspectM
                 moveY = 0.1
                 break;
             case 3:
-                moveX = - model.clientWidth / 1200 * 0.8
-                moveZ = - model.clientWidth / 1200 * 1.0
+                moveX = -7 * 0.25 * aspectM
+                moveZ = -2 * 0.25 * aspectM
                 moveY = 0.05
                 break;
-
+            case 4:
+                moveX = -8 * 0.25 * aspectM
+                moveZ = -1.5 * 0.25 * aspectM
+                moveY = 0.15
+                break;
+            case 5:
+                moveX = -5 * 0.25 * aspectM
+                moveZ = 4 * 0.25 * aspectM
+                moveY = 0.05
+                break;
             default:
                 break;
         }
-
-        // console.log(moveX, moveZ)
-
-        // let to = {
-        //     x: posX,
-        //     y: posY,
-        //     z: posZ
-        // }
-        // console.log('d')
-
-        // moveX = model.clientWidth / 1200 * 1
-        // moveZ = - model.clientWidth / 1200 * 1.5
 
         tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
             .to({ x: camera.position.x + moveX * sign, z: camera.position.z + moveZ * sign, y: camera.position.y + moveY * sign }, 1000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                // console.log(groupNinja.position)
                 camera.position.x = cameraPosition.x
                 camera.position.z = cameraPosition.z
                 camera.position.y = cameraPosition.y
-                console.log(camera.position)
-                // camera.position.set(this.x, this.y, this.z)
-                // console.log(isMoving)
+                // console.log(camera.position)
+
             })
             .start() // Start the tween immediately.
             .onStart(() => isPlaying = 1)
@@ -436,45 +435,9 @@
                 // groupRotation.y = groupNinja.rotation.y
                 // levelDetection(direction, sign)
 
-                // console.log(level)
+                console.log(level)
                 isPlaying = 0
             })
-
-        // tweenPosition = new TWEEN.Tween(groupPosition, false)
-        //     .to({ x: groupPosition.x + moveX * sign }, 2000)
-        //     .easing(TWEEN.Easing.Exponential.InOut)
-        //     .onUpdate(() => {
-        //         // console.log(groupNinja.position)
-        //         groupNinja.position.x = groupPositionRound.x
-
-        //         groupPositionRound.set({ x: groupPosition.x })
-
-        //         // camera.position.set(this.x, this.y, this.z)
-        //         // console.log(isMoving)
-        //     })
-        //     .start() // Start the tween immediately.
-        //     .onStart(() => isPlaying = 1)
-        //     .onComplete(() => {
-        //         // groupRotation.y = groupNinja.rotation.y
-        //         // levelDetection(direction, sign)
-
-        //         // console.log(level)
-        //         isPlaying = 0
-        //     })
-
-        // let tweenModel = gsap.to('.model', {
-        //     duration: 2,
-        //     x: () => (-1) * modelContainer.offsetWidth * 0.25 * sign,
-        //     easy: "Power1.easyInOut",
-        //     paused: true,
-        //     onStart: function () {
-        //         isPlaying = 1
-        //     },
-        //     onComplete: function () {
-        //         isPlaying = 0
-        //     }
-        // })
-
     }
 
     const textBlock = document.querySelector('.text-block')
@@ -527,9 +490,6 @@
         cursorBigPart.style.transform = `scale(0)`
     }
 
-    // model.addEventListener('mouseenter', enterMouseHandler)
-    // model.addEventListener('mouseleave', leaveMouseHandler)
-
     // DOM ELEMENT add two listnerers for enter and for leave 
 
     // WHEEL EVENT
@@ -539,15 +499,20 @@
 
     let tweenCamPosition = undefined
 
+
+
     function levelDetection(direction, sign) {
 
-        if (level == 3 && direction == 'left') {
-            level = 1
-        } else if (level == 1 && direction == "right") {
-            level = 3
+        if (level == LEVELMAX && direction == 'left') {
+            level = LEVELMIN
+        } else if (level == LEVELMIN && direction == "right") {
+            level = LEVELMAX
         } else {
             level = level + (sign * 1)
         }
+
+        console.log(level)
+
     }
 
     function groupRotate(direction) {
@@ -563,13 +528,6 @@
         if (direction === 'right') {
             sign = -1
         }
-
-        // console.log(groupNinja.rotation)
-
-        // groupNinja.rotation.y = groupRotation.y + Math.PI 
-        // groupRotation.y = groupNinja.rotation.y
-
-        // let groupRotation = {y: 0}
 
         tweenRotation = new TWEEN.Tween(groupRotation, false)
             .to({ y: groupRotation.y + (omega * sign) }, 3000)
@@ -589,40 +547,6 @@
                 // console.log(level)
                 isMoving = 0
             })
-
-        // tweenRotation = new TWEEN.Tween(cameraRotation, false)
-        //     .to({ y: cameraRotation.y + (omega * sign) }, 3000)
-        //     .easing(TWEEN.Easing.Exponential.InOut)
-        //     .onUpdate(() => {
-        //         groupNinja.rotation.y = groupRotationRound.y
-
-        //         groupRotationRound.set({ y: groupRotation.y })
-        //         // console.log(isMoving)
-        //     })
-        //     .start() // Start the tween immediately.
-        //     .onStart(() => isMoving = 1)
-        //     .onComplete(() => {
-        //         // groupRotation.y = groupNinja.rotation.y
-        //         levelDetection(direction, sign)
-
-        //         // console.log(level)
-        //         isMoving = 0
-        //     })
-        // TweenMax.to(groupNinja.rotation, {
-        //     y: groupRotation.y + (omega * sign),
-        //     duration: 3,
-        //     // paused: true,
-        //     easy: 'expo.easyInOut',
-        //     onStart: () => isMoving = 1,
-        //     onComplete: () => {
-        //         groupRotation.y = groupNinja.rotation.y
-
-        //         level = level + (sign * 1)
-
-        //         console.log(level)
-        //         isMoving = 0
-        //     }
-        // })
     }
 
     window.addEventListener('wheel', wheelHandler)
@@ -647,7 +571,6 @@
     // dracoLoader;
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/js/libs/draco/')
-    // dracoLoader.setDecoderConfig( { type: 'js' } );
 
     // ktx2Loader
     const ktx2Loader = new KTX2Loader()
@@ -664,7 +587,7 @@
 
     const groupNinja = new THREE.Group()
 
-    async function loadModel({ x, y, z, ry, scale, url, animation }) {
+    async function loadModel({ x, y, z, ry, scale, url, animation, layers }) {
 
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
@@ -675,57 +598,19 @@
         model.position.set(x, y, z)
         model.rotation.set(0, ry, 0)
 
+        if (url == './new/KATANA_v12.glb') {
+
+            model.rotation.set(0, ry, 0)
+        }
+
         //detect size of model
 
-        // const box = new THREE.Box3().setFromObject(model);
-        // box.applyMatrix4(model.matrixWorld)
-
-        // groupNinja.add(box)
-        // box = calculateAABB(model, )
-
-
-
-
-        // sceneBoxes.push(box)
-        // 
-        // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-        // groupNinja.add(boxHelper)
-        // scene.add(boxHelper)
-
-        // Body_Low003
-        // groupNinja.add(box)
-        // groupNinja.add(boxHelper)
-        // const size = box.getSize(new THREE.Vector3());
-
-        // console.log(box)
-
-
-
-        // const height = box.max.y - box.min.y
-        // const width = box.max.x - box.min.x
-        // const deep = box.max.z - box.min.z
-
-        // box.applyMatrix4(model.matrixWorld)
-
-        // animation start
 
         if (gltf.animations.length && animation) {
             loadAnimation(gltf)
         }
 
-        // traverse model
-        // sceneBoxes.push(box)
-
-        // let skinned = new THREE.Vector3()
-
-        // let geometry = 
-
-        // skinned = model.)
-        // let aabb = new THREE.Box3()
-        // let skinned = new THREE.Vector3()
-
-        // console.log(model)
-
+        console.log(url)
 
         model.traverse(function (child) {
             if (child.isMesh) {
@@ -734,79 +619,25 @@
                 child.castShadow = true
                 child.material.color.convertSRGBToLinear();
 
+                console.log(child.name)
+
+                if (layers.includes(child.name)) {
+                    // child.layers.enable(2)
+                    // console.log('win')
+                }
+
+                if (child.name == 'model_4001') {
+                    // console.log('win')
+                }
+
             }
             if ((child.isMesh && child.material.metalness == 1)) {
-                // console.log('metal Mesh')
-
-                // child.material.envmap = envmap
-                // child.material.envMapIntensity = 0.7
             }
             if (child.isSkinnedMesh) {
-                // console.log('skinnedmesh')
-                // console.log(child.name)
-                //         // console.log(child)
-                //         // child.frustumCulled = false
-                //         // sceneMeshes[child.name] = child
-
-
-
-                // aabb.makeEmpty()
-
-
-                //         // let boxx = child.geometry.computeBoundingBox()
-                // let geometry = child.geometry
-                // let position = geometry.attributes.position
-
-                //         // aabb.computeBoundingBox()
-
-
-                // for (let i = 0; i < position.count; i++) {
-                //     skinned.fromBufferAttribute(position, i)
-                //     child.applyBoneTransform(i, skinned)
-                // child.localToWorld(skinned)
-                // aabb.expandByPoint(skinned)
-                // }
-
-                // child.updateWorldMatrix(false, false)
-                // skinned.setFromMatrixPosition(child.matrixWorld)
-                // aabb.applyMatrix4(child.matrixWorld)
-
-                //         // const box = new THREE.Box3().setFromObject(child);
-                //         // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-                // const boxHelper = new THREE.Box3Helper(aabb, 0x00ff00)
-                // const boxHelper1 = new THREE.Box3Helper(boxx, 0x00ffCC)
-                //         // aabb.position.set(x, y + 2, z)
-                //         // aabb.rotation.set(0, ry, 0)
-
-                // groupNinja.add(boxHelper)
-                // scene.add(boxHelper)
-
-                //         // let aabb = new THREE.Box3().set
-                //     }
             }
         })
 
-        // boxes.push(aabb)
-        // vectors.push(skinned)
-        // scene.add()
-
-        // skeleton helper 
-
-        // skeleton = new THREE.SkeletonHelper(model);
-        // let boxSkeleton = new THREE.Box3().setFromObject(skeleton)
-        // skeleton.visible = false;
-        // skeleton.material.linewidth = 7
-
-        // skeletons.push(skeleton)
-        // scene.add( skeleton )
-        // let boxSkeletonHelper = new THREE.Box3Helper(boxSkeleton, 0xffff17)
-        // scene.add(boxSkeletonHelper);
-
         return model
-    }
-
-    function createBoundingBox() {
-
     }
 
     function loadAnimation(gltf) {
@@ -822,12 +653,10 @@
         mixers.push(mixer)
         clocks.push(clock)
 
-        // const actions = [ firstAction ]
-
         firstAction.play();
     }
 
-    const n = 3
+    const n = 5
     const rds = 5
     const omega = 2 * Math.PI / n
 
@@ -848,6 +677,8 @@
                 y: y(i),
                 ry: Math.PI / 2 - omega * i + Math.PI
             })
+            // console.log(points[i])
+            // console.log(camera.position, camera.rotation)
         }
 
         return points
@@ -864,7 +695,8 @@
             ry: points[0].ry,
             scale: 0.1,
             url: './shogun_5.glb',
-            animation: false
+            animation: false,
+            layers: []
         }),
         michelangelo: loadModel({
             x: points[1].x,
@@ -873,7 +705,8 @@
             ry: points[1].ry,
             scale: 1,
             url: 'smtv_42_p.glb',
-            animation: true
+            animation: true,
+            layers: []
         }),
         rafhael: loadModel({
             x: points[2].x,
@@ -881,9 +714,30 @@
             z: points[2].y,
             ry: points[2].ry,
             scale: 1,
-            url: './samur_2.glb',
-            animation: true
-        })
+            url: './new/CSAMUR_v5.gltf',
+            animation: true,
+            layers: []
+        }),
+        katana: loadModel({
+            x: points[3].x,
+            y: 0.75,
+            z: points[3].y,
+            ry: points[3].ry,
+            scale: 0.75,
+            url: './new/KATANA_v12.glb',
+            animation: true,
+            layers: []
+        }),
+        shrader: loadModel({
+            x: points[4].x,
+            y: 0.2,
+            z: points[4].y,
+            ry: points[4].ry,
+            scale: 1.25,
+            url: './new/Ronin_15.glb',
+            animation: true,
+            layers: []
+        }),
     }
 
     const promises = Object.values(ninjaesObject)
@@ -892,13 +746,13 @@
         y: groupNinja.rotation.y
     }
 
-    const groupPosition = {
-        x: groupNinja.position.x
-    }
+    // const groupPosition = {
+    //     x: groupNinja.position.x
+    // }
 
-    const groupPositionRound = Ola({
-        x: groupNinja.rotation.x
-    }, 500)
+    // const groupPositionRound = Ola({
+    //     x: groupNinja.rotation.x
+    // }, 500)
 
     const groupRotationRound = Ola({
         y: groupNinja.rotation.y
@@ -915,9 +769,6 @@
 
     promises.forEach((promise, index) => {
         promise.then(ninja => {
-            // ninja.cursos = 'pointer'
-
-            // ninja.on('mouseover', function(ev) {})
 
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
@@ -927,123 +778,47 @@
 
     scene.add(groupNinja)
     console.log(ninjaes)
-    // console.log(scene)
-    // console.log(scene.children[3].children)
-
-    // RAYCASTING (MOUSE OVER)
-
-    function stopAnimationModel() {
-
-        for (let i = 0; i < boxes.length; i++) {
-            // boxes[i].copy( vectors[i].geometry.boundingBox ).applyMatrix4( vectors.matrixWorld );
-
-        }
-
-
-    }
 
 
     // RENDER LOOP
 
-
-    // raycaster.setFromCamera(pointer, camera);
-    // ray.setFromCamera(pointer,camera)
-    // var lookAtVector = new THREE.Vector3(0,0, -1);
-    //   lookAtVector.applyQuaternion(camera.quaternion);
+    let counter = 0
 
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
+        counter++
 
+        // console.log(camera.rotation)
 
+        raycaster.setFromCamera(pointer, camera);
+
+        // console.log(camera.position)
+        // console.log(camera.rotation)
 
         // stopAnimationModel()
 
         // console.log('INTERSECTED')
         // console.log(INTERSECTED)
+        if (counter == 120) {
+            const intersects = raycaster.intersectObjects(scene.children)
 
-        const intersects = raycaster.intersectObjects(scene.children)
+            if (intersects.length) {
+                INTERSECTED = true
+                // for (let i = 0; i < intersects.length; i++) {
+                //     // console.log(intersects[i])
+                //     INTERSECTED = i
+                //     console.log('intersected', i)
+                // }
+            } else if (intersects.length == 0) {
+                INTERSECTED = null
+            }
 
-        if (intersects.length) {
-            INTERSECTED = true
-            // for (let i = 0; i < intersects.length; i++) {
-            //     // console.log(intersects[i])
-            //     INTERSECTED = i
-            //     console.log('intersected', i)
-            // }
-        } else if (intersects.length == 0) {
-            INTERSECTED = null
+            counter = 0
         }
 
 
-        // ANOTHER CODE WITH non workoble part
 
-        // for (let j = 0; j < boxes.length; j++) {
-        //     if (ninjaes.length > 0 && boxes.length > 0) {
-        //         const intersects = raycaster.intersectObjects(scene.children)
-        //         // console.log('clicked')
-        //         // console.log(intersects)
-
-        //         // console.log(ninjaes)
-        //         if (intersects.length > 0) {
-        //             // console.log(intersects)
-
-        //             console.log('intersect')
-
-
-        //             // for (let i = 0; i < intersects.length; i++) {
-        //             //     console.log(intersects[i])
-        //             //     if (i == 0) {
-        //             //         INTERSECTED = intersects[i]
-        //             //     }
-        //             // }
-        //             // console.log(raycaster.params)
-        //             // console.log(intersect)
-
-
-
-        //         } else {
-        //             INTERSECTED = null
-        //         }
-        //     }
-
-        // }
-
-
-
-
-        // for (let j = 0; j < sceneBoxes.length; j++) {
-        //     const intersects = raycaster.intersectObjects(sceneBoxes[j]);
-
-        //     for (let i = 0; i < intersects.length; i++) {
-        //         console.log(intersects)
-        //         // intersects[i].object.material.color.set(0xff0000);
-        //     }
-        // }
-
-
-
-        // if (intersects.length > 0) {
-        //     // console.log("intersect")
-        //     // console.log(intersect)
-        //     console.log('INTERSECTED')
-
-        //     for (let i = 0; i < intersects.length; i++) {
-        //         console.log(intersects)
-        //         console.log(intersects[i])
-        //         // intersects[i].object.material.color.set(0xff0000);
-        //     }
-
-        //     INTERSECTED++
-        // }
-
-        // if (!intersects.length) {
-        //     console.log('not INTERSECTED')
-        // }
-
-        // stats.update();
-
-        // animation of model 
 
         if (mixers) {
             for (let i = 0; i < mixers.length; i++) (
@@ -1057,15 +832,11 @@
             tweenRotation.update()
         }
 
-        // if (tweenPosition) {
-            // tweenPosition.update()
-            // console.log(camera.position)
-        // }
 
         if (tweenCamPosition) {
             tweenCamPosition.update()
-            // console.log(camera.position)
         }
+
 
 
 
@@ -1078,17 +849,25 @@
             // console.log()
 
             // if (!isMoving && level == ninja.id) {
-                // console.log(ninja.id)
-                // console.log(mouse.y)
-                // gsap.to(ninja.model.rotation, {
-                //     // y: ninja.model.rotation.y + mouse.x * 0.25,
-                //     // y: ninja.model.rotation.y + mouseDiff.x * 10,
-                //     // x: mouse.y * 0.15,
-                //     duration: 3,
-                //     easy: "Power1.easyIn",
-                // })
+            // console.log(ninja.id)
+            // console.log(mouse.y)
+
+
+
             // }
         }
+
+        // gsap.to(camera.rotation, {
+        // y: camera.rotation.y + mouse.x * 0.001,
+        // y: ninja.model.rotation.y + mouseDiff.x * 10,
+        // x: mouse.y * 0.15,
+        // duration: 0.3,
+        // easy: "Power1.easyIn",
+        // })
+
+        // camera.position.x += (mouseX - camera.position.x) * 0.01;
+        // camera.position.y += (mouseY - camera.position.y) * 0.01;
+        // camera.lookAt(scene.position);
 
         // controls.update()
     };
