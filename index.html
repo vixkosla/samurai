@@ -122,7 +122,7 @@
 
     import * as THREE from 'three'
 
-    
+
 
     import {
         OrbitControls
@@ -213,7 +213,7 @@
     const exposure = 6.5
 
     // renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMapping = THREE.LinearToneMapping  
+    renderer.toneMapping = THREE.LinearToneMapping
     renderer.toneMappingExposure = exposure
     THREE.ColorManagement.enabled = true;
     // renderer.useLegacyLights = false;
@@ -224,7 +224,7 @@
 
     // renderer.outputColorSpace = THREE.sRGBEncoding
     // THREE.ColorManagement.enabled = true;
-    renderer.outputColorSpace = THREE.LinearSRGBColorSpace ;
+    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
     // renderer.outputColorSpace = THREE.SRGBColorSpace ;
 
     // THREE.ColorManagement.enabled = true;
@@ -328,7 +328,7 @@
 
 
         // mousePrev.x = position.x
-        // mousePrev.y = position.y
+        // mousePrev.y.y
 
         position.set({ x: event.pageX, y: event.pageY })
 
@@ -389,6 +389,13 @@
 
     let tweenBouncing = undefined
 
+    function createBouncing({ ninja, flag }) {
+
+        if (flag) {
+            return ninjaBouncing(ninja)
+        }
+    }
+
     function ninjaBouncing(ninja) {
 
         let bounce = Math.PI / 360 * 7.5
@@ -430,29 +437,29 @@
 
         switch (level) {
             case 1:
-                moveX = -5.5 * 0.25 * aspectM
-                moveZ = 4.25 * 0.25 * aspectM
-                moveY = 0.1
+                moveX = 3 * 0.25 * aspectM
+                moveZ = 1.5 * 0.25 * aspectM
+                moveY = 0
                 break;
             case 2:
-                moveX = -2 * 0.25 * aspectM
-                moveZ = 2 * 0.25 * aspectM
-                moveY = 0.1
+                moveX = 3 * 0.25 * aspectM
+                moveZ = 1.5 * 0.25 * aspectM
+                moveY = 0
                 break;
             case 3:
-                moveX = -7 * 0.25 * aspectM
-                moveZ = -2 * 0.25 * aspectM
-                moveY = 0.05
+                moveX = 4 * 0.25 * aspectM
+                moveZ = 1.5 * 0.25 * aspectM
+                moveY = -0.2
                 break;
             case 4:
-                moveX = -8 * 0.25 * aspectM
-                moveZ = -1.5 * 0.25 * aspectM
-                moveY = 0.15
+                moveX = 2.7 * 0.25 * aspectM
+                moveZ = 1 * 0.25 * aspectM
+                moveY = 0.1
                 break;
             case 5:
-                moveX = -5 * 0.25 * aspectM
-                moveZ = 4 * 0.25 * aspectM
-                moveY = 0.05
+                moveX = 3 * 0.25 * aspectM
+                moveZ = 1.5 * 0.25 * aspectM
+                moveY = 0
                 break;
             default:
                 break;
@@ -657,10 +664,11 @@
         model.scale.set(1 * scale, 1 * scale, 1 * scale)
         model.position.set(x, y, z)
         model.rotation.set(0, ry, 0)
+        model.name = url
 
         if (url == './new/KATANA_v12.glb') {
 
-            model.rotation.set(0, ry, 0)
+            model.rotation.set( 0 , ry, Math.PI / 3)
         }
 
         //detect size of model
@@ -678,8 +686,8 @@
                 // child.visible = true
                 child.castShadow = true
                 child.recieveShadow = true
-                child.frustumCulled = false; 
-                child.material.color.convertSRGBToLinear();
+                child.frustumCulled = false;
+                // child.material.color.convertSRGBToLinear();
 
                 console.log(child.name)
 
@@ -759,7 +767,7 @@
             y: 0,
             z: points[0].y,
             ry: points[0].ry,
-            scale: 0.1,
+            scale: 0.085,
             url: './shogun_5.glb',
             animation: false,
             layers: []
@@ -779,17 +787,17 @@
             y: 0,
             z: points[2].y,
             ry: points[2].ry,
-            scale: 1,
+            scale: 1.3,
             url: './new/Ronin_15.glb',
             animation: true,
             layers: []
         }),
         katana: loadModel({
             x: points[3].x,
-            y: 0.75,
+            y: 0.5,
             z: points[3].y,
             ry: points[3].ry,
-            scale: 0.75,
+            scale: 0.5,
             url: './new/KATANA_v12.glb',
             animation: true,
             layers: []
@@ -799,8 +807,8 @@
             y: 0,
             z: points[4].y,
             ry: points[4].ry,
-            scale: 1,
-            url: './new/Samurai_FixedMet_10.glb',
+            scale: 0.9,
+            url: './new/Samurai_FixedMet_10-processed.gltf',
             animation: true,
             layers: []
         }),
@@ -836,8 +844,11 @@
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
             // scene.add(ninja)
+            console.log(ninja)
 
-            tweensNinjaes.push(ninjaBouncing(ninja))
+            if (ninja.name == './shogun_5.glb') {
+                tweensNinjaes.push(ninjaBouncing(ninja))
+            }
         })
     })
 
