@@ -9,6 +9,9 @@
 
     <link rel="stylesheet" href="./style.css">
 
+    <!-- normallized wheel -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/src/isEventSupported.min.js"></script> -->
+
     <!-- ola -->
     <script src="https://cdn.jsdelivr.net/npm/ola"></script>
 
@@ -25,13 +28,11 @@
     <script type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
-            "three/addons/": "https://threejs.org/examples/jsm/",
-            "interaction": "./js/three.interaction.js"
+            "three/addons/": "https://threejs.org/examples/jsm/"
         }
     }</script><!-- Remove this when import maps will be widely supported -->
 
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-
 
     <!-- <script src="./js/libs/basis/basis_transcoder.js"></script> -->
 
@@ -121,6 +122,8 @@
 
     import * as THREE from 'three'
 
+    
+
     import {
         OrbitControls
     } from 'three/addons/controls/OrbitControls.js';
@@ -132,6 +135,8 @@
 
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import Stats from 'three/addons/libs/stats.module.js';
+
+    // import { normalizeWheel } from 'https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/+esm';
 
     // BASIC
 
@@ -158,7 +163,7 @@
     camera.position.z = 0
     camera.position.y = 1
     camera.position.x = 0
-    camera.rotation.y = - Math.PI / 2
+    // camera.rotation.y = - Math.PI / 2
     // camera.rotation.x = 0
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -203,13 +208,14 @@
 
     const scene = new THREE.Scene();
 
+    scene.background = new THREE.Color(0x0c0c0e)
 
-    const exposure = 1.5
+    const exposure = 4.5
 
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    // renderer.toneMapping = THREE.LinearToneMapping  
+    // renderer.toneMapping = THREE.ReinhardToneMapping;
+    renderer.toneMapping = THREE.LinearToneMapping  
     renderer.toneMappingExposure = exposure
-    // THREE.ColorManagement.legacyMode = false;
+    THREE.ColorManagement.enabled = true;
     // renderer.useLegacyLights = false;
 
     renderer.shadowMap.enabled = true;
@@ -218,7 +224,9 @@
 
     // renderer.outputColorSpace = THREE.sRGBEncoding
     // THREE.ColorManagement.enabled = true;
-    // renderer.outputColorSpace = THREE.LinearSRGBColorSpace ;
+    renderer.outputColorSpace = THREE.LinearSRGBColorSpace ;
+    // renderer.outputColorSpace = THREE.SRGBColorSpace ;
+
     // THREE.ColorManagement.enabled = true;
 
 
@@ -227,20 +235,20 @@
     // scene.environment = envmap;
 
 
-    // const color = 0x322b35;
-    // const intensity = 1350;
-    // const width = 12;
-    // const height = 4;
-    // const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
-    // RAlight.position.set(0, -4, -10);
-    // RAlight.rotation.x = THREE.MathUtils.degToRad(135);
-    // scene.add(RAlight);
+    const color = 0xffffff;
+    const intensity = 5;
+    const width = 12;
+    const height = 4;
+    const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
+    RAlight.position.set(0, 4, 10);
+    RAlight.rotation.x = THREE.MathUtils.degToRad(35);
+    scene.add(RAlight);
 
-    const pointLight = new THREE.PointLight(0xf0f8ff, 1.6);
+    const pointLight = new THREE.PointLight(0xf0f8ff, 5.7);
     pointLight.position.set(0, 4, 0);
     scene.add(pointLight);
 
-    const DirectionalLight = new THREE.DirectionalLight(0xf0f8ff, 0.1);
+    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
     pointLight.position.set(3, 5, 3);
     scene.add(DirectionalLight);
 
@@ -334,6 +342,10 @@
 
 
 
+        if (ninjaes.length > 4) {
+            camera.rotation.y = mouse.x * 0.01;
+            // camera.rotation.x = mouse.y * 0.01
+        }
 
         // console.log(mouse.x)
 
@@ -374,6 +386,33 @@
     let moveX = undefined
     let moveZ = undefined
     let moveY = undefined
+
+    let tweenBouncing = undefined
+
+    function ninjaBouncing(ninja) {
+
+        let bounce = Math.PI / 360 * 7.5
+
+        let ninjaRotation = {
+            y: ninja.rotation.y - bounce
+        }
+
+        console.log(ninja)
+
+
+        let tweenBouncing = new TWEEN.Tween(ninjaRotation, false)
+            .to({ y: ninja.rotation.y + 2 * bounce }, 3000)
+            .easing(TWEEN.Easing.Quadratic.inOut)
+            .repeat(Infinity) // repeats forever
+            .yoyo(true)
+            .onUpdate(() => {
+                // console.log(ninja.rotation.y)
+                ninja.rotation.y = ninjaRotation.y
+            })
+            .start()
+
+        return tweenBouncing
+    }
 
     function cameraMoving(direction) {
 
@@ -529,6 +568,8 @@
             sign = -1
         }
 
+        // groupRotation.y = groupNinja.rotation.y
+
         tweenRotation = new TWEEN.Tween(groupRotation, false)
             .to({ y: groupRotation.y + (omega * sign) }, 3000)
             .easing(TWEEN.Easing.Exponential.InOut)
@@ -552,6 +593,11 @@
     window.addEventListener('wheel', wheelHandler)
 
     function wheelHandler(e) {
+        console.log('hey')
+
+        // const normilized = normalizeWheel(e)
+        // console.log(normilized)
+
         if (e.deltaY > 30 && e.deltaY < 50 && !isMoving) {
             groupRotate('right')
             if (isPlayed) {
@@ -587,10 +633,24 @@
 
     const groupNinja = new THREE.Group()
 
+    groupNinja.rotation.y = Math.PI / 2
+
+    const groupRotation = {
+        y: groupNinja.rotation.y
+    }
+
+    const groupRotationRound = Ola({
+        y: groupNinja.rotation.y
+    }, 500)
+
     async function loadModel({ x, y, z, ry, scale, url, animation, layers }) {
 
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
+
+        console.log(gltf.userData)
+
+        // model.geometry.center()
 
         // scale and position
 
@@ -617,6 +677,8 @@
                 // console.log('mesh')
                 // child.visible = true
                 child.castShadow = true
+                child.recieveShadow = true
+                child.frustumCulled = false; 
                 child.material.color.convertSRGBToLinear();
 
                 console.log(child.name)
@@ -628,6 +690,10 @@
 
                 if (child.name == 'model_4001') {
                     // console.log('win')
+                }
+
+                if (url == './smtv_44_p.glb') {
+                    child.geometry.center()
                 }
 
             }
@@ -704,7 +770,7 @@
             z: points[1].y,
             ry: points[1].ry,
             scale: 1,
-            url: 'smtv_42_p.glb',
+            url: './new/CSAMUR_v5.gltf',
             animation: true,
             layers: []
         }),
@@ -714,7 +780,7 @@
             z: points[2].y,
             ry: points[2].ry,
             scale: 1,
-            url: './new/CSAMUR_v5.gltf',
+            url: './new/Ronin_15.glb',
             animation: true,
             layers: []
         }),
@@ -730,11 +796,11 @@
         }),
         shrader: loadModel({
             x: points[4].x,
-            y: 0.2,
+            y: 0,
             z: points[4].y,
             ry: points[4].ry,
-            scale: 1.25,
-            url: './new/Ronin_15.glb',
+            scale: 1,
+            url: './new/Samurai_FixedMet_10.glb',
             animation: true,
             layers: []
         }),
@@ -742,9 +808,7 @@
 
     const promises = Object.values(ninjaesObject)
 
-    const groupRotation = {
-        y: groupNinja.rotation.y
-    }
+
 
     // const groupPosition = {
     //     x: groupNinja.position.x
@@ -754,9 +818,7 @@
     //     x: groupNinja.rotation.x
     // }, 500)
 
-    const groupRotationRound = Ola({
-        y: groupNinja.rotation.y
-    }, 500)
+
 
     const cameraPosition = {
         x: camera.position.x,
@@ -766,6 +828,7 @@
 
     const ninjaes = []
 
+    let tweensNinjaes = []
 
     promises.forEach((promise, index) => {
         promise.then(ninja => {
@@ -773,11 +836,16 @@
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
             // scene.add(ninja)
+
+            tweensNinjaes.push(ninjaBouncing(ninja))
         })
     })
 
+
     scene.add(groupNinja)
     console.log(ninjaes)
+
+
 
 
     // RENDER LOOP
@@ -801,18 +869,18 @@
         // console.log('INTERSECTED')
         // console.log(INTERSECTED)
         if (counter == 120) {
-            const intersects = raycaster.intersectObjects(scene.children)
+            // const intersects = raycaster.intersectObjects(scene.children)
 
-            if (intersects.length) {
-                INTERSECTED = true
-                // for (let i = 0; i < intersects.length; i++) {
-                //     // console.log(intersects[i])
-                //     INTERSECTED = i
-                //     console.log('intersected', i)
-                // }
-            } else if (intersects.length == 0) {
-                INTERSECTED = null
-            }
+            // if (intersects.length) {
+            //     INTERSECTED = true
+            //     // for (let i = 0; i < intersects.length; i++) {
+            //     //     // console.log(intersects[i])
+            //     //     INTERSECTED = i
+            //     //     console.log('intersected', i)
+            //     // }
+            // } else if (intersects.length == 0) {
+            //     INTERSECTED = null
+            // }
 
             counter = 0
         }
@@ -837,6 +905,12 @@
             tweenCamPosition.update()
         }
 
+        if (tweensNinjaes.length) {
+            for (let tween of tweensNinjaes) {
+                tween.update()
+            }
+        }
+
 
 
 
@@ -856,6 +930,9 @@
 
             // }
         }
+
+        // console.log(camera.position)
+        // console.log(camera.rotation)
 
         // gsap.to(camera.rotation, {
         // y: camera.rotation.y + mouse.x * 0.001,
