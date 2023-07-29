@@ -145,7 +145,7 @@
 
     const fov = 45
     let aspect = model.clientWidth / model.clientHeight
-    let aspectM = aspect
+    let aspectM = aspect * model.clientHeight / 768
 
     function updateAspectRatio() {
         aspect = model.clientWidth / model.clientHeight
@@ -210,12 +210,27 @@
 
     scene.background = new THREE.Color(0x0c0c0e)
 
-    const exposure = 6.5
+    THREE.ColorManagement.enabled = true;
+
+    new RGBELoader()
+        .setPath('textures/')
+        .load('royal_esplanade_1k.hdr', function (texture) {
+
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            // scene.background = texture;
+            scene.environment = texture;
+
+        });
+
+
+
+    const exposure = 1.4
 
     // renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMapping = THREE.LinearToneMapping
+    // renderer.toneMapping = THREE.LinearToneMapping
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = exposure
-    THREE.ColorManagement.enabled = true;
     // renderer.useLegacyLights = false;
 
     renderer.shadowMap.enabled = true;
@@ -224,8 +239,9 @@
 
     // renderer.outputColorSpace = THREE.sRGBEncoding
     // THREE.ColorManagement.enabled = true;
-    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-    // renderer.outputColorSpace = THREE.SRGBColorSpace ;
+    // renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     // THREE.ColorManagement.enabled = true;
 
@@ -236,28 +252,29 @@
 
 
     const color = 0xffffff;
-    const intensity = 5;
+    const intensity = 1.2;
     const width = 12;
     const height = 4;
     const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
-    RAlight.position.set(0, 4, 10);
+    RAlight.position.set(0, 4, 0);
     RAlight.rotation.x = THREE.MathUtils.degToRad(35);
     scene.add(RAlight);
 
-    const pointLight = new THREE.PointLight(0xf0f8ff, 5.7);
+    const pointLight = new THREE.PointLight(0xf0f8ff, 1.3);
     pointLight.position.set(0, 4, 0);
     scene.add(pointLight);
 
-    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
     pointLight.position.set(3, 5, 3);
     scene.add(DirectionalLight);
 
-    const ambientLight = new THREE.AmbientLight(0xf0ffff, 0.05)
+    const ambientLight = new THREE.AmbientLight(0xf0ffff, 0.1)
     ambientLight.position.set(0, 7, 0)
     scene.add(ambientLight)
 
 
     // pointLight.intensity = 1
+
 
 
 
@@ -437,29 +454,29 @@
 
         switch (level) {
             case 1:
-                moveX = 3 * 0.25 * aspectM
-                moveZ = 1.5 * 0.25 * aspectM
-                moveY = 0
+                moveX = 1 * 0.20 * aspectM
+                moveZ = 9.5 * 0.20 * aspectM
+                moveY = -0.3
                 break;
             case 2:
-                moveX = 3 * 0.25 * aspectM
-                moveZ = 1.5 * 0.25 * aspectM
-                moveY = 0
+                moveX = 1 * 0.20 * aspectM
+                moveZ = 9.5 * 0.20 * aspectM
+                moveY = -0.3
                 break;
             case 3:
-                moveX = 4 * 0.25 * aspectM
-                moveZ = 1.5 * 0.25 * aspectM
-                moveY = -0.2
+                moveX = 1 * 0.20 * aspectM
+                moveZ = 9.5 * 0.20 * aspectM
+                moveY = -0.3
                 break;
             case 4:
-                moveX = 2.7 * 0.25 * aspectM
-                moveZ = 1 * 0.25 * aspectM
+                moveX = 2.7 * 0.20 * aspectM
+                moveZ = 1 * 0.20 * aspectM
                 moveY = 0.1
                 break;
             case 5:
-                moveX = 3 * 0.25 * aspectM
-                moveZ = 1.5 * 0.25 * aspectM
-                moveY = 0
+                moveX = 1 * 0.20 * aspectM
+                moveZ = 9.5 * 0.20 * aspectM
+                moveY = -0.3
                 break;
             default:
                 break;
@@ -668,7 +685,7 @@
 
         if (url == './new/KATANA_v12.glb') {
 
-            model.rotation.set( 0 , ry, Math.PI / 3)
+            model.rotation.set(0, ry, Math.PI / 3)
         }
 
         //detect size of model
@@ -706,6 +723,8 @@
 
             }
             if ((child.isMesh && child.material.metalness == 1)) {
+                console.log(child.material.type)
+                console.log(child.material)
             }
             if (child.isSkinnedMesh) {
             }
