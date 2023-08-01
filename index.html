@@ -347,7 +347,7 @@
         // mousePrev.x = position.x
         // mousePrev.y.y
 
-        position.set({ x: event.pageX, y: event.pageY })
+        position.set({ x: event.clientX, y: event.clientY })
 
         mouse.set({
             x: pointer.x,
@@ -361,7 +361,7 @@
 
         // if (ninjaes.length > 4) {
         camera.rotation.y = - mouse.x * 0.01;
-        // camera.rotation.x = mouse.y * 0.01
+        camera.rotation.x = mouse.y * 0.01
         // }
 
         // console.log(mouse.x)
@@ -370,6 +370,7 @@
         // console.log(mouseDiff.x)
 
         if (INTERSECTED) {
+            console.log('hit')
             enterMouseHandler()
         } else if (!INTERSECTED) {
             leaveMouseHandler()
@@ -381,6 +382,9 @@
 
         pointer.x = (position.x / window.innerWidth) * 2 - 1
         pointer.y = - (position.y / window.innerHeight) * 2 + 1
+
+        raycaster.setFromCamera(pointer, camera);
+
 
     })
 
@@ -421,7 +425,7 @@
             y: ninja.rotation.y - bounce
         }
 
-        console.log(ninja)
+        // console.log(ninja)
 
 
         let tweenBouncing = new TWEEN.Tween(ninjaRotation, false)
@@ -609,6 +613,8 @@
                 // groupRotation.y = groupNinja.rotation.y
                 levelDetection(direction, sign)
 
+                createBoundingBox()
+
                 // console.log(level)
                 isMoving = 0
             })
@@ -637,6 +643,15 @@
 
 
     // LOAD MODEL
+    const manager = new THREE.LoadingManager();
+
+    let url = "./new/Samurai_FixedMet_11.glb"
+    let m = 3
+
+    manager.onLoad = function (url, m) {
+        console.log('complete')
+        createBoundingBox()
+    }
 
     // dracoLoader;
     const dracoLoader = new DRACOLoader()
@@ -647,7 +662,7 @@
         .setTranscoderPath('./js/libs/basis/')
         .detectSupport(renderer);
 
-    const gltfLoader = new GLTFLoader().setPath('./models/')
+    const gltfLoader = new GLTFLoader(manager).setPath('./models/')
 
     gltfLoader.setKTX2Loader(ktx2Loader);
     gltfLoader.setMeshoptDecoder(MeshoptDecoder);
@@ -688,6 +703,11 @@
             model.rotation.set(0, ry, Math.PI / 3)
         }
 
+        if (url == './shogun_5.glb') {
+            console.log('greate')
+            // createBoundingBox(model)
+        }
+
         //detect size of model
 
 
@@ -697,8 +717,8 @@
 
         console.log(url)
 
-        const box = new THREE.Box3().setFromObject(model)
-        const target = new THREE.Vector3()
+        // const box = new THREE.Box3().setFromObject(model)
+        // const target = new THREE.Vector3()
 
         model.traverse(function (child) {
             if (child.isMesh) {
@@ -709,7 +729,7 @@
                 child.frustumCulled = false;
                 // child.material.color.convertSRGBToLinear();
 
-                console.log(child.name)
+                // console.log(child.name)
 
 
 
@@ -723,52 +743,72 @@
                 }
 
                 if (url == './smtv_44_p.glb') {
-                    child.geometry.center()
+                    // child.geometry.center()
                 }
 
             }
             if ((child.isMesh && child.material.metalness == 1)) {
-                console.log(child.material.type)
-                console.log(child.material)
+                // console.log(child.material.type)
+                // console.log(child.material)
             }
             if (child.isSkinnedMesh) {
-                for (let i = 0; i < child.geometry.attributes.position.count; i++) {
-                    target.fromBufferAttribute(child.geometry.attributes.position, i)
-                    child.applyBoneTransform(i, target)
-                    box.expandByPoint(target)
-                }
-
-            }
-        })
-        const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-        scene.add(boxHelper)
-        boxes.push({
-            "box": box,
-            "target": target,
-            "helper": boxHelper
-        })
-
-        return model
-    }
-
-    // let aabb = new THREE.Box3()
-    // let target
-
-    function createBoundingBox() {
-        aabb.makeEmpty()
-
-        let model = ninja[level - 1]
-        aabb.setFromObject(model)
-
-        model.traverse(function (child) {
-            if (child.isMesh) {
                 for (let i = 0; i < child.geometry.attributes.position.count; i++) {
                     // target.fromBufferAttribute(child.geometry.attributes.position, i)
                     // child.applyBoneTransform(i, target)
                     // box.expandByPoint(target)
                 }
+
             }
         })
+        // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
+        // scene.add(boxHelper)
+        // boxes.push({
+        //     "box": box,
+        //     "target": target,
+        //     "helper": boxHelper
+        // })
+
+        return model
+    }
+
+    let aabb = new THREE.Box3()
+    let targetA = new THREE.Vector3()
+    let boxHelper = undefined
+
+    function createBoundingBox(ninja) {
+        aabb.makeEmpty()
+        // scene.remove(boxHelper)
+
+        let model = undefined
+
+        if (!ninja) {
+            ninjaes.forEach(ninja => {
+                if (ninja.id == level) {
+                    model = ninja.model
+                    console.log('great', ninja.id, level)
+                }
+            })
+        } else {
+            model = ninja
+        }
+
+
+        // console.log(model)
+
+        aabb = new THREE.Box3().setFromObject(model)
+
+        // model.traverse(function (child) {
+            // if (child.isMesh) {
+                // for (let i = 0; i < child.geometry.attributes.position.count; i++) {
+                    // targetA.fromBufferAttribute(child.geometry.attributes.position, i)
+                    // child.applyBoneTransform(i, targetA)
+                    // box.expandByPoint(targetA)
+                // }
+            // }
+        // })
+
+        // boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
+        // scene.add(boxHelper)
     }
 
     function loadAnimation(gltf) {
@@ -903,19 +943,20 @@
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
             // scene.add(ninja)
-            console.log(ninja)
+            // console.log(ninja)
 
             tweensNinjaes.push(ninjaBouncing(ninja))
+            // createBoundingBox()
 
             if (ninja.name == './shogun_5.glb') {
-                tweensNinjaes.push(ninjaBouncing(ninja))
+                // tweensNinjaes.push(ninjaBouncing(ninja))
             }
         })
     })
 
 
     scene.add(groupNinja)
-    console.log(ninjaes)
+    // console.log(ninjaes)
 
 
 
@@ -924,6 +965,9 @@
 
     let counter = 0
 
+    console.log(raycaster)
+    console.log(aabb)
+
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
@@ -931,7 +975,6 @@
 
         // console.log(camera.rotation)
 
-        raycaster.setFromCamera(pointer, camera);
 
         // console.log(camera.position)
         // console.log(camera.rotation)
@@ -940,19 +983,20 @@
 
         // console.log('INTERSECTED')
         // console.log(INTERSECTED)
-        if (counter == 120) {
-            // const intersects = raycaster.intersectObjects(scene.children)
+        if (counter == 5) {
+            const intersects = raycaster.ray.intersectsBox(aabb)
+            console.log(intersects)
 
-            // if (intersects.length) {
-            //     INTERSECTED = true
+            if (intersects) {
+                INTERSECTED = true
             //     // for (let i = 0; i < intersects.length; i++) {
             //     //     // console.log(intersects[i])
             //     //     INTERSECTED = i
             //     //     console.log('intersected', i)
             //     // }
-            // } else if (intersects.length == 0) {
-            //     INTERSECTED = null
-            // }
+            } else if (!intersects) {
+                INTERSECTED = null
+            }
 
             counter = 0
         }
@@ -983,21 +1027,21 @@
             }
         }
 
-        if (boxes.length > 4) {
-            // console.log(boxes)
-            for (const box of boxes) {
-                // box.box.updateMatrixWorld()
-                box.helper.updateMatrixWorld()
+        // if (boxes.length > 4) {
+        //     // console.log(boxes)
+        //     for (const box of boxes) {
+        //         // box.box.updateMatrixWorld()
+        //         box.helper.updateMatrixWorld()
 
-                const intersects = raycaster.ray.intersectsBox(box.box)
+        //         const intersects = raycaster.ray.intersectsBox(box.box)
 
-                if (intersects.length > 0) {
-                    console.log(intersects)
+        //         if (intersects.length > 0) {
+        //             console.log(intersects)
 
-                    INTERSECTED = true
-                }
-            }
-        }
+        //             INTERSECTED = true
+        //         }
+        //     }
+        // }
 
 
         // binding model to mouse
@@ -1008,6 +1052,16 @@
 
                 if (ninja.id == level) {
                     ninja.model.rotation.y = ninja.model.rotation.y + pointer.x * 0.1
+
+
+                    // console.log('go-ray-go')
+                    // const intersects = raycaster.ray.intersectsBox(aabb)
+
+                    // if (intersects.length > 0) {
+                    //     console.log(intersects)
+
+                    //     INTERSECTED = true
+                    // }
 
                     if (boxes.length > 4) {
                         // console.log(boxes[ninja.id])
