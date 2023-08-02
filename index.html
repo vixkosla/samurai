@@ -737,8 +737,8 @@
         // }
         // })
 
-        boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
-        scene.add(boxHelper)
+        // boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
+        // scene.add(boxHelper)
     }
 
     function loadAnimation(gltf) {
@@ -788,7 +788,7 @@
     const points = createCirclePoints()
     pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
 
-    let p = 1.15 // scale models
+    let p = 1.20 // scale models
 
     const ninjaesObject = {
         donatello: loadModel({
