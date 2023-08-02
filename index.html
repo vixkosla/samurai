@@ -272,40 +272,11 @@
     ambientLight.position.set(0, 7, 0)
     scene.add(ambientLight)
 
-
-    // pointLight.intensity = 1
-
-
-
-
-    const geometry = new THREE.BoxGeometry(1, 2, 4);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0xfeedaf
-    });
-
-    const cube = new THREE.Mesh(geometry, material);
-
-    // scene.add(cube)
-
     // RAYCASTER
 
-
     let raycaster = new THREE.Raycaster()
-    // raycaster.layers.set(2)
 
-
-    // let ray = new THREE.Ray()
     let pointer = new THREE.Vector2()
-    let sceneMeshes = []
-    let sceneBoxes = []
-
-    let skeleton
-    let skeletons = []
-
-    let containerObj = new THREE.Object3D()
-
-    let boxes = []
-    let vectors = []
 
     // let controls = new OrbitControls(camera, renderer.domElement)
     // controls.target.set(5, 5, 20)
@@ -318,16 +289,6 @@
         y: undefined
     }, 5)
 
-    const mousePrev = {
-        x: undefined,
-        y: undefined
-    }
-
-    const mouseDiff = Ola({
-        x: undefined,
-        y: undefined
-    }, 10)
-
     const position = Ola({ x: 0, y: 0 }, 5) // new CDN
 
     const cursor = document.querySelector('.cursor')
@@ -335,53 +296,34 @@
 
     let INTERSECTED = null
 
-    let mouseX = undefined
-    let mouseY = undefined
-
 
     window.addEventListener('mousemove', function (e) {
         event.preventDefault();
 
-
-
-        // mousePrev.x = position.x
-        // mousePrev.y.y
-
         position.set({ x: event.clientX, y: event.clientY })
+
+        cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
+
+        pointer.x = (position.x / window.innerWidth) * 2 - 1
+        pointer.y = - (position.y / window.innerHeight) * 2 + 1
 
         mouse.set({
             x: pointer.x,
             y: pointer.y
         })
 
-        // mouseX = event.clientX - window.innerWidth / 2;
-        // mouseY = event.clientY - window.innerHeight / 2;
 
 
 
         // if (ninjaes.length > 4) {
         camera.rotation.y = - mouse.x * 0.01;
         camera.rotation.x = mouse.y * 0.01
-        // }
-
-        // console.log(mouse.x)
-
-        // mouseDiff.set({ x: (event.pageX - mousePrev.x) })
-        // console.log(mouseDiff.x)
 
         if (INTERSECTED) {
-            console.log('hit')
             enterMouseHandler()
         } else if (!INTERSECTED) {
             leaveMouseHandler()
         }
-
-        cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
-
-        // intersectHandler(e)
-
-        pointer.x = (position.x / window.innerWidth) * 2 - 1
-        pointer.y = - (position.y / window.innerHeight) * 2 + 1
 
         raycaster.setFromCamera(pointer, camera);
 
@@ -430,7 +372,7 @@
 
         let tweenBouncing = new TWEEN.Tween(ninjaRotation, false)
             .to({ y: ninja.rotation.y + 2 * bounce }, 6000)
-            .easing(TWEEN.Easing.Quadratic.inOut)
+            .easing(TWEEN.Easing.Linear.inOut)
             .repeat(Infinity) // repeats forever
             .yoyo(true)
             .onUpdate(() => {
@@ -459,17 +401,17 @@
         switch (level) {
             case 1:
                 moveX = 1 * 0.20 * aspectM
-                moveZ = 8.5 * 0.20 * aspectM
+                moveZ = 2.5
                 moveY = -0.3
                 break;
             case 2:
                 moveX = 1 * 0.20 * aspectM
-                moveZ = 8.5 * 0.20 * aspectM
+                moveZ = 2.5
                 moveY = -0.3
                 break;
             case 3:
                 moveX = 1 * 0.20 * aspectM
-                moveZ = 8.5 * 0.20 * aspectM
+                moveZ = 2.5
                 moveY = -0.3
                 break;
             case 4:
@@ -479,7 +421,7 @@
                 break;
             case 5:
                 moveX = 1 * 0.20 * aspectM
-                moveZ = 8.5 * 0.20 * aspectM
+                moveZ = 2.5
                 moveY = -0.3
                 break;
             default:
@@ -490,10 +432,11 @@
             .to({ x: camera.position.x + moveX * sign, z: camera.position.z + moveZ * sign, y: camera.position.y + moveY * sign }, 1000)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                camera.position.x = cameraPosition.x
-                camera.position.z = cameraPosition.z
-                camera.position.y = cameraPosition.y
-                // console.log(camera.position)
+                camera.position.x = cameraPositionRound.x
+                camera.position.z = cameraPositionRound.z
+                camera.position.y = cameraPositionRound.y
+
+                cameraPositionRound.set({ x: cameraPosition.x, y: cameraPosition.y, z: cameraPosition.z })                // console.log(camera.position)
 
             })
             .start() // Start the tween immediately.
@@ -521,24 +464,26 @@
 
     function clickHandler() {
 
-        if (!isPlayed) {
-            cursorBigPart.style.transform += 'rotate(90deg)'
-        }
+        if (!isMoving) {
+            if (!isPlayed) {
+                cursorBigPart.style.transform += 'rotate(90deg)'
+            }
 
-        tweenText.play()
-
-        if (!isPlayed && !isPlaying) {
-
-            tweenText.reverse()
-            cameraMoving('left')
-
-            isPlayed = 1
-        } else if (!isPlaying) {
-
-            cameraMoving('right')
             tweenText.play()
 
-            isPlayed = 0
+            if (!isPlayed && !isPlaying) {
+
+                tweenText.reverse()
+                cameraMoving('left')
+
+                isPlayed = 1
+            } else if (!isPlaying) {
+
+                cameraMoving('right')
+                tweenText.play()
+
+                isPlayed = 0
+            }
         }
     }
 
@@ -687,10 +632,6 @@
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
 
-        // console.log(gltf.userData)
-
-        // model.geometry.center()
-
         // scale and position
 
         model.scale.set(1 * scale, 1 * scale, 1 * scale)
@@ -705,7 +646,6 @@
 
         if (url == './shogun_5.glb') {
             console.log('greate')
-            // createBoundingBox(model)
         }
 
         //detect size of model
@@ -716,9 +656,6 @@
         }
 
         console.log(url)
-
-        // const box = new THREE.Box3().setFromObject(model)
-        // const target = new THREE.Vector3()
 
         model.traverse(function (child) {
             if (child.isMesh) {
@@ -760,13 +697,6 @@
 
             }
         })
-        // const boxHelper = new THREE.Box3Helper(box, 0xff0000)
-        // scene.add(boxHelper)
-        // boxes.push({
-        //     "box": box,
-        //     "target": target,
-        //     "helper": boxHelper
-        // })
 
         return model
     }
@@ -798,17 +728,17 @@
         aabb = new THREE.Box3().setFromObject(model)
 
         // model.traverse(function (child) {
-            // if (child.isMesh) {
-                // for (let i = 0; i < child.geometry.attributes.position.count; i++) {
-                    // targetA.fromBufferAttribute(child.geometry.attributes.position, i)
-                    // child.applyBoneTransform(i, targetA)
-                    // box.expandByPoint(targetA)
-                // }
-            // }
+        // if (child.isMesh) {
+        // for (let i = 0; i < child.geometry.attributes.position.count; i++) {
+        // targetA.fromBufferAttribute(child.geometry.attributes.position, i)
+        // child.applyBoneTransform(i, targetA)
+        // box.expandByPoint(targetA)
+        // }
+        // }
         // })
 
-        // boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
-        // scene.add(boxHelper)
+        boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
+        scene.add(boxHelper)
     }
 
     function loadAnimation(gltf) {
@@ -933,6 +863,12 @@
         z: camera.position.z
     }
 
+    const cameraPositionRound = Ola({
+        x: camera.position.x,
+        y: camera.position.y,
+        z: camera.position.z
+    }, 250)
+
     const ninjaes = []
 
     let tweensNinjaes = []
@@ -956,44 +892,24 @@
 
 
     scene.add(groupNinja)
-    // console.log(ninjaes)
-
-
-
-
     // RENDER LOOP
 
     let counter = 0
 
-    console.log(raycaster)
-    console.log(aabb)
+    // console.log(raycaster)
+    // console.log(aabb)
 
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
         counter++
 
-        // console.log(camera.rotation)
-
-
-        // console.log(camera.position)
-        // console.log(camera.rotation)
-
-        // stopAnimationModel()
-
-        // console.log('INTERSECTED')
-        // console.log(INTERSECTED)
-        if (counter == 5) {
+        if (counter == 1) {
             const intersects = raycaster.ray.intersectsBox(aabb)
             console.log(intersects)
 
             if (intersects) {
                 INTERSECTED = true
-            //     // for (let i = 0; i < intersects.length; i++) {
-            //     //     // console.log(intersects[i])
-            //     //     INTERSECTED = i
-            //     //     console.log('intersected', i)
-            //     // }
             } else if (!intersects) {
                 INTERSECTED = null
             }
@@ -1001,8 +917,7 @@
             counter = 0
         }
 
-
-
+        // animation maxima
 
         if (mixers) {
             for (let i = 0; i < mixers.length; i++) (
@@ -1010,12 +925,11 @@
             )
         }
 
+        //  tween animation
 
-        //  animation of group
         if (tweenRotation) {
             tweenRotation.update()
         }
-
 
         if (tweenCamPosition) {
             tweenCamPosition.update()
@@ -1027,23 +941,6 @@
             }
         }
 
-        // if (boxes.length > 4) {
-        //     // console.log(boxes)
-        //     for (const box of boxes) {
-        //         // box.box.updateMatrixWorld()
-        //         box.helper.updateMatrixWorld()
-
-        //         const intersects = raycaster.ray.intersectsBox(box.box)
-
-        //         if (intersects.length > 0) {
-        //             console.log(intersects)
-
-        //             INTERSECTED = true
-        //         }
-        //     }
-        // }
-
-
         // binding model to mouse
         if (ninjaes) {
             for (const ninja of ninjaes) {
@@ -1051,48 +948,10 @@
                 ninja.model.updateMatrixWorld()
 
                 if (ninja.id == level) {
-                    ninja.model.rotation.y = ninja.model.rotation.y + pointer.x * 0.1
-
-
-                    // console.log('go-ray-go')
-                    // const intersects = raycaster.ray.intersectsBox(aabb)
-
-                    // if (intersects.length > 0) {
-                    //     console.log(intersects)
-
-                    //     INTERSECTED = true
-                    // }
-
-                    if (boxes.length > 4) {
-                        // console.log(boxes[ninja.id])
-                        // console.log('LEVEL', level)
-
-
-                    }
+                    ninja.model.rotation.y = ninja.model.rotation.y + pointer.x * 0.15
                 }
-
-
-                // ninja.model.rotation.x = - pointer.y * 0.05
-
-                // ninja.model.rotation.z +=  0.01
-                // console.log(ninja.model.rotation.x)
-
-
-                // console.log()
-
-                // if (!isMoving && level == ninja.id) {
-                // console.log(ninja.id)
-                // console.log(mouse.y)
-
-
-
-                // }
             }
         }
-
-
-        // console.log(camera.position)
-        // console.log(camera.rotation)
 
         // gsap.to(camera.rotation, {
         // y: camera.rotation.y + mouse.x * 0.001,
@@ -1101,10 +960,6 @@
         // duration: 0.3,
         // easy: "Power1.easyIn",
         // })
-
-        // camera.position.x += (mouseX - camera.position.x) * 0.01;
-        // camera.position.y += (mouseY - camera.position.y) * 0.01;
-        // camera.lookAt(scene.position);
 
         // controls.update()
     };
