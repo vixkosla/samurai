@@ -17,6 +17,7 @@ html {
 }
 
 body {
+    margin: 0;
     background-color: black;
     color: white;
     font-size: 16px;
@@ -35,8 +36,8 @@ body {
 
 .cursor {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     z-index: 3;
     left: 0;
     top: 0;
@@ -62,11 +63,11 @@ svg .cursor-bigPart {
     }
 
     75% {
-        transform: scale(1.25);
+        transform: scale(1.55);
     }
 
     100% {
-        transform: scale(1);
+        transform: scale(0.9);
     }
 }
 
@@ -79,9 +80,9 @@ nav {
 .model-container {
     min-width: 200px;
     position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -254,4 +255,56 @@ button {
 
 test {
     color:0xf0f8ff;
+}
+
+/* loading bar */
+
+.progressbar-container {
+    position: absolute;
+    background-color: #1A1A1A;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.progressbar {
+    /* position: ; */
+    color: #EAFC52;
+    /* background-color: #EAFC52; */
+    width: 15%;
+    height: 30px;
+}
+
+.progressbar-container label {
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 0;
+    text-align: center;
+}
+
+#progressbar {
+    box-shadow: 0;
+    border-radius: 0;
+    /* background-color: #EAFC52; */
+}
+
+progress {
+    padding-right: 20px;
+    height: 2px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    color: #EAFC52;
+    background: white;
+    border: 0;
+    transform: translateY(-10px);
+}
+
+.progressbar-loaded {
+    display: none;
 }

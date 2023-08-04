@@ -28,7 +28,8 @@
     <script type="importmap">{
         "imports": {
             "three": "https://threejs.org/build/three.module.js",
-            "three/addons/": "https://threejs.org/examples/jsm/"
+            "three/addons/": "https://threejs.org/examples/jsm/",
+            "normalizeWheel": "https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/+esm"
         }
     }</script><!-- Remove this when import maps will be widely supported -->
 
@@ -43,6 +44,13 @@
 </head>
 
 <body>
+    <div class="progressbar-container">
+        <div class="progressbar">
+            <label for="progress-bar">Loading...</label>
+            <progress id="progress-bar" value="0" max="100"></progress>
+
+        </div>
+    </div>
     <div class="cursor-container">
         <div class="cursor">
             <svg viewBox="0 0 70 70" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">
@@ -136,7 +144,7 @@
     import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
     import Stats from 'three/addons/libs/stats.module.js';
 
-    // import { normalizeWheel } from 'https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/+esm';
+    import * as normalizeWheel from 'normalizeWheel';
 
     // BASIC
 
@@ -211,6 +219,8 @@
     scene.background = new THREE.Color(0x0c0c0e)
 
     THREE.ColorManagement.enabled = true;
+
+    const manager = new THREE.LoadingManager();
 
     new RGBELoader()
         .setPath('textures/')
@@ -400,18 +410,18 @@
 
         switch (level) {
             case 1:
-                moveX = 1 * 0.20 * aspectM
-                moveZ = 2.5
-                moveY = -0.3
+                moveX = 1 * 0.45 * aspectM
+                moveZ = 2.25
+                moveY = -0.4
                 break;
             case 2:
-                moveX = 1 * 0.20 * aspectM
-                moveZ = 2.5
-                moveY = -0.3
+                moveX = 1 * 0.45 * aspectM
+                moveZ = 2.25
+                moveY = -0.4
                 break;
             case 3:
-                moveX = 1 * 0.20 * aspectM
-                moveZ = 2.5
+                moveX = 1 * 0.65 * aspectM
+                moveZ = 1.5
                 moveY = -0.3
                 break;
             case 4:
@@ -420,9 +430,9 @@
                 moveY = 0.1
                 break;
             case 5:
-                moveX = 1 * 0.20 * aspectM
-                moveZ = 2.5
-                moveY = -0.3
+                moveX = 1 * 0.45 * aspectM
+                moveZ = 2
+                moveY = -0.4
                 break;
             default:
                 break;
@@ -565,13 +575,34 @@
             })
     }
 
+    // 
+    let touchStartX, touchStartY, touchEndX, touchEndY
+
     window.addEventListener('wheel', wheelHandler)
+    window.addEventListener('touchstart', touchStartHandler)
+    window.addEventListener('touchend', touchEndHandler)
+
+    function touchStartHandler(e) {
+        touchStartX = event.screenX
+        touchStartY = event.screenY
+    }
+
+    function touchEndHandler(e) {
+        touchEndX = event.screenX
+        touchEndY = event.screenY
+        handlerSwipe()
+    }
+
+    function handlerSwipe() {
+
+    }
+
 
     function wheelHandler(e) {
         console.log('hey')
 
-        // const normilized = normalizeWheel(e)
-        // console.log(normilized)
+        // const normalized = normalizeWheel(event)
+        // console.log(normalized)
 
         if (e.deltaY > 30 && e.deltaY < 50 && !isMoving) {
             groupRotate('right')
@@ -588,13 +619,25 @@
 
 
     // LOAD MODEL
-    const manager = new THREE.LoadingManager();
 
     let url = "./new/Samurai_FixedMet_11.glb"
     let m = 3
 
-    manager.onLoad = function (url, m) {
-        console.log('complete')
+    const progressBar = document.getElementById('progress-bar')
+    const prggressBarContainer = document.querySelector('.progressbar-container')
+    // console.log()
+
+    manager.onProgress = function (url, loaded, total) {
+        progressBar.value = loaded / total * 100
+
+        console.log('url', url)
+        console.log('loaded', loaded)
+        console.log("total", total)
+    }
+    manager.onLoad = function (url, loaded, total) {
+        console.log('loading all models have complete')
+        prggressBarContainer.classList.add('progressbar-loaded')
+
         createBoundingBox()
     }
 
@@ -788,12 +831,13 @@
     const points = createCirclePoints()
     pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
 
-    let p = 1.20 // scale models
+    let p = 1.30 // scale models
+    let delta = -0.3 // down model
 
     const ninjaesObject = {
         donatello: loadModel({
             x: points[0].x,
-            y: 0,
+            y: 0 + delta,
             z: points[0].y,
             ry: points[0].ry,
             scale: 0.085 * p,
@@ -803,7 +847,7 @@
         }),
         michelangelo: loadModel({
             x: points[1].x,
-            y: 0,
+            y: 0 + delta,
             z: points[1].y,
             ry: points[1].ry,
             scale: 1 * p,
@@ -813,10 +857,10 @@
         }),
         rafhael: loadModel({
             x: points[2].x,
-            y: 0,
+            y: -0.5,
             z: points[2].y,
             ry: points[2].ry,
-            scale: 1.3 * p,
+            scale: 1.6 * p,
             url: './new/Ronin_15.glb',
             animation: true,
             layers: []
@@ -833,7 +877,7 @@
         }),
         shrader: loadModel({
             x: points[4].x,
-            y: 0,
+            y: 0 + delta,
             z: points[4].y,
             ry: points[4].ry,
             scale: 0.9 * p,
@@ -906,7 +950,7 @@
 
         if (counter == 1) {
             const intersects = raycaster.ray.intersectsBox(aabb)
-            console.log(intersects)
+            // console.log(intersects)
 
             if (intersects) {
                 INTERSECTED = true
