@@ -45,13 +45,18 @@
 
 <body>
     <div class="progressbar-container">
-        <div class="progressbar">
+        <div class="progress-bar-alt" style="--p:0">
+            <div class="progress-bar-alt_label">
+                Progress
+            </div>
+        </div>
+        <!-- <div class="progressbar">
             <label for="progress-bar">Loading...</label>
             <progress id="progress-bar" value="0" max="100"></progress>
 
-        </div>
+        </div> -->
     </div>
-    <div class="cursor-container">
+    <div class="cursor-container cursor-container-loading">
         <div class="cursor">
             <svg viewBox="0 0 70 70" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="35" cy="35" r="7" fill="lightgrey" />
@@ -593,8 +598,22 @@
         handlerSwipe()
     }
 
-    function handlerSwipe() {
+    let deltaY = undefined
 
+    function handlerSwipe() {
+        let deltaY = touchStartY - touchEndY
+
+        if (deltaY > 30 && deltaY < 50 && !isMoving) {
+            groupRotate('right')
+            if (isPlayed) {
+                clickHandler()
+            }
+        } else if (deltaY < -30 && deltaY < -50 && !isMoving) {
+            groupRotate('left')
+            if (isPlayed) {
+                clickHandler()
+            }
+        }
     }
 
 
@@ -623,20 +642,32 @@
     let url = "./new/Samurai_FixedMet_11.glb"
     let m = 3
 
+    const cursorContainer = document.querySelector('.cursor-container')
+
+    const progressBarAlt = document.querySelector('.progress-bar-alt')
+
     const progressBar = document.getElementById('progress-bar')
-    const prggressBarContainer = document.querySelector('.progressbar-container')
+    const progressBarContainer = document.querySelector('.progressbar-container')
     // console.log()
 
     manager.onProgress = function (url, loaded, total) {
-        progressBar.value = loaded / total * 100
+        let progress
 
+        progress = Math.floor(loaded / total * 100)
+        console.log(progress)
+
+        // progressBar.value = progress
+        progressBarAlt.style = `--p:${progress}`
+        
         console.log('url', url)
         console.log('loaded', loaded)
         console.log("total", total)
     }
+
     manager.onLoad = function (url, loaded, total) {
         console.log('loading all models have complete')
-        prggressBarContainer.classList.add('progressbar-loaded')
+        progressBarContainer.classList.add('progressbar-loaded')
+        cursorContainer.classList.remove('cursor-container-loading')
 
         createBoundingBox()
     }
@@ -682,7 +713,7 @@
         model.rotation.set(0, ry, 0)
         model.name = url
 
-        if (url == './new/KATANA_v12.glb') {
+        if (url == './new/KATANA_v24.glb') {
 
             model.rotation.set(0, ry, Math.PI / 3)
         }
@@ -861,7 +892,7 @@
             z: points[2].y,
             ry: points[2].ry,
             scale: 1.6 * p,
-            url: './new/Ronin_15.glb',
+            url: './new/Ronin_17.glb',
             animation: true,
             layers: []
         }),
@@ -871,7 +902,7 @@
             z: points[3].y,
             ry: points[3].ry + Math.PI,
             scale: 0.4,
-            url: './new/KATANA_v12.glb',
+            url: './new/KATANA_v24.glb',
             animation: true,
             layers: []
         }),
