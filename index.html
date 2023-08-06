@@ -651,14 +651,14 @@
     // console.log()
 
     manager.onProgress = function (url, loaded, total) {
-        let progress
+        let progress = undefined
 
         progress = Math.floor(loaded / total * 100)
         console.log(progress)
 
         // progressBar.value = progress
         progressBarAlt.style = `--p:${progress}`
-        
+
         console.log('url', url)
         console.log('loaded', loaded)
         console.log("total", total)
@@ -674,7 +674,7 @@
 
     // dracoLoader;
     const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath('/js/libs/draco/')
+        .setDecoderPath('./js/libs/draco/')
 
     // ktx2Loader
     const ktx2Loader = new KTX2Loader()
