@@ -381,3 +381,7 @@ progress {
 .cursor-container-loading {
     display: none;
 }
+
+.text-block_default {
+    display: none;
+}
