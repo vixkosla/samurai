@@ -201,8 +201,7 @@ nav {
 }
 
 .image-box {
-    max-width:100%!important;
-    width: 30%!important;
+    width: 30%;
 }
 
 .image-box span {
@@ -388,125 +387,12 @@ progress {
 }
 
 
-
-
-.empty-block {
-  /* width: 50%; */
-  min-width: 300px;
-  min-height: 500px;
+@media (max-width: 1421px){
+.text-block p , .image-box{
+    margin-bottom: 30px;
 }
 
-.text-block {
-max-width: 650px;
-  width: 100%;
-  padding-right: 4vw;
-
-}
-
-.text-block p {
-  font-family: 'Raleway';
-  font-style: normal;
-  font-weight: 400;
-  font-size: calc(12px + (23 - 12) * ((100vw - 420px) / (1980 - 420)));
-  line-height: 27px;
-  opacity: 0.9;
-  margin-bottom: 40px;
- 
-}
-.text-block h1 {
-
-  font-family: 'Orbitron';
-  font-style: normal;
-  font-weight: 700;
-  font-size: calc(55px + (115 - 55) * ((100vw - 420px) / (1980 - 420)));
-  line-height: 142px;
-  text-transform: uppercase;
-}
-
-.block_image {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  gap: 50px;
-}
-
-.image-box {
-  max-width: 185px;
-  width: 185px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap:15px ;
-  margin-bottom: 55px;
-}
-
-.image-box span {
-  font-family: 'Raleway';
-  font-style: normal;
-  font-weight: 400;
-  font-size: calc(13px + (20 - 13) * ((100vw - 420px) / (1980 - 420)));
-  line-height: 23px;
-  text-align: center;
-  text-transform: lowercase;
-  color: #FFFFFF;
-  margin: 0 auto;
-  display: inline-block;
-}
-
-.intro-box {
-  max-width: 130px;
-  width: 100%;
-  aspect-ratio: 1;
-  /* margin: 0 auto; */
-
-  /* margin: 5em; */
-  box-sizing: border-box;
-  /* height: 50px; */
-  background-color: #1A1A1A;
-  border-radius: 20%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.intro-box img {
-  width: 40%;
-}
-@media(max-width: 1921px){
-  .text-block p {
-    font-size: 23px;
-      }
-}
-@media (max-width: 1121px){
-.text-block{
-  max-width: 100%;
-}
 .text-block h1{
-  position: absolute;
-  margin: 0 auto;
-  text-align: center;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -485px;
-  text-align: center;
+    line-height: 116px;
 }
-.model-container{
-  width: 100%;
-}
-
-.text-block p{
-  margin-bottom: 30px;
-  line-height:1;
-}
-}
-
-@media only screen and (max-width: 500px) {
-  .text-block {
-      width: 100% !important;
-      padding: 0 1vw;
-      margin-right: 4vw;
-  }
-
 }
