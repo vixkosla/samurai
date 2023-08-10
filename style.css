@@ -201,7 +201,8 @@ nav {
 }
 
 .image-box {
-    width: 30%;
+    max-width:100%!important;
+    width: 30%!important;
 }
 
 .image-box span {
