@@ -330,13 +330,15 @@ progress {
 
 @media only screen and (max-width:500px) {
     .model_container_inner {
-        flex-direction: column
+        bottom:-470px;
+        padding:0 20px;        
     }
     .text-block {
         width: 100% !important;
         padding: 0 1vw;
         margin-right: 4vw
     }
+    
 }
 
 .intro.yelBtn {
