@@ -360,6 +360,16 @@ progress {
 
 
 
+@media only screen and (max-width: 1421px){
+.text-block p , .image-box{
+    margin-bottom: 30px;
+}
+
+.text-block h1{
+    line-height: 116px;
+}
+}
+
 
 .model_container_inner {
     transition: all 0.5s ease;
