@@ -702,6 +702,10 @@
         return tweenBouncing
     }
 
+    let minWidth = modelContainer.style.minWidth
+    console.log(minWidth)
+    console.log('minWidth')
+
     function cameraMoving(direction) {
 
         let sign = undefined
@@ -716,14 +720,18 @@
 
         updateAspectRatio()
 
+        const minWidth = 320
+
         switch (level) {
             case 1:
-                moveX = 1 * 0.65 * aspectM
+                // moveX = 1 * 0.65 * aspectM
+                moveX = (model.clientWidth - minWidth) / 512
                 moveZ = 1.5
                 moveY = -0.35
                 break;
             case 2:
                 moveX = 1 * 0.65 * aspectM
+                // moveX = (model.clientWidth - minWidth) / 512
                 moveZ = 1.5
                 moveY = -0.35
                 break;
@@ -745,6 +753,8 @@
             default:
                 break;
         }
+
+        console.log(moveX)
 
         tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
             .to({ x: camera.position.x + moveX * sign, z: camera.position.z + moveZ * sign, y: camera.position.y + moveY * sign }, 1000)
@@ -805,7 +815,8 @@
         }
     }
 
-    model.addEventListener('click', clickHandler)
+
+
 
     // CURSOR
 
@@ -887,9 +898,6 @@
     // 
     let touchStartX, touchStartY, touchEndX, touchEndY
 
-    window.addEventListener('wheel', wheelHandler)
-    window.addEventListener('touchstart', touchStartHandler)
-    window.addEventListener('touchend', touchEndHandler)
 
     function touchStartHandler(e) {
         touchStartX = event.touches[0].clientX
@@ -943,6 +951,14 @@
         }
     }
 
+    function initHandlers() {
+        model.addEventListener('click', clickHandler)
+
+        window.addEventListener('wheel', wheelHandler)
+        window.addEventListener('touchstart', touchStartHandler)
+        window.addEventListener('touchend', touchEndHandler)
+    }
+
 
     // LOAD MODEL
 
@@ -977,6 +993,8 @@
         cursorContainer.classList.remove('cursor-container-loading')
 
         createBoundingBox()
+
+        initHandlers()
     }
 
     // dracoLoader;

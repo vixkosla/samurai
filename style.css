@@ -3565,6 +3565,7 @@ nav {
 
 .model-container {
     min-width: 200px;
+    min-height: 300px;
     position: absolute;
     width: 100%;
     height: 100%;
