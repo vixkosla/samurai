@@ -720,33 +720,36 @@
 
         updateAspectRatio()
 
-        const minWidth = 320
+        minWidth = 320
 
         switch (level) {
             case 1:
                 // moveX = 1 * 0.65 * aspectM
-                moveX = (model.clientWidth - minWidth) / 512
+                moveX = (model.clientWidth - minWidth) / 774    
                 moveZ = 1.5
                 moveY = -0.35
                 break;
             case 2:
-                moveX = 1 * 0.65 * aspectM
-                // moveX = (model.clientWidth - minWidth) / 512
+                // moveX = 1 * 0.65 * aspectM
+                moveX = (model.clientWidth - minWidth) / 774
                 moveZ = 1.5
                 moveY = -0.35
                 break;
             case 3:
-                moveX = 1 * 0.85 * aspectM
+                // moveX = 1 * 0.85 * aspectM
+                moveX = (model.clientWidth - minWidth) / 588
                 moveZ = 1
                 moveY = -0.35
                 break;
             case 4:
-                moveX = 3 * 0.30 * aspectM
+                // moveX = 3 * 0.30 * aspectM
+                moveX = (model.clientWidth - minWidth) / 558
                 moveZ = 1 * 0.10 * aspectM
                 moveY = 0
                 break;
             case 5:
                 moveX = 1 * 0.55 * aspectM
+                moveX = (model.clientWidth - minWidth) / 914
                 moveZ = 1
                 moveY = -0.35
                 break;
@@ -754,6 +757,7 @@
                 break;
         }
 
+        console.log(model.clientWidth)
         console.log(moveX)
 
         tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
