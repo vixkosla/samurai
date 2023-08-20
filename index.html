@@ -101,7 +101,7 @@
         <div class="model"></div>
     </div>
 
-    <div class="container">
+    <div class="text-container">
 
         <!-- 1111111111111111111111111111111111111111111111111111111111111111111111111 -->
         <div class="model_container_inner open active open active container">
@@ -503,6 +503,10 @@
     window.addEventListener('resize', onWindowResize, false)
 
     function onWindowResize() {
+        if (isPlayed) {
+            clickHandler()
+        }
+
         renderer.setSize(model.clientWidth, model.clientHeight)
 
         updateAspectRatio()
@@ -725,9 +729,9 @@
         switch (level) {
             case 1:
                 // moveX = 1 * 0.65 * aspectM
-                moveX = (model.clientWidth - minWidth) / 774    
+                moveX = (model.clientWidth - minWidth) / 900
                 moveZ = 1.5
-                moveY = -0.35
+                moveY = -0.15
                 break;
             case 2:
                 // moveX = 1 * 0.65 * aspectM
@@ -1197,7 +1201,7 @@
     const ninjaesObject = {
         donatello: loadModel({
             x: points[0].x,
-            y: 0 + delta,
+            y: 0.75 + delta,
             z: points[0].y,
             ry: points[0].ry,
             scale: 0.085 * p,
@@ -1230,7 +1234,7 @@
             y: 0.7,
             z: points[3].y,
             ry: points[3].ry + Math.PI,
-            scale: 0.4,
+            scale: 0.35,
             url: './new/KATANA_v24.glb',
             animation: true,
             layers: []
