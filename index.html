@@ -960,8 +960,10 @@
     }
 
     function initHandlers() {
-        model.addEventListener('click', clickHandler)
 
+        model.addEventListener('click', function () {
+            if (INTERSECTED) { clickHandler() }
+        })
         window.addEventListener('wheel', wheelHandler)
         window.addEventListener('touchstart', touchStartHandler)
         window.addEventListener('touchend', touchEndHandler)
@@ -1307,23 +1309,54 @@
     // console.log(raycaster)
     // console.log(aabb)
 
+    const geometryCube = new THREE.BoxGeometry(0.03, 0.15, 0.03)
+    const materialCube = new THREE.MeshMatcapMaterial({ color: 0xEAFC52 });
+    // 
+    const cubeOne = new THREE.Mesh(geometryCube, materialCube);
+
+    cubeOne.position.set(0.7, 0.5, -2.6)
+
+    const boxForCube = new THREE.Box3().setFromObject(cubeOne)
+    const boxHelperCube = new THREE.Box3Helper(boxForCube, 0xEAFC52)
+
+    scene.add(cubeOne);
+    scene.add(boxHelperCube)
+
+    cubeOne.scale.set(1.7, 0.7, 1.7)
+    cubeOne.position.y = 0.525
+
+    let direction = -1
+
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
         counter++
 
-        if (counter == 1) {
-            const intersects = raycaster.ray.intersectsBox(aabb)
-            // console.log(intersects)
+        cubeOne.position.y += 0.001 * direction
 
-            if (intersects) {
-                INTERSECTED = true
-            } else if (!intersects) {
-                INTERSECTED = null
-            }
+        if (counter == 35) {
+            // console.log('change direction')
 
+            
+
+            direction = direction * (-1)
+
+            console.log('change direction', direction)
             counter = 0
         }
+
+        // if (counter == 1) {
+        const intersects = raycaster.ray.intersectsBox(aabb)
+        // console.log(intersects)
+
+        if (intersects) {
+            INTERSECTED = true
+        } else if (!intersects) {
+            INTERSECTED = null
+        }
+
+        // counter = 0
+        // }
 
         // animation maxima
 
