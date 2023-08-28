@@ -475,14 +475,20 @@
     const far = 100
 
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    const cameraAlt = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
     camera.position.z = -0.5
     camera.position.y = 1
     camera.position.x = 0
+
+    cameraAlt.position.z = -0.5
+    cameraAlt.position.y = 1
+    cameraAlt.position.x = 0
     // camera.rotation.y = - Math.PI / 2
     // camera.rotation.x = 0
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.autoClear = false;
 
     // renderer.format = THREE.RGBAFormat
     // renderer.gammaOutput = true
@@ -511,9 +517,15 @@
 
         updateAspectRatio()
 
+
         camera.aspect = aspect
-        camera.updateProjectionMatrix()
+        cameraAlt.aspect = aspect
+
+        camera.updateProjectionMatrix() 
+        cameraAlt.updateProjectionMatrix() 
+
         renderer.render(scene, camera);
+        renderer.render(sceneAlt, cameraAlt);
     }
 
     let mixers = []
@@ -527,8 +539,10 @@
     const LEVELMIN = 1
 
     const scene = new THREE.Scene();
+    const sceneAlt = new THREE.Scene();
 
     scene.background = new THREE.Color(0x0c0c0e)
+    // sceneAlt.background = new THREE.Color(0xffffff)
 
     THREE.ColorManagement.enabled = true;
 
@@ -1206,7 +1220,7 @@
             y: 0.75 + delta,
             z: points[0].y,
             ry: points[0].ry,
-            scale: 0.085 * p,
+            scale: 0.095 * p,
             url: './shogun_5.glb',
             animation: true,
             layers: []
@@ -1314,13 +1328,13 @@
     // 
     const cubeOne = new THREE.Mesh(geometryCube, materialCube);
 
-    cubeOne.position.set(0.7, 0.5, -2.6)
+    cubeOne.position.set(-0.4, 0.5, -2.7)
 
     const boxForCube = new THREE.Box3().setFromObject(cubeOne)
     const boxHelperCube = new THREE.Box3Helper(boxForCube, 0xEAFC52)
 
-    scene.add(cubeOne);
-    scene.add(boxHelperCube)
+    sceneAlt.add(cubeOne);
+    // sceneAl.add(boxHelperCube)
 
     cubeOne.scale.set(1.7, 0.7, 1.7)
     cubeOne.position.y = 0.525
@@ -1330,9 +1344,11 @@
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
+        renderer.render(sceneAlt, cameraAlt)
         counter++
 
         cubeOne.position.y += 0.001 * direction
+        cubeOne.rotation.y += 0.01
 
         if (counter == 35) {
             // console.log('change direction')
