@@ -2558,8 +2558,8 @@ f .header_inner_item.logo {
     }
 
     .model_container_inner.container {
-        top: auto;
-        bottom: 40px;
+        /* top: auto; */
+        top: 40px;
         max-width: 100%;
         min-height: auto;
         margin: 0 0 0 auto !important;
@@ -2614,7 +2614,7 @@ f .header_inner_item.logo {
         text-align: center;
         left: 50%;
         transform: translateX(-50%);
-        top: -485px;
+        top: -415px;
         text-align: center;
     }
 
@@ -3810,7 +3810,7 @@ progress {
     transition: all .5s ease;
     position: absolute;
     left: -1000px;
-    bottom: 50%;
+    top: 50%;
     transform: translateY(-50%);
     width: 650px;
     min-height: 650px;
@@ -4005,8 +4005,8 @@ progress {
 
 @media (max-width:1021px) {
     .model_container_inner.container {
-        top: auto;
-        bottom: 40px;
+        /* top: auto; */
+        top: 40px;
         max-width: unset;
         width: unset;
         min-height: auto;
