@@ -4005,12 +4005,11 @@ progress {
 
 @media (max-width:1021px) {
     .model_container_inner.container {
-        /* top: auto; */
-        top: 40px;
-        max-width: unset;
-        width: unset;
-        min-height: auto;
-        margin: 0 0 0 auto !important
+         left: 0;
+    top: 50%;
+    bottom: 0;
+    transform: translate(10px, 10px);
+    bottom: unset;
     }
 
     .image-box {
