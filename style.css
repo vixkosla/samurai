@@ -4019,6 +4019,9 @@ progress {
     }
 
     .model_container_inner.open {
-        left: 0
+          left: 0;
+    top: 50%;
+    transform: translate(0);
+    bottom: unset;
     }
 }
