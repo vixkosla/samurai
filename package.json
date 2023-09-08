@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@gltf-transform/core": "^3.6.0",
+    "@gltf-transform/extensions": "^3.6.0",
+    "@gltf-transform/functions": "^3.6.0",
+    "draco3dgltf": "^1.5.6",
+    "meshoptimizer": "^0.19.0"
+  },
+  "scripts": {
+    "start": "node ./js/transform.js"
+  },
+  "type": "module"
+}
