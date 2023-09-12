@@ -936,13 +936,22 @@
                 // console.log(isMoving)
             })
             .start() // Start the tween immediately.
-            .onStart(() => isMoving = 1)
+            .onStart(() => {
+
+                isMoving = 1
+                setTimeout(() => {
+                    updateModelRotation()
+                    // console.log("Delayed for 1 second.");
+                }, 2000);
+
+            })
             .onComplete(() => {
                 // groupRotation.y = groupNinja.rotation.y
                 levelDetection(direction, sign)
 
                 createBoundingBox()
                 changeTextBlock()
+
 
                 // console.log(level)
                 isMoving = 0
@@ -1248,6 +1257,14 @@
         return points
     }
 
+    function updateModelRotation() {
+        ninjaes.forEach(ninja => {
+            if (ninja.id == level) {
+                ninja.model.rotation.y = points[level - 1].ry
+            }
+        })
+    }
+
     const points = createCirclePoints()
     pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
 
@@ -1301,7 +1318,7 @@
             z: points[4].y,
             ry: points[4].ry,
             scale: 0.9 * p,
-            url: './new/Samurai_FixedMet_7.glb',
+            url: './new/Samurai_FixedMet_7.gltf',
             animation: true,
             layers: []
         }),
