@@ -963,16 +963,20 @@
 
 
     function touchStartHandler(e) {
-        touchStartX = event.touches[0].clientX
-        touchStartY = event.touches[0].clientY
+
+        let touch = { x: e.touches[0], y: e }
+
+        touchStartX = event.changedTouches[0].screenX
+            touchStartY = event.changedTouches[0].screenY
+
 
         // console.log(event)
         // console.log(event.touches[0].clientX, event.touches[0].clientY)
     }
 
     function touchEndHandler(e) {
-        touchEndX = event.changedTouches[0].clientX
-        touchEndY = event.changedTouches[0].clientY
+        touchEndX = event.changedTouches[0].screenX
+        touchEndY = event.changedTouches[0].screenY
         handlerSwipe()
     }
 
