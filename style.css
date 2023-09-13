@@ -3695,8 +3695,13 @@ nav {
     font-family: 'Orbitron', monospace
 }
 
+:root {
+    --windth: 0;
+    --p: 0;
+}
+
 .progress-bar-alt {
-    --width: calc(var(--p)*1%);
+    /* --width: calc(var(--p)*1%); */
     position: relative;
     background-color: #333;
     width: 300px;
