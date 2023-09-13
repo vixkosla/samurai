@@ -1075,7 +1075,9 @@
         console.log(progress)
 
         // progressBar.value = progress
-        progressBarAlt.style = `--p:${progress}`
+        // progressBarAlt.style = `--p:${progress}`
+        progressBarAlt.style.setProperty("--p", progress)
+
 
         console.log('url', url)
         console.log('loaded', loaded)
