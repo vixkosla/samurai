@@ -822,12 +822,16 @@
 
             })
             .start() // Start the tween immediately.
-            .onStart(() => isPlaying = 1)
+            .onStart(() => {
+                isMoving = 1
+                isPlaying = 1
+            })
             .onComplete(() => {
                 // groupRotation.y = groupNinja.rotation.y
                 // levelDetection(direction, sign)
 
                 console.log(level)
+                isMoving = 0
                 isPlaying = 0
             })
     }
@@ -967,7 +971,7 @@
         let touch = { x: e.touches[0], y: e }
 
         touchStartX = event.changedTouches[0].screenX
-            touchStartY = event.changedTouches[0].screenY
+        touchStartY = event.changedTouches[0].screenY
 
 
         // console.log(event)
@@ -985,15 +989,17 @@
     function handlerSwipe() {
         let deltaY = touchStartY - touchEndY
 
-        if (deltaY > 30 && deltaY < 50 && !isMoving) {
-            groupRotate('right')
-            if (isPlayed) {
-                clickHandler()
-            }
-        } else if (deltaY < -30 && deltaY < -50 && !isMoving) {
-            groupRotate('left')
-            if (isPlayed) {
-                clickHandler()
+        if (!isMoving) {
+            if (deltaY > 30 && deltaY < 50 && !isMoving) {
+                groupRotate('right')
+                if (isPlayed) {
+                    clickHandler()
+                }
+            } else if (deltaY < -30 && deltaY < -50 && !isMoving) {
+                groupRotate('left')
+                if (isPlayed) {
+                    clickHandler()
+                }
             }
         }
     }
@@ -1031,7 +1037,10 @@
                 MOVING = 0
             }
         })
-        window.addEventListener('wheel', wheelHandler)
+        window.addEventListener('wheel', function (e) {
+            if (!isMoving)
+                wheelHandler(e)
+        })
         window.addEventListener('touchstart', touchStartHandler)
         window.addEventListener('touchend', touchEndHandler)
     }
@@ -1049,6 +1058,15 @@
     const progressBar = document.getElementById('progress-bar')
     const progressBarContainer = document.querySelector('.progressbar-container')
     // console.log()
+    let LOADED
+
+    manager.onStart = function () {
+        setTimeout(() => {
+            if (!LOADED) {
+                // window.location.reload()
+            }
+        }, 25000)
+    }
 
     manager.onProgress = function (url, loaded, total) {
         let progress = undefined
@@ -1064,7 +1082,10 @@
         console.log("total", total)
     }
 
+
     manager.onLoad = function (url, loaded, total) {
+        LOADED = true
+
         console.log('loading all models have complete')
         progressBarContainer.classList.add('progressbar-loaded')
         cursorContainer.classList.remove('cursor-container-loading')
