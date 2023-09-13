@@ -3696,6 +3696,7 @@ nav {
 }
 
 .progress-bar-alt {
+    --width: calc(var(--p)*1%);
     position: relative;
     background-color: #333;
     width: 300px;
