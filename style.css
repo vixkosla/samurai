@@ -3709,7 +3709,7 @@ nav {
     transform: skew(30deg)
 }
 
-.progress-bar-alt:before {
+#progress-bar-alt-width {
     --width: calc(var(--p)*1%);
     position: absolute;
     content: '';
@@ -3723,6 +3723,23 @@ nav {
     -webkit-animation: load .5s forwards linear, glitch 2s infinite linear;
     -moz-animation: load .5s forwards linear, glitch 2s infinite linear;
 }
+
+/* .progress-bar-alt:before {
+    --width: calc(var(--p)*1%);
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background-color: #EAFC52;
+    width: 0;
+    height: 100%;
+    animation: load .5s forwards linear, glitch 2s infinite linear;
+    -webkit-animation: load .5s forwards linear, glitch 2s infinite linear;
+    -moz-animation: load .5s forwards linear, glitch 2s infinite linear;
+} */
+
+
 
 .progress-bar-alt:after {
     counter-reset: progress var(--p);

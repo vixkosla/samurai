@@ -1066,7 +1066,16 @@
                 // window.location.reload()
             }
         }, 25000)
+
+        let progressBarWidth = document.createElement("div");
+        progressBarWidth.id = "progress-bar-alt-width";
+
+        console.log(progressBarWidth)
+        
+        progressBarAlt.appendChild(progressBarWidth)
     }
+
+
 
     manager.onProgress = function (url, loaded, total) {
         let progress = undefined
@@ -1077,7 +1086,6 @@
         // progressBar.value = progress
         // progressBarAlt.style = `--p:${progress}`
         progressBarAlt.style.setProperty("--p", progress)
-
 
         console.log('url', url)
         console.log('loaded', loaded)
