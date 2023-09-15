@@ -631,7 +631,7 @@
     const cursorBigPart = document.querySelector('.cursor-bigPart')
 
     let INTERSECTED = null
-    let DRAGED = null
+
     let CLICKED = null
     let MOVING = null
 
@@ -639,16 +639,11 @@
 
     window.addEventListener('mousedown', function (e) {
         e.preventDefault()
-        // if (!MOVING) {
-        // console.log('not moving and start draging')
+
         CLICKED = true
         MOVING++
         timer = new Date()
-        // DRAGED = true
-        // }
 
-        // e.stopPropagation();
-        // e.stopImmediatePropagation()
     })
 
     window.addEventListener('mouseup', function (e) {
@@ -656,18 +651,23 @@
         MOVING++
         timer = timer - new Date()
 
-        // setTimeout(() => {
-        //     DRAGED = null
-        //     console.log("Delayed for 1 second.");
-        // }, 500);
-
         e.preventDefault()
-        // e.stopPropagation();
-        // e.stopImmediatePropagation()
     })
 
+
+    let isMobile = 0
+
+    function detectMobileDevice() {
+        let containerWidth =  modelContainer.style.width
+
+        if (containerWidth < 420) {
+            console.log('mobile device')
+            console.log(containerWidth)
+            isMobile = true
+        }
+    }
+
     window.addEventListener('mousemove', function (e) {
-        // MOVING = true
 
         event.preventDefault();
 
@@ -752,9 +752,6 @@
         return tweenBouncing
     }
 
-    let minWidth = modelContainer.style.minWidth
-    console.log(minWidth)
-    console.log('minWidth')
 
     function cameraMoving(direction) {
 
@@ -937,7 +934,6 @@
                 groupNinja.rotation.y = groupRotationRound.y
 
                 groupRotationRound.set({ y: groupRotation.y })
-                // console.log(isMoving)
             })
             .start() // Start the tween immediately.
             .onStart(() => {
@@ -945,7 +941,6 @@
                 isMoving = 1
                 setTimeout(() => {
                     updateModelRotation()
-                    // console.log("Delayed for 1 second.");
                 }, 2000);
 
             })
@@ -990,12 +985,12 @@
         let deltaY = touchStartY - touchEndY
 
         if (!isMoving) {
-            if (deltaY > 30 && deltaY < 50 && !isMoving) {
+            if (deltaY > 10 && deltaY < 50 && !isMoving) {
                 groupRotate('right')
                 if (isPlayed) {
                     clickHandler()
                 }
-            } else if (deltaY < -30 && deltaY < -50 && !isMoving) {
+            } else if (deltaY < -10 && deltaY < -50 && !isMoving) {
                 groupRotate('left')
                 if (isPlayed) {
                     clickHandler()
@@ -1029,9 +1024,6 @@
 
         model.addEventListener('click', function () {
 
-            // console.log(DRAGED)
-            // console.log(MOVING)
-            console.log(timer)
             if (INTERSECTED && timer > -400 && MOVING == 2) {
                 clickHandler()
                 MOVING = 0
