@@ -516,7 +516,7 @@
         renderer.setSize(model.clientWidth, model.clientHeight)
 
         updateAspectRatio()
-
+        detectMobileDevice()
 
         camera.aspect = aspect
         cameraAlt.aspect = aspect
@@ -658,9 +658,11 @@
     let isMobile = 0
 
     function detectMobileDevice() {
-        let containerWidth =  modelContainer.style.width
+        let containerWidth = model.clientWidth
 
-        if (containerWidth < 420) {
+        console.log(containerWidth)
+
+        if (containerWidth < 760) {
             console.log('mobile device')
             console.log(containerWidth)
             isMobile = true
@@ -718,6 +720,8 @@
     let moveZ = undefined
     let moveY = undefined
 
+    let minWidth = 320
+
     let tweenBouncing = undefined
 
     function createBouncing({ ninja, flag }) {
@@ -767,7 +771,7 @@
 
         updateAspectRatio()
 
-        minWidth = 320
+        // minWidth = 320
 
         switch (level) {
             case 1:
@@ -1024,9 +1028,14 @@
 
         model.addEventListener('click', function () {
 
-            if (INTERSECTED && timer > -400 && MOVING == 2) {
+            if (!isMobile) {
+                if (INTERSECTED && timer > -400 && MOVING == 2) {
+                    clickHandler()
+                    MOVING = 0
+                }
+
+            } else if (isMobile) {
                 clickHandler()
-                MOVING = 0
             }
         })
         window.addEventListener('wheel', function (e) {
@@ -1055,16 +1064,15 @@
     manager.onStart = function () {
         setTimeout(() => {
             if (!LOADED) {
-                // window.location.reload()
             }
         }, 25000)
 
         let progressBarWidth = document.createElement("div");
         progressBarWidth.id = "progress-bar-alt-width";
 
-        console.log(progressBarWidth)
-        
         progressBarAlt.appendChild(progressBarWidth)
+
+        detectMobileDevice()
     }
 
 
@@ -1079,9 +1087,6 @@
         // progressBarAlt.style = `--p:${progress}`
         progressBarAlt.style.setProperty("--p", progress)
 
-        console.log('url', url)
-        console.log('loaded', loaded)
-        console.log("total", total)
     }
 
 
@@ -1126,10 +1131,21 @@
         y: groupNinja.rotation.y
     }, 500)
 
+    function centerModel(model) {
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+
+        model.position.x += (model.position.x - center.x);
+        model.position.y += (model.position.y - center.y);
+        model.position.z += (model.position.z - center.z);
+    }
+
     async function loadModel({ x, y, z, ry, scale, url, animation, layers }) {
 
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
+
+        centerModel(model)
 
         // scale and position
 
@@ -1345,7 +1361,7 @@
             z: points[4].y,
             ry: points[4].ry,
             scale: 0.9 * p,
-            url: './new/Samurai_FixedMet_7.gltf',
+            url: './new/Samurai_FixedMet_711.glb',
             animation: true,
             layers: []
         }),
@@ -1457,14 +1473,18 @@
         }
 
         // if (counter == 1) {
-        const intersects = raycaster.ray.intersectsBox(aabb)
+        if (!isMobile) {
+            const intersects = raycaster.ray.intersectsBox(aabb)
+
+            if (intersects) {
+                INTERSECTED = true
+            } else if (!intersects) {
+                INTERSECTED = null
+            }
+        }
         // console.log(intersects)
 
-        if (intersects) {
-            INTERSECTED = true
-        } else if (!intersects) {
-            INTERSECTED = null
-        }
+
 
         // counter = 0
         // }

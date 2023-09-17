@@ -47,15 +47,15 @@ await document.transform(
         resize: [2048, 2048],
     }),
 
-    // reorder({ encoder: MeshoptEncoder }),
-    // quantize({pattern: /^(POSITION|TEXCOORD|JOINTS|WEIGHTS)(_\d+)?$/})
+    reorder({ encoder: MeshoptEncoder }),
+    quantize()
     // Custom transform.
 );
 
-// document.createExtension(EXTMeshoptCompression)
-//     .setRequired(true)
-//     .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
+document.createExtension(EXTMeshoptCompression)
+    .setRequired(true)
+    .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.QUANTIZE });
 
 // Write.
-await io.write('models/new/Samurai_FixedMet_7.glb', document);      // → void
+await io.write('models/new/Samurai_FixedMet_711.glb', document);      // → void
 // const glb = await io.writeBinary(document); // Document → Uint8Array
