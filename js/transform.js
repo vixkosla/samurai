@@ -16,7 +16,7 @@ import draco3d from 'draco3dgltf';
 // await MeshoptEncoder.ready;
 
 const io = new NodeIO()
-    .registerExtensions(ALL_EXTENSIONS)
+    .registerExtensions(KHRONOS_EXTENSIONS)
 // .registerExtensions(KHRONOS_EXTENSIONS)
 // .registerExtensions([EXTMeshoptCompression, KHRTextureBasisu])
 // .registerDependencies({
@@ -28,7 +28,7 @@ const io = new NodeIO()
 
 // Read.
 let document;
-document = await io.read('./models/new/KATANA_v3.gltf'); // → Document
+document = await io.read('models/new/CSAMUR_v5.glb'); // → Document
 // document = await io.readBinary(glb);   // Uint8Array → Document
 
 

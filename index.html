@@ -561,23 +561,26 @@
 
 
 
-    const exposure = 1.4
+    const exposure = 1.3
 
     // renderer.toneMapping = THREE.ReinhardToneMapping;
     // renderer.toneMapping = THREE.LinearToneMapping
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = exposure
     // renderer.useLegacyLights = false;
+    renderer.useLegacyLights = true;
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
+    // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 
 
     // renderer.outputColorSpace = THREE.sRGBEncoding
-    // THREE.ColorManagement.enabled = true;
-    // renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+    THREE.ColorManagement.enabled = true;
+    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     // THREE.ColorManagement.enabled = true;
 
@@ -594,17 +597,17 @@
     const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
     RAlight.position.set(0, 4, 0);
     RAlight.rotation.x = THREE.MathUtils.degToRad(35);
-    scene.add(RAlight);
+    // scene.add(RAlight);
 
-    const pointLight = new THREE.PointLight(0xf0f8ff, 1.3);
-    pointLight.position.set(0, 4, 0);
+    const pointLight = new THREE.PointLight(0xffffff, 3.3);
+    pointLight.position.set(0, 0, 5);
     scene.add(pointLight);
 
     const DirectionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
     pointLight.position.set(3, 5, 3);
-    scene.add(DirectionalLight);
+    // scene.add(DirectionalLight);
 
-    const ambientLight = new THREE.AmbientLight(0xf0ffff, 0.1)
+    const ambientLight = new THREE.AmbientLight(0xf0ffff, 0.5)
     ambientLight.position.set(0, 7, 0)
     scene.add(ambientLight)
 
