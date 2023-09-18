@@ -1061,11 +1061,16 @@
     // console.log()
     let LOADED
 
+    let startTimer, endTimer
+
     manager.onStart = function () {
         setTimeout(() => {
             if (!LOADED) {
+                location.reload()
             }
         }, 25000)
+
+        startTimer = new Date()
 
         let progressBarWidth = document.createElement("div");
         progressBarWidth.id = "progress-bar-alt-width";
@@ -1100,6 +1105,9 @@
         createBoundingBox()
 
         initHandlers()
+
+        endTimer = startTimer - new Date()
+        console.log(`models was loaded in ${endTimer} time`)
     }
 
     // dracoLoader;
@@ -1135,9 +1143,28 @@
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
 
-        model.position.x += (model.position.x - center.x);
-        model.position.y += (model.position.y - center.y);
-        model.position.z += (model.position.z - center.z);
+
+        console.log('consolelogdatablabla')
+        console.log(model.position.x, model.position.y, model.position.z)
+        console.log(center.x, center.y, center.z)
+
+        console.log(model)
+
+        model.traverse(function (child) {
+            if (child.isMesh) {
+                console.log(child.name)
+                console.log(child.position.x, child.position.y, child.position.z)
+
+                child.position.x = center.x ;
+                child.position.y = center.y ;
+                child.position.z = center.z ;
+
+                console.log(child.position.x, child.position.y, child.position.z)
+
+            }
+        })
+
+
     }
 
     async function loadModel({ x, y, z, ry, scale, url, animation, layers }) {
@@ -1145,12 +1172,21 @@
         const gltf = await gltfLoader.loadAsync(url)
         const model = gltf.scene
 
-        centerModel(model)
+
+        if (url == './new/Samurai_FixedMet_711.glb') {
+            centerModel(model)
+        }
 
         // scale and position
 
         model.scale.set(1 * scale, 1 * scale, 1 * scale)
-        model.position.set(x, y, z)
+        // console.log(x, y, z)
+        // model.position.set(x, y, z)
+
+        model.position.y += (model.position.y + y);
+        model.position.x += (model.position.x + x);
+        model.position.z += (model.position.z + z);
+
         model.rotation.set(0, ry, 0)
         model.name = url
 
@@ -1160,7 +1196,7 @@
         }
 
         if (url == './shogun_5.glb') {
-            console.log('greate')
+            // console.log('greate')
         }
 
         //detect size of model
@@ -1173,6 +1209,8 @@
         console.log(url)
 
         model.traverse(function (child) {
+            // child.geometry.center()
+
             if (child.isMesh) {
                 // console.log('mesh')
                 // child.visible = true
@@ -1212,6 +1250,8 @@
 
             }
         })
+
+
 
         return model
     }

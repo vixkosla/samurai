@@ -1,6 +1,6 @@
 import { NodeIO } from '@gltf-transform/core';
 
-import { reorder, weld, quantize, resample, prune, dedup, draco, textureCompress } from '@gltf-transform/functions';
+import { reorder, weld, quantize, resample, prune, dedup, draco, center, metalRough, textureCompress } from '@gltf-transform/functions';
 
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { KHRONOS_EXTENSIONS } from '@gltf-transform/extensions';
@@ -35,7 +35,13 @@ await document.transform(
     // Losslessly resample animation frames.
     resample(),
     // Remove unused nodes, textures, or other data.
+
+    center(),
+
+    metalRough(),
+
     prune(),
+
     // Remove duplicate vertex or texture data, if any.
     // dedup(),
     // Compress mesh geometry with Draco.
