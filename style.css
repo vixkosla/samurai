@@ -3405,6 +3405,34 @@ f .header_inner_item.logo {
 }
 
 @media (max-width: 473px) {
+      .text-block h1{
+        top:-360px;
+    }
+    .image-box{
+        width:30%!important;
+    }
+    .text-block p{
+line-height:19px;
+    }
+    .block_image{
+        gap:10px;
+    }
+    .box svg{
+        width:18px;
+    }
+     .block_image .intro.yelBtn{
+        margin:40px auto 0;
+    width: 240px;
+    height: 60px;
+    min-height: 60px;
+    border-radius:20px;
+    }
+    .block_image .yelBtn span{
+    display: contents;
+font-size: 16.553px;
+font-weight: 700;
+        
+    }
     .shinobiSlider_title.tittle.t {
         text-align: left;
         max-width: 350px;
