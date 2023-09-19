@@ -511,6 +511,7 @@
     function onWindowResize() {
         if (isPlayed) {
             clickHandler()
+            console.log('close')
         }
 
         renderer.setSize(model.clientWidth, model.clientHeight)
@@ -561,7 +562,7 @@
 
 
 
-    const exposure = 0.105
+    const exposure = 1.99005
 
     // renderer.toneMapping = THREE.ReinhardToneMapping;
     // renderer.toneMapping = THREE.LinearToneMapping
@@ -591,25 +592,27 @@
 
 
     const color = 0xffffff;
-    const intensity = 32.2;
+    const intensity = 0.75;
     const width = 12;
     const height = 4;
     const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
     RAlight.position.set(0, 0, 0);
-    RAlight.rotation.x = THREE.MathUtils.degToRad(135);
-    scene.add(RAlight);
+    RAlight.rotation.x = THREE.MathUtils.degToRad(15);
+    // scene.add(RAlight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 25.4);
-    pointLight.position.set(0, 0, 0);
-    scene.add(pointLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1.24);
+    pointLight.position.set(0, 0, -5);
+    // scene.add(pointLight);
 
-    const DirectionalLight = new THREE.DirectionalLight(0xffffff, 25.7);
-    pointLight.position.set(3, 5, 3);
-    scene.add(DirectionalLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    directionalLight.position.set(-4, 2, 3);
+    // directionalLight.castShadow = true
+    // directionalLight.target = groupNinja
+    scene.add(directionalLight);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.8)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.01)
     ambientLight.position.set(0, 7, 0)
-    scene.add(ambientLight)
+    // scene.add(ambientLight)
 
     // RAYCASTER
 
@@ -904,7 +907,9 @@
 
     let tweenCamPosition = undefined
 
-
+    function changeLightDirection() {
+        directionalLight.target = ninjaes[level].model
+    }
 
     function levelDetection(direction, sign) {
 
@@ -951,6 +956,10 @@
                 setTimeout(() => {
                     updateModelRotation()
                 }, 2000);
+
+                setTimeout(() => {
+                    // changeLightDirection()
+                }, 1500);
 
             })
             .onComplete(() => {
@@ -1033,15 +1042,32 @@
 
         model.addEventListener('click', function () {
 
-            if (!isMobile) {
-                if (INTERSECTED && timer > -400 && MOVING == 2) {
+            if (timer > -400 && MOVING == 2) {
+                if (!isMobile && INTERSECTED) {
                     clickHandler()
+
+                    MOVING = 0
+
+                } else if (isMobile) {
+                    clickHandler()
+
                     MOVING = 0
                 }
 
-            } else if (isMobile) {
-                clickHandler()
             }
+
+            // if (!isMobile) {
+            //     if (INTERSECTED && timer > -400 && MOVING == 2) {
+            //         clickHandler()
+            //         MOVING = 0
+            //     }
+
+            // } else if (isMobile) {
+            //     if () {
+
+            //     }
+            //     clickHandler()
+            // }
         })
         window.addEventListener('wheel', function (e) {
             if (!isMoving)
@@ -1073,7 +1099,7 @@
             if (!LOADED) {
                 location.reload()
             }
-        }, 25000)
+        }, 35000)
 
         startTimer = new Date()
 
@@ -1160,9 +1186,9 @@
                 console.log(child.name)
                 console.log(child.position.x, child.position.y, child.position.z)
 
-                child.position.x = center.x ;
-                child.position.y = center.y ;
-                child.position.z = center.z ;
+                child.position.x = center.x;
+                child.position.y = center.y;
+                child.position.z = center.z;
 
                 console.log(child.position.x, child.position.y, child.position.z)
 
@@ -1354,7 +1380,7 @@
     }
 
     const points = createCirclePoints()
-    pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
+    // pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
 
     let p = 1.30 // scale models
     let delta = -0.3 // down model
@@ -1447,6 +1473,11 @@
 
             ninjaes.push({ "model": ninja, "id": index + 1 })
             groupNinja.add(ninja)
+
+            if (index == 0) {
+                // directionalLight.target = ninja
+                console.log("light to the object")
+            }
             // scene.add(ninja)
             // console.log(ninja)
 
@@ -1459,7 +1490,9 @@
         })
     })
 
-
+    directionalLight.target = groupNinja
+    directionalLight.rotation.y = Math.PI / 4;
+ 
     scene.add(groupNinja)
     // RENDER LOOP
 

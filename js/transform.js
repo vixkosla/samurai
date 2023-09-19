@@ -81,7 +81,7 @@ await document.transform(
         encoder: sharp,
         targetFormat: 'webp',
         slots: /^(?!normalTexture).*$/, // exclude normal maps,
-        resize: [1024, 1024]
+        resize: [512, 512]
     }),
 
     reorder({ encoder: MeshoptEncoder, level: 'high' }),
