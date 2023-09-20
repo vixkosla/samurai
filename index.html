@@ -1096,7 +1096,7 @@
     const progressBar = document.getElementById('progress-bar')
     const progressBarContainer = document.querySelector('.progressbar-container')
     // console.log()
-    let LOADED
+    let LOADED, LOADING
 
     let startTimer, endTimer
 
@@ -1104,8 +1104,17 @@
         setTimeout(() => {
             if (!LOADED) {
                 // location.reload()
+                console.log('restart because of end over time')
             }
         }, 35000)
+
+        setTimeout(() => {
+            if (!LOADING) {
+                location.reload()
+                console.log(LOADING)
+                console.log('restart because of not loading')
+            }
+        }, 5000)
 
         startTimer = new Date()
 
@@ -1121,6 +1130,7 @@
 
     manager.onProgress = function (url, loaded, total) {
         let progress = undefined
+        LOADING = true
 
         progress = Math.floor(loaded / total * 100)
         console.log(progress)
