@@ -592,27 +592,32 @@
 
 
     const color = 0xffffff;
-    const intensity = 0.75;
+    const intensity = 2.25;
     const width = 12;
     const height = 4;
     const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
     RAlight.position.set(0, 0, 0);
-    RAlight.rotation.x = THREE.MathUtils.degToRad(15);
-    // scene.add(RAlight);
+    RAlight.rotation.x = THREE.MathUtils.degToRad(5);
+    // sceneAlt.add(RAlight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1.24);
-    pointLight.position.set(0, 0, -5);
-    // scene.add(pointLight);
+    const pointLight = new THREE.PointLight(0xffffff, 0.74);
+    pointLight.position.set(0, 5, 0);
+    sceneAlt.add(pointLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    const directionalLightAlt = new THREE.DirectionalLight(0xffffff, 1.05);
+    
     directionalLight.position.set(-4, 2, 3);
+    directionalLightAlt.position.set(0, 5, 3);
+
     // directionalLight.castShadow = true
     // directionalLight.target = groupNinja
     scene.add(directionalLight);
+    sceneAlt.add(directionalLightAlt);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.01)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35)
     ambientLight.position.set(0, 7, 0)
-    // scene.add(ambientLight)
+    // sceneAlt.add(ambientLight)
 
     // RAYCASTER
 
@@ -946,6 +951,7 @@
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
                 groupNinja.rotation.y = groupRotationRound.y
+                groupNinjaAlt.rotation.y = groupRotationRound.y
 
                 groupRotationRound.set({ y: groupRotation.y })
             })
@@ -1073,8 +1079,8 @@
             if (!isMoving)
                 wheelHandler(e)
         })
-        window.addEventListener('touchstart', touchStartHandler)
-        window.addEventListener('touchend', touchEndHandler)
+        // window.addEventListener('touchstart', touchStartHandler)
+        // window.addEventListener('touchend', touchEndHandler)
     }
 
 
@@ -1097,7 +1103,7 @@
     manager.onStart = function () {
         setTimeout(() => {
             if (!LOADED) {
-                location.reload()
+                // location.reload()
             }
         }, 35000)
 
@@ -1159,8 +1165,10 @@
 
 
     const groupNinja = new THREE.Group()
+    const groupNinjaAlt = new THREE.Group()
 
     groupNinja.rotation.y = Math.PI / 2
+    groupNinjaAlt.rotation.y = Math.PI / 2
 
     const groupRotation = {
         y: groupNinja.rotation.y
@@ -1181,19 +1189,19 @@
 
         console.log(model)
 
-        model.traverse(function (child) {
-            if (child.isMesh) {
-                console.log(child.name)
-                console.log(child.position.x, child.position.y, child.position.z)
+        // model.traverse(function (child) {
+        //     if (child.isMesh) {
+        //         console.log(child.name)
+        //         console.log(child.position.x, child.position.y, child.position.z)
 
-                child.position.x = center.x;
-                child.position.y = center.y;
-                child.position.z = center.z;
+                model.position.x -= center.x;
+                model.position.y -= center.y;
+                model.position.z -= center.z;
 
-                console.log(child.position.x, child.position.y, child.position.z)
+            //     console.log(child.position.x, child.position.y, child.position.z)
 
-            }
-        })
+            // }
+        // })
 
 
     }
@@ -1204,7 +1212,7 @@
         const model = gltf.scene
 
 
-        if (url == './new/Samurai_FixedMet_711.glb') {
+        if (url == './new/smtv_44_p.glb') {
             centerModel(model)
         }
 
@@ -1432,7 +1440,7 @@
             z: points[4].y,
             ry: points[4].ry,
             scale: 0.9 * p,
-            url: './new/Samurai_FixedMet_711.glb',
+            url: './new/smtv_44_p.glb',
             animation: true,
             layers: []
         }),
@@ -1472,7 +1480,12 @@
         promise.then(ninja => {
 
             ninjaes.push({ "model": ninja, "id": index + 1 })
-            groupNinja.add(ninja)
+
+            if (index == 4) {
+                groupNinjaAlt.add(ninja)
+            } else {
+                groupNinja.add(ninja)
+            }
 
             if (index == 0) {
                 // directionalLight.target = ninja
@@ -1491,9 +1504,11 @@
     })
 
     directionalLight.target = groupNinja
+    directionalLightAlt.target = groupNinjaAlt
     directionalLight.rotation.y = Math.PI / 4;
- 
+
     scene.add(groupNinja)
+    sceneAlt.add(groupNinjaAlt)
     // RENDER LOOP
 
     let counter = 0

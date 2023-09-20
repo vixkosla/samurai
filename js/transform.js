@@ -1,12 +1,14 @@
 import { NodeIO } from '@gltf-transform/core';
 
+// import { ready, resample } from 'keyframe-resample';
+
 import { generateTangents } from 'mikktspace';
 
 import sharp from 'sharp';
 
 import { PropertyType } from '@gltf-transform/core';
 
-import { unweld, textureCompress, tangents, sparse, simplify, join, instance, flatten, reorder, weld, quantize, resample, prune, dedup, draco, center, metalRough } from '@gltf-transform/functions';
+import {  resample, unweld, textureCompress, tangents, sparse, simplify, join, instance, flatten, reorder, weld, quantize, prune, dedup, draco, center, metalRough } from '@gltf-transform/functions';
 
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 // import { KHRONOS_EXTENSIONS } from '@gltf-transform/extensions';
@@ -27,7 +29,7 @@ const io = new NodeIO()
     // .registerExtensions(KHRONOS_EXTENSIONS)
 // .registerExtensions(KHRONOS_EXTENSIONS)
 // .registerExtensions([EXTMeshoptCompression, KHRTextureBasisu])
-// .registerExtensions([EXTMeshoptCompression])
+.registerExtensions([EXTMeshoptCompression])
 .registerExtensions([KHRDracoMeshCompression])
 .registerDependencies({
 'draco3d.decoder': await draco3d.createDecoderModule(), // Optional.
@@ -49,7 +51,8 @@ document = await io.read('models/new/KATANA_v3.glb'); // → Document
 
 await document.transform(
     // Losslessly resample animation frames.
-    // resample(),
+    // resample({ ready, resample }),
+    resample(),
     // Remove unused nodes, textures, or other data.
 
     center({pivot: 'below'}),
@@ -66,7 +69,6 @@ await document.transform(
     // quantize(),
     simplify({ simplifier: MeshoptSimplifier, ratio: 0.5, error: 0.0001 }),
 
-    // sparse({ratio: 1 / 10}),
     // reorder({encoder: MeshoptEncoder, level: 'high'}),
     // dedup({propertyTypes: [PropertyType.MESH]}),
     // Remove duplicate vertex or texture data, if any.
@@ -80,14 +82,15 @@ await document.transform(
     textureCompress({
         encoder: sharp,
         targetFormat: 'webp',
-        slots: /^(?!normalTexture).*$/, // exclude normal maps,
-        resize: [512, 512]
+        // slots: /^(?!normalTexture).*$/, // exclude normal maps,
+        resize: [256, 256]
     }),
 
     reorder({ encoder: MeshoptEncoder, level: 'high' }),
     quantize({ pattern: /^(POSITION|TEXCOORD|JOINTS|WEIGHTS)(_\d+)?$/ }),
 
 
+    sparse({ratio: 5 / 10}),
     // flatten(),
     // draco()
     // Custom transform.
@@ -103,9 +106,9 @@ await document.transform(
 //     };
 // }
 
-// document.createExtension(EXTMeshoptCompression)
-    // .setRequired(true)
-    // .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
+document.createExtension(EXTMeshoptCompression)
+    .setRequired(true)
+    .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
 
 // document.createExtension(KHRTextureBasisu)
 //     .setRequired(true);
