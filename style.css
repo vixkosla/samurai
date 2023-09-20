@@ -3559,7 +3559,8 @@ font-weight: 700;
 
 .cursor-container {
     display: relative;
-    pointer-events: none
+    pointer-events: none;
+    display: none;
 }
 
 .cursor {
