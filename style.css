@@ -3453,6 +3453,9 @@ font-weight: 700;
 }
 
 @media (max-width: 445px) {
+  .intro.yelBtn{
+      margin:0 auto:
+  }
     .advantages_item_spin_inner::before {
         left: 26%;
     }
