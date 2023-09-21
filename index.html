@@ -440,1225 +440,412 @@
 
     // TEXT BLOCK BEHAVIOR
 
-    const textBlocks = document.querySelectorAll('.text-block')
-    console.log(textBlocks)
-
-    function changeTextBlock() {
-        textBlocks.forEach((block, index) => {
-            if (!block.classList.contains('text-block-default')) {
-                block.classList.add('text-block_default')
-            }
-
-            if (index + 1 == level) {
-                block.classList.remove('text-block_default')
-            }
-        })
-    }
-
-    // BASIC
-
-    const model = document.querySelector(".model")
-    const modelContainer = document.querySelector('.model-container')
-
-    const fov = 45
-    let aspect = model.clientWidth / model.clientHeight
-    let aspectM = aspect * model.clientHeight / 768
-
-    function updateAspectRatio() {
-        aspect = model.clientWidth / model.clientHeight
-
-        if (!isPlayed) {
-            aspectM = aspect
-        }
-    }
-
-    const near = 0.1
-    const far = 100
-
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    const cameraAlt = new THREE.PerspectiveCamera(fov, aspect, near, far);
-
-    camera.position.z = -0.5
-    camera.position.y = 1
-    camera.position.x = 0
-
-    cameraAlt.position.z = -0.5
-    cameraAlt.position.y = 1
-    cameraAlt.position.x = 0
-    // camera.rotation.y = - Math.PI / 2
-    // camera.rotation.x = 0
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.autoClear = false;
-
-    // renderer.format = THREE.RGBAFormat
-    // renderer.gammaOutput = true
-    // renderer.gammaFactor = 2.2;
-    // renderer.outputEncoding = THREE.sRGBEncoding;
-
-    // renderer.shadowMap.enabled = true;
-    // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    // let stats = new Stats()
-    renderer.setSize(model.clientWidth, model.clientHeight)
-    // renderer.setClearColor(0x000, 1.0);
-
-    model.appendChild(renderer.domElement);
-    // model.appendChild(stats.dom);
-
-
-    window.addEventListener('resize', onWindowResize, false)
-
-    function onWindowResize() {
-        if (isPlayed) {
-            clickHandler()
-            console.log('close')
-        }
-
-        renderer.setSize(model.clientWidth, model.clientHeight)
-
-        updateAspectRatio()
-        detectMobileDevice()
-
-        camera.aspect = aspect
-        cameraAlt.aspect = aspect
-
-        camera.updateProjectionMatrix()
-        cameraAlt.updateProjectionMatrix()
-
-        renderer.render(scene, camera);
+  const textBlocks = document.querySelectorAll(".text-block");
+function changeTextBlock() {
+    textBlocks.forEach((e, t) => {
+        e.classList.contains("text-block-default") || e.classList.add("text-block_default"), t + 1 == level && e.classList.remove("text-block_default");
+    });
+}
+console.log(textBlocks);
+const model = document.querySelector(".model"),
+    modelContainer = document.querySelector(".model-container"),
+    fov = 45;
+let aspect = model.clientWidth / model.clientHeight,
+    aspectM = (aspect * model.clientHeight) / 768;
+function updateAspectRatio() {
+    (aspect = model.clientWidth / model.clientHeight), isPlayed || (aspectM = aspect);
+}
+const near = 0.1,
+    far = 100,
+    camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100),
+    cameraAlt = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+(camera.position.z = -0.5), (camera.position.y = 1), (camera.position.x = 0), (cameraAlt.position.z = -0.5), (cameraAlt.position.y = 1), (cameraAlt.position.x = 0);
+const renderer = new THREE.WebGLRenderer({ antialias: !0, alpha: !0 });
+function onWindowResize() {
+    isPlayed && (clickHandler(), console.log("close")),
+        renderer.setSize(model.clientWidth, model.clientHeight),
+        updateAspectRatio(),
+        detectMobileDevice(),
+        (camera.aspect = aspect),
+        (cameraAlt.aspect = aspect),
+        camera.updateProjectionMatrix(),
+        cameraAlt.updateProjectionMatrix(),
+        renderer.render(scene, camera),
         renderer.render(sceneAlt, cameraAlt);
-    }
-
-    let mixers = []
-    let clocks = []
-
-
-    let isMoving = 0
-    let level = 1
-
-    const LEVELMAX = 5
-    const LEVELMIN = 1
-
-    const scene = new THREE.Scene();
-    const sceneAlt = new THREE.Scene();
-
-    scene.background = new THREE.Color(0x0c0c0e)
-    // sceneAlt.background = new THREE.Color(0xffffff)
-
-    THREE.ColorManagement.enabled = true;
-
-    const manager = new THREE.LoadingManager();
-
-    new RGBELoader()
-        .setPath('textures/')
-        .load('royal_esplanade_1k.hdr', function (texture) {
-
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-
-            // scene.background = texture;
-            scene.environment = texture;
-
-        });
-
-
-
-    const exposure = 1.99005
-
-    // renderer.toneMapping = THREE.ReinhardToneMapping;
-    // renderer.toneMapping = THREE.LinearToneMapping
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = exposure
-    // renderer.useLegacyLights = false;
-    renderer.useLegacyLights = true;
-
-    renderer.shadowMap.enabled = true;
-    // renderer.shadowMap.type = THREE.VSMShadowMap;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-
-
-    // renderer.outputColorSpace = THREE.sRGBEncoding
-    THREE.ColorManagement.enabled = true;
-    renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
-
-    // renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-    // THREE.ColorManagement.enabled = true;
-
-
-    // const envmap = new RGBELoader().load("./assets/abandoned_games_room_01_1k.hdr");
-    // envmap.mapping = THREE.EquirectangularReflectionMapping
-    // scene.environment = envmap;
-
-
-    const color = 0xffffff;
-    const intensity = 2.25;
-    const width = 12;
-    const height = 4;
-    const RAlight = new THREE.RectAreaLight(color, intensity, width, height);
-    RAlight.position.set(0, 0, 0);
-    RAlight.rotation.x = THREE.MathUtils.degToRad(5);
-    // sceneAlt.add(RAlight);
-
-    const pointLight = new THREE.PointLight(0xffffff, 0.74);
-    pointLight.position.set(0, 5, 0);
-    sceneAlt.add(pointLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    const directionalLightAlt = new THREE.DirectionalLight(0xffffff, 1.05);
-    
-    directionalLight.position.set(-4, 2, 3);
-    directionalLightAlt.position.set(0, 5, 3);
-
-    // directionalLight.castShadow = true
-    // directionalLight.target = groupNinja
-    scene.add(directionalLight);
-    sceneAlt.add(directionalLightAlt);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35)
-    ambientLight.position.set(0, 7, 0)
-    // sceneAlt.add(ambientLight)
-
-    // RAYCASTER
-
-    let raycaster = new THREE.Raycaster()
-
-    let pointer = new THREE.Vector2()
-
-    // let controls = new OrbitControls(camera, renderer.domElement)
-    // controls.target.set(5, 5, 20)
-    // controls.update()
-
-    //  CUSTOM CURSOR
-
-    const mouse = Ola({
-        x: undefined,
-        y: undefined
-    }, 5)
-
-    const position = Ola({ x: 0, y: 0 }, 5) // new CDN
-
-    const cursor = document.querySelector('.cursor')
-    const cursorBigPart = document.querySelector('.cursor-bigPart')
-
-    let INTERSECTED = null
-
-    let CLICKED = null
-    let MOVING = null
-
-    let timer = null
-
-    window.addEventListener('mousedown', function (e) {
-        e.preventDefault()
-
-        CLICKED = true
-        MOVING++
-        timer = new Date()
-
-    })
-
-    window.addEventListener('mouseup', function (e) {
-        CLICKED = null
-        MOVING++
-        timer = timer - new Date()
-
-        e.preventDefault()
-    })
-
-
-    let isMobile = 0
-
-    function detectMobileDevice() {
-        let containerWidth = model.clientWidth
-
-        console.log(containerWidth)
-
-        if (containerWidth < 760) {
-            console.log('mobile device')
-            console.log(containerWidth)
-            isMobile = true
-        } else {
-            isMobile = false
-        }
-    }
-
-    window.addEventListener('mousemove', function (e) {
-
-        event.preventDefault();
-
-        position.set({ x: event.clientX, y: event.clientY })
-
-        cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`
-
-        pointer.x = (position.x / window.innerWidth) * 2 - 1
-        pointer.y = - (position.y / window.innerHeight) * 2 + 1
-
-        mouse.set({
-            x: pointer.x,
-            y: pointer.y
+}
+(renderer.autoClear = !1), renderer.setSize(model.clientWidth, model.clientHeight), model.appendChild(renderer.domElement), window.addEventListener("resize", onWindowResize, !1);
+let mixers = [],
+    clocks = [],
+    isMoving = 0,
+    level = 1;
+const LEVELMAX = 5,
+    LEVELMIN = 1,
+    scene = new THREE.Scene(),
+    sceneAlt = new THREE.Scene();
+(scene.background = new THREE.Color(789518)), (THREE.ColorManagement.enabled = !0);
+const manager = new THREE.LoadingManager();
+new RGBELoader().setPath("textures/").load("royal_esplanade_1k.hdr", function (e) {
+    (e.mapping = THREE.EquirectangularReflectionMapping), (scene.environment = e);
+});
+const exposure = 1.99005;
+(renderer.toneMapping = THREE.ACESFilmicToneMapping),
+    (renderer.toneMappingExposure = 1.99005),
+    (renderer.useLegacyLights = !0),
+    (renderer.shadowMap.enabled = !0),
+    (renderer.shadowMap.type = THREE.PCFSoftShadowMap),
+    (THREE.ColorManagement.enabled = !0),
+    (renderer.outputColorSpace = THREE.LinearSRGBColorSpace);
+const color = 16777215,
+    intensity = 2.25,
+    width = 12,
+    height = 4,
+    RAlight = new THREE.RectAreaLight(color, 2.25, 12, 4);
+RAlight.position.set(0, 0, 0), (RAlight.rotation.x = THREE.MathUtils.degToRad(5));
+const pointLight = new THREE.PointLight(16777215, 0.74);
+pointLight.position.set(0, 5, 0), sceneAlt.add(pointLight);
+const directionalLight = new THREE.DirectionalLight(16777215, 1.4),
+    directionalLightAlt = new THREE.DirectionalLight(16777215, 1.05);
+directionalLight.position.set(-4, 2, 3), directionalLightAlt.position.set(0, 5, 3), scene.add(directionalLight), sceneAlt.add(directionalLightAlt);
+const ambientLight = new THREE.AmbientLight(16777215, 0.35);
+ambientLight.position.set(0, 7, 0);
+let raycaster = new THREE.Raycaster(),
+    pointer = new THREE.Vector2();
+const mouse = Ola({ x: void 0, y: void 0 }, 5),
+    position = Ola({ x: 0, y: 0 }, 5),
+    cursor = document.querySelector(".cursor"),
+    cursorBigPart = document.querySelector(".cursor-bigPart");
+let INTERSECTED = null,
+    CLICKED = null,
+    MOVING = null,
+    timer = null;
+window.addEventListener("mousedown", function (e) {
+    e.preventDefault(), (CLICKED = !0), MOVING++, (timer = new Date());
+}),
+    window.addEventListener("mouseup", function (e) {
+        (CLICKED = null), MOVING++, (timer -= new Date()), e.preventDefault();
+    });
+let isMobile = 0;
+function detectMobileDevice() {
+    let e = model.clientWidth;
+    console.log(e), e < 760 ? (console.log("mobile device"), console.log(e), (isMobile = !0)) : (isMobile = !1);
+}
+function intersectHandler(e) {}
+window.addEventListener("mousemove", function (e) {
+    event.preventDefault(),
+        position.set({ x: event.clientX, y: event.clientY }),
+        (cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`),
+        (pointer.x = (position.x / window.innerWidth) * 2 - 1),
+        (pointer.y = (-position.y / window.innerHeight) * 2 + 1),
+        mouse.set({ x: pointer.x, y: pointer.y }),
+        (camera.rotation.y = 0.01 * -mouse.x),
+        (camera.rotation.x = 0.01 * mouse.y),
+        INTERSECTED ? enterMouseHandler() : INTERSECTED || leaveMouseHandler(),
+        raycaster.setFromCamera(pointer, camera),
+        (MOVING = !1);
+});
+let moveX,
+    moveZ,
+    moveY,
+    tweenBouncing,
+    isPlayed = 0,
+    isPlaying = 0,
+    minWidth = 320;
+function createBouncing({ ninja: e, flag: t }) {
+    if (t) return ninjaBouncing(e);
+}
+function ninjaBouncing(e) {
+    let t = (Math.PI / 360) * 7.5,
+        o = { y: e.rotation.y - t };
+    return new TWEEN.Tween(o, !1)
+        .to({ y: e.rotation.y + 2 * t }, 6e3)
+        .easing(TWEEN.Easing.Linear.inOut)
+        .repeat(1 / 0)
+        .yoyo(!0)
+        .onUpdate(() => {
+            e.rotation.y = o.y;
         })
-
-        // if (ninjaes.length > 4) {
-        camera.rotation.y = - mouse.x * 0.01;
-        camera.rotation.x = mouse.y * 0.01
-
-        if (INTERSECTED) {
-            enterMouseHandler()
-        } else if (!INTERSECTED) {
-            leaveMouseHandler()
-        }
-
-        raycaster.setFromCamera(pointer, camera);
-
-        MOVING = false
-    })
-
-    // let intersects = undefined
-
-    function intersectHandler(event) {
-
-        // console.log(raycaster)
-
-
+        .start();
+}
+function cameraMoving(e) {
+    let t;
+    switch (("right" == e && (t = 1), "left" == e && (t = -1), updateAspectRatio(), level)) {
+        case 1:
+            (moveX = (model.clientWidth - minWidth) / 900), (moveZ = 1.5), (moveY = -0.15);
+            break;
+        case 2:
+            (moveX = (model.clientWidth - minWidth) / 774), (moveZ = 1.5), (moveY = -0.35);
+            break;
+        case 3:
+            (moveX = (model.clientWidth - minWidth) / 588), (moveZ = 1), (moveY = -0.35);
+            break;
+        case 4:
+            (moveX = (model.clientWidth - minWidth) / 558), (moveZ = 0.1 * aspectM), (moveY = 0);
+            break;
+        case 5:
+            (moveX = 0.55 * aspectM), (moveX = (model.clientWidth - minWidth) / 914), (moveZ = 1), (moveY = -0.35);
     }
-
-    // TEXT BLOCK and cursor animation  
-
-    // TEXT BLOCK
-
-    let isPlayed = 0
-    let isPlaying = 0
-
-    let moveX = undefined
-    let moveZ = undefined
-    let moveY = undefined
-
-    let minWidth = 320
-
-    let tweenBouncing = undefined
-
-    function createBouncing({ ninja, flag }) {
-
-        if (flag) {
-            return ninjaBouncing(ninja)
-        }
-    }
-
-    function ninjaBouncing(ninja) {
-
-        let bounce = Math.PI / 360 * 7.5
-
-        let ninjaRotation = {
-            y: ninja.rotation.y - bounce
-        }
-
-        // console.log(ninja)
-
-
-        let tweenBouncing = new TWEEN.Tween(ninjaRotation, false)
-            .to({ y: ninja.rotation.y + 2 * bounce }, 6000)
-            .easing(TWEEN.Easing.Linear.inOut)
-            .repeat(Infinity) // repeats forever
-            .yoyo(true)
+    console.log(model.clientWidth),
+        console.log(moveX),
+        (tweenCamPosition = new TWEEN.Tween(cameraPosition, !1)
+            .to({ x: camera.position.x + moveX * t, z: camera.position.z + moveZ * t, y: camera.position.y + moveY * t }, 1e3)
+            .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                // console.log(ninja.rotation.y)
-                ninja.rotation.y = ninjaRotation.y
+                (camera.position.x = cameraPositionRound.x),
+                    (camera.position.z = cameraPositionRound.z),
+                    (camera.position.y = cameraPositionRound.y),
+                    cameraPositionRound.set({ x: cameraPosition.x, y: cameraPosition.y, z: cameraPosition.z });
             })
             .start()
-
-        return tweenBouncing
-    }
-
-
-    function cameraMoving(direction) {
-
-        let sign = undefined
-
-        if (direction == 'right') {
-            sign = 1
-        }
-
-        if (direction == 'left') {
-            sign = -1
-        }
-
-        updateAspectRatio()
-
-        // minWidth = 320
-
-        switch (level) {
-            case 1:
-                // moveX = 1 * 0.65 * aspectM
-                moveX = (model.clientWidth - minWidth) / 900
-                moveZ = 1.5
-                moveY = -0.15
-                break;
-            case 2:
-                // moveX = 1 * 0.65 * aspectM
-                moveX = (model.clientWidth - minWidth) / 774
-                moveZ = 1.5
-                moveY = -0.35
-                break;
-            case 3:
-                // moveX = 1 * 0.85 * aspectM
-                moveX = (model.clientWidth - minWidth) / 588
-                moveZ = 1
-                moveY = -0.35
-                break;
-            case 4:
-                // moveX = 3 * 0.30 * aspectM
-                moveX = (model.clientWidth - minWidth) / 558
-                moveZ = 1 * 0.10 * aspectM
-                moveY = 0
-                break;
-            case 5:
-                moveX = 1 * 0.55 * aspectM
-                moveX = (model.clientWidth - minWidth) / 914
-                moveZ = 1
-                moveY = -0.35
-                break;
-            default:
-                break;
-        }
-
-        console.log(model.clientWidth)
-        console.log(moveX)
-
-        tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
-            .to({ x: camera.position.x + moveX * sign, z: camera.position.z + moveZ * sign, y: camera.position.y + moveY * sign }, 1000)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(() => {
-                camera.position.x = cameraPositionRound.x
-                camera.position.z = cameraPositionRound.z
-                camera.position.y = cameraPositionRound.y
-
-                cameraPositionRound.set({ x: cameraPosition.x, y: cameraPosition.y, z: cameraPosition.z })                // console.log(camera.position)
-
-            })
-            .start() // Start the tween immediately.
             .onStart(() => {
-                isMoving = 1
-                isPlaying = 1
+                (isMoving = 1), (isPlaying = 1);
             })
             .onComplete(() => {
-                // groupRotation.y = groupNinja.rotation.y
-                // levelDetection(direction, sign)
-
-                console.log(level)
-                isMoving = 0
-                isPlaying = 0
-            })
-    }
-
-    const textBlock = document.querySelector('.text-block')
-
-    let tweenText = TweenMax.to('.text-block', {
-        delay: (i) => 0.25,
-        duration: 1.5,
-        x: -50,
-        opacity: 0,
-        paused: true,
-        easy: Power4.easyInOut,
-        immediateRender: false
-    }).progress(1)
-
-    function clickHandler() {
-
-        if (!isMoving) {
-            if (!isPlayed) {
-                cursorBigPart.style.transform += 'rotate(90deg)'
-            }
-
-            tweenText.play()
-
-            if (!isPlayed && !isPlaying) {
-
-                tweenText.reverse()
-                cameraMoving('left')
-
-                isPlayed = 1
-            } else if (!isPlaying) {
-
-                cameraMoving('right')
-                tweenText.play()
-
-                isPlayed = 0
-            }
-        }
-    }
-
-
-
-
-    // CURSOR
-
-    function enterMouseHandler() {
-        cursorBigPart.style.transform = `scale(1)`
-        if (isPlayed) {
-            cursorBigPart.style.transform += `rotate(135deg)`
-        }
-    }
-
-    function leaveMouseHandler() {
-        cursorBigPart.style.transform = `scale(0)`
-    }
-
-    // DOM ELEMENT add two listnerers for enter and for leave 
-
-    // WHEEL EVENT
-
-    let tweenRotation = undefined
-    let tweenPosition = undefined
-
-    let tweenCamPosition = undefined
-
-    function changeLightDirection() {
-        directionalLight.target = ninjaes[level].model
-    }
-
-    function levelDetection(direction, sign) {
-
-        if (level == LEVELMAX && direction == 'left') {
-            level = LEVELMIN
-        } else if (level == LEVELMIN && direction == "right") {
-            level = LEVELMAX
-        } else {
-            level = level + (sign * 1)
-        }
-
-        console.log(level)
-
-    }
-
-    function groupRotate(direction) {
-
-        let sign = undefined
-
-        // console.log('check')
-
-        if (direction === 'left') {
-            sign = 1
-        }
-
-        if (direction === 'right') {
-            sign = -1
-        }
-
-        // groupRotation.y = groupNinja.rotation.y
-
-        tweenRotation = new TWEEN.Tween(groupRotation, false)
-            .to({ y: groupRotation.y + (omega * sign) }, 3000)
+                console.log(level), (isMoving = 0), (isPlaying = 0);
+            }));
+}
+const textBlock = document.querySelector(".text-block");
+let tweenRotation,
+    tweenPosition,
+    tweenCamPosition,
+    touchStartX,
+    touchStartY,
+    touchEndX,
+    touchEndY,
+    deltaY,
+    tweenText = TweenMax.to(".text-block", { delay: (e) => 0.25, duration: 1.5, x: -50, opacity: 0, paused: !0, easy: Power4.easyInOut, immediateRender: !1 }).progress(1);
+function clickHandler() {
+    isMoving ||
+        (isPlayed || (cursorBigPart.style.transform += "rotate(90deg)"),
+        tweenText.play(),
+        isPlayed || isPlaying ? isPlaying || (cameraMoving("right"), tweenText.play(), (isPlayed = 0)) : (tweenText.reverse(), cameraMoving("left"), (isPlayed = 1)));
+}
+function enterMouseHandler() {
+    (cursorBigPart.style.transform = "scale(1)"), isPlayed && (cursorBigPart.style.transform += "rotate(135deg)");
+}
+function leaveMouseHandler() {
+    cursorBigPart.style.transform = "scale(0)";
+}
+function changeLightDirection() {
+    directionalLight.target = ninjaes[level].model;
+}
+function levelDetection(e, t) {
+    level == LEVELMAX && "left" == e ? (level = LEVELMIN) : level == LEVELMIN && "right" == e ? (level = LEVELMAX) : (level += 1 * t), console.log(level);
+}
+function groupRotate(e) {
+    let t;
+    "left" === e && (t = 1),
+        "right" === e && (t = -1),
+        (tweenRotation = new TWEEN.Tween(groupRotation, !1)
+            .to({ y: groupRotation.y + omega * t }, 3e3)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(() => {
-                groupNinja.rotation.y = groupRotationRound.y
-                groupNinjaAlt.rotation.y = groupRotationRound.y
-
-                groupRotationRound.set({ y: groupRotation.y })
+                (groupNinja.rotation.y = groupRotationRound.y), (groupNinjaAlt.rotation.y = groupRotationRound.y), groupRotationRound.set({ y: groupRotation.y });
             })
-            .start() // Start the tween immediately.
+            .start()
             .onStart(() => {
-
-                isMoving = 1
-                setTimeout(() => {
-                    updateModelRotation()
-                }, 2000);
-
-                setTimeout(() => {
-                    // changeLightDirection()
-                }, 1500);
-
+                (isMoving = 1),
+                    setTimeout(() => {
+                        updateModelRotation();
+                    }, 2e3),
+                    setTimeout(() => {}, 1500);
             })
             .onComplete(() => {
-                // groupRotation.y = groupNinja.rotation.y
-                levelDetection(direction, sign)
-
-                createBoundingBox()
-                changeTextBlock()
-
-
-                // console.log(level)
-                isMoving = 0
-            })
-    }
-
-    // 
-    let touchStartX, touchStartY, touchEndX, touchEndY
-
-
-    function touchStartHandler(e) {
-
-        let touch = { x: e.touches[0], y: e }
-
-        touchStartX = event.changedTouches[0].screenX
-        touchStartY = event.changedTouches[0].screenY
-
-
-        // console.log(event)
-        // console.log(event.touches[0].clientX, event.touches[0].clientY)
-    }
-
-    function touchEndHandler(e) {
-        touchEndX = event.changedTouches[0].screenX
-        touchEndY = event.changedTouches[0].screenY
-        handlerSwipe()
-    }
-
-    let deltaY = undefined
-
-    function handlerSwipe() {
-        let deltaY = touchStartY - touchEndY
-
-        if (!isMoving) {
-            if (deltaY > 10 && deltaY < 50 && !isMoving) {
-                groupRotate('right')
-                if (isPlayed) {
-                    clickHandler()
-                }
-            } else if (deltaY < -10 && deltaY < -50 && !isMoving) {
-                groupRotate('left')
-                if (isPlayed) {
-                    clickHandler()
-                }
-            }
-        }
-    }
-
-
-    function wheelHandler(e) {
-        console.log('hey')
-
-        // const normalized = normalizeWheel(event)
-        // console.log(normalized)
-        console.log(e.deltaY)
-
-        if (e.deltaY > 30 && e.deltaY > 50 && !isMoving) {
-            groupRotate('right')
-            if (isPlayed) {
-                clickHandler()
-            }
-        } else if (e.deltaY < -30 && e.deltaY < -50 && !isMoving) {
-            groupRotate('left')
-            if (isPlayed) {
-                clickHandler()
-            }
-        }
-    }
-
-    function initHandlers() {
-
-        model.addEventListener('click', function () {
-
-            if (timer > -400 && MOVING == 2) {
-                if (!isMobile && INTERSECTED) {
-                    clickHandler()
-
-                    MOVING = 0
-
-                } else if (isMobile) {
-                    clickHandler()
-
-                    MOVING = 0
-                }
-
-            }
-
-            // if (!isMobile) {
-            //     if (INTERSECTED && timer > -400 && MOVING == 2) {
-            //         clickHandler()
-            //         MOVING = 0
-            //     }
-
-            // } else if (isMobile) {
-            //     if () {
-
-            //     }
-            //     clickHandler()
-            // }
-        })
-        window.addEventListener('wheel', function (e) {
-            if (!isMoving)
-                wheelHandler(e)
-        })
-        // window.addEventListener('touchstart', touchStartHandler)
-        // window.addEventListener('touchend', touchEndHandler)
-    }
-
-
-    // LOAD MODEL
-
-    let url = "./new/Samurai_FixedMet_11.glb"
-    let m = 3
-
-    const cursorContainer = document.querySelector('.cursor-container')
-
-    const progressBarAlt = document.querySelector('.progress-bar-alt')
-
-    const progressBar = document.getElementById('progress-bar')
-    const progressBarContainer = document.querySelector('.progressbar-container')
-    // console.log()
-    let LOADED, LOADING
-
-    let startTimer, endTimer
-
-    manager.onStart = function () {
+                levelDetection(e, t), createBoundingBox(), changeTextBlock(), (isMoving = 0);
+            }));
+}
+function touchStartHandler(e) {
+    e.touches[0];
+    (touchStartX = event.changedTouches[0].screenX), (touchStartY = event.changedTouches[0].screenY);
+}
+function touchEndHandler(e) {
+    (touchEndX = event.changedTouches[0].screenX), (touchEndY = event.changedTouches[0].screenY), handlerSwipe();
+}
+function handlerSwipe() {
+    let e = touchStartY - touchEndY;
+    isMoving || (e > 10 && e < 50 && !isMoving ? (groupRotate("right"), isPlayed && clickHandler()) : e < -10 && e < -50 && !isMoving && (groupRotate("left"), isPlayed && clickHandler()));
+}
+function wheelHandler(e) {
+    console.log("hey"),
+        console.log(e.deltaY),
+        e.deltaY > 30 && e.deltaY > 50 && !isMoving ? (groupRotate("right"), isPlayed && clickHandler()) : e.deltaY < -30 && e.deltaY < -50 && !isMoving && (groupRotate("left"), isPlayed && clickHandler());
+}
+function initHandlers() {
+    model.addEventListener("click", function () {
+        timer > -400 && 2 == MOVING && ((!isMobile && INTERSECTED) || isMobile) && (clickHandler(), (MOVING = 0));
+    }),
+        window.addEventListener("wheel", function (e) {
+            isMoving || wheelHandler(e);
+        });
+}
+let url = "./new/Samurai_FixedMet_11.glb",
+    m = 3;
+const cursorContainer = document.querySelector(".cursor-container"),
+    progressBarAlt = document.querySelector(".progress-bar-alt"),
+    progressBar = document.getElementById("progress-bar"),
+    progressBarContainer = document.querySelector(".progressbar-container");
+let LOADED, LOADING, startTimer, endTimer;
+(manager.onStart = function () {
+    setTimeout(() => {
+        LOADED || console.log("restart because of end over time");
+    }, 35e3),
         setTimeout(() => {
-            if (!LOADED) {
-                // location.reload()
-                console.log('restart because of end over time')
-            }
-        }, 35000)
-
-        setTimeout(() => {
-            if (!LOADING) {
-                location.reload()
-                console.log(LOADING)
-                console.log('restart because of not loading')
-            }
-        }, 5000)
-
-        startTimer = new Date()
-
-        let progressBarWidth = document.createElement("div");
-        progressBarWidth.id = "progress-bar-alt-width";
-
-        progressBarAlt.appendChild(progressBarWidth)
-
-        detectMobileDevice()
-    }
-
-
-
-    manager.onProgress = function (url, loaded, total) {
-        let progress = undefined
-        LOADING = true
-
-        progress = Math.floor(loaded / total * 100)
-        console.log(progress)
-
-        // progressBar.value = progress
-        // progressBarAlt.style = `--p:${progress}`
-        progressBarAlt.style.setProperty("--p", progress)
-
-    }
-
-
-    manager.onLoad = function (url, loaded, total) {
-        LOADED = true
-        alert('the end')
-
-        console.log('loading all models have complete')
-        progressBarContainer.classList.add('progressbar-loaded')
-        cursorContainer.classList.remove('cursor-container-loading')
-
-        createBoundingBox()
-
-        initHandlers()
-
-        endTimer = startTimer - new Date()
-        console.log(`models was loaded in ${endTimer} time`)
-    }
-
-    // dracoLoader;
-    const dracoLoader = new DRACOLoader()
-        .setDecoderPath('./js/libs/draco/')
-
-    // ktx2Loader
-    const ktx2Loader = new KTX2Loader()
-        .setTranscoderPath('./js/libs/basis/')
-        .detectSupport(renderer);
-
-    const gltfLoader = new GLTFLoader(manager).setPath('./models/')
-
-    gltfLoader.setKTX2Loader(ktx2Loader);
-    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
-    gltfLoader.setDRACOLoader(dracoLoader);
-
-
-
-    const groupNinja = new THREE.Group()
-    const groupNinjaAlt = new THREE.Group()
-
-    groupNinja.rotation.y = Math.PI / 2
-    groupNinjaAlt.rotation.y = Math.PI / 2
-
-    const groupRotation = {
-        y: groupNinja.rotation.y
-    }
-
-    const groupRotationRound = Ola({
-        y: groupNinja.rotation.y
-    }, 500)
-
-    function centerModel(model) {
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-
-
-        console.log('consolelogdatablabla')
-        console.log(model.position.x, model.position.y, model.position.z)
-        console.log(center.x, center.y, center.z)
-
-        console.log(model)
-
-        // model.traverse(function (child) {
-        //     if (child.isMesh) {
-        //         console.log(child.name)
-        //         console.log(child.position.x, child.position.y, child.position.z)
-
-                model.position.x -= center.x;
-                model.position.y -= center.y;
-                model.position.z -= center.z;
-
-            //     console.log(child.position.x, child.position.y, child.position.z)
-
-            // }
-        // })
-
-
-    }
-
-    async function loadModel({ x, y, z, ry, scale, url, animation, layers }) {
-
-        const gltf = await gltfLoader.loadAsync(url)
-        const model = gltf.scene
-
-
-        if (url == './new/smtv_44_p.glb') {
-            centerModel(model)
-        }
-
-        // scale and position
-
-        model.scale.set(1 * scale, 1 * scale, 1 * scale)
-        // console.log(x, y, z)
-        // model.position.set(x, y, z)
-
-        model.position.y += (model.position.y + y);
-        model.position.x += (model.position.x + x);
-        model.position.z += (model.position.z + z);
-
-        model.rotation.set(0, ry, 0)
-        model.name = url
-
-        if (url == './new/KATANA_v24.glb') {
-
-            model.rotation.set(0, ry, Math.PI / 3)
-        }
-
-        if (url == './SHOGUN_v8.gltf') {
-            // console.log('greate')
-        }
-
-        //detect size of model
-
-
-        if (gltf.animations.length && animation) {
-            loadAnimation(gltf)
-        }
-
-        console.log(url)
-
-        model.traverse(function (child) {
-            // child.geometry.center()
-
-            if (child.isMesh) {
-                // console.log('mesh')
-                // child.visible = true
-                child.castShadow = true
-                child.recieveShadow = true
-                child.frustumCulled = false;
-                // child.material.color.convertSRGBToLinear();
-
-                // console.log(child.name)
-
-
-
-                if (layers.includes(child.name)) {
-                    // child.layers.enable(2)
-                    // console.log('win')
-                }
-
-                if (child.name == 'model_4001') {
-                    // console.log('win')
-                }
-
-                if (url == './smtv_44_p.glb') {
-                    // child.geometry.center()
-                }
-
-            }
-            if ((child.isMesh && child.material.metalness == 1)) {
-                // console.log(child.material.type)
-                // console.log(child.material)
-            }
-            if (child.isSkinnedMesh) {
-                for (let i = 0; i < child.geometry.attributes.position.count; i++) {
-                    // target.fromBufferAttribute(child.geometry.attributes.position, i)
-                    // child.applyBoneTransform(i, target)
-                    // box.expandByPoint(target)
-                }
-
-            }
-        })
-
-
-
-        return model
-    }
-
-    let aabb = new THREE.Box3()
-    let targetA = new THREE.Vector3()
-    let boxHelper = undefined
-
-    function createBoundingBox(ninja) {
-        aabb.makeEmpty()
-        // scene.remove(boxHelper)
-
-        let model = undefined
-
-        if (!ninja) {
-            ninjaes.forEach(ninja => {
-                if (ninja.id == level) {
-                    model = ninja.model
-                    console.log('great', ninja.id, level)
-                }
-            })
-        } else {
-            model = ninja
-        }
-
-
-        // console.log(model)
-
-        aabb = new THREE.Box3().setFromObject(model)
-
-        // model.traverse(function (child) {
-        // if (child.isMesh) {
-        // for (let i = 0; i < child.geometry.attributes.position.count; i++) {
-        // targetA.fromBufferAttribute(child.geometry.attributes.position, i)
-        // child.applyBoneTransform(i, targetA)
-        // box.expandByPoint(targetA)
-        // }
-        // }
-        // })
-
-        // boxHelper = new THREE.Box3Helper(aabb, 0xff0000)
-        // scene.add(boxHelper)
-    }
-
-    function loadAnimation(gltf) {
-
-        const animations = gltf.animations
-
-        let mixer = new THREE.AnimationMixer(gltf.scene)
-        let clock = new THREE.Clock()
-
-
-        const firstAction = mixer.clipAction(animations[0])
-
-        mixers.push(mixer)
-        clocks.push(clock)
-
-        firstAction.play();
-    }
-
-    const n = 5
-    const rds = 5
-    const omega = 2 * Math.PI / n
-
-    function createCirclePoints() {
-        let points = []
-
-        const x = function (i) {
-            return rds * Math.cos(omega * i)
-        }
-
-        const y = function (i) {
-            return rds * Math.sin(omega * i)
-        }
-
-        for (let i = 0; i < n; i++) {
-            points.push({
-                x: x(i),
-                y: y(i),
-                ry: Math.PI / 2 - omega * i + Math.PI
-            })
-            // console.log(points[i])
-            // console.log(camera.position, camera.rotation)
-        }
-
-        return points
-    }
-
-    function updateModelRotation() {
-        ninjaes.forEach(ninja => {
-            if (ninja.id == level) {
-                ninja.model.rotation.y = points[level - 1].ry
-            }
-        })
-    }
-
-    const points = createCirclePoints()
-    // pointLight.position.set(points[1].x - 1.5, 5, points[1].y - 2.5)
-
-    let p = 1.30 // scale models
-    let delta = -0.3 // down model
-
-    const ninjaesObject = {
-        donatello: loadModel({
-            x: points[0].x,
-            y: 0.75 + delta,
-            z: points[0].y,
-            ry: points[0].ry,
-            scale: 0.095 * p,
-            url: './SHOGUN_v8.gltf',
-            animation: true,
-            layers: []
-        }),
-        michelangelo: loadModel({
-            x: points[1].x,
-            y: 0 + delta,
-            z: points[1].y,
-            ry: points[1].ry,
-            scale: 1 * p,
-            url: './new/CSAMUR_v6.glb',
-            animation: true,
-            layers: []
-        }),
-        rafhael: loadModel({
-            x: points[2].x,
-            y: -0.5,
-            z: points[2].y,
-            ry: points[2].ry,
-            scale: 1.6 * p,
-            url: './new/Ronin_9.glb',
-            animation: true,
-            layers: []
-        }),
-        katana: loadModel({
-            x: points[3].x,
-            y: 0.7,
-            z: points[3].y,
-            ry: points[3].ry + Math.PI,
-            scale: 0.35,
-            url: './new/KATANA_v24.glb',
-            animation: true,
-            layers: []
-        }),
-        shrader: loadModel({
-            x: points[4].x,
-            y: 0 + delta,
-            z: points[4].y,
-            ry: points[4].ry,
-            scale: 0.9 * p,
-            url: './new/smtv_44_p.glb',
-            animation: true,
-            layers: []
-        }),
-    }
-
-    const promises = Object.values(ninjaesObject)
-
-
-
-    // const groupPosition = {
-    //     x: groupNinja.position.x
-    // }
-
-    // const groupPositionRound = Ola({
-    //     x: groupNinja.rotation.x
-    // }, 500)
-
-
-
-    const cameraPosition = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    }
-
-    const cameraPositionRound = Ola({
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z
-    }, 250)
-
-    const ninjaes = []
-
-    let tweensNinjaes = []
-
-    promises.forEach((promise, index) => {
-        promise.then(ninja => {
-
-            ninjaes.push({ "model": ninja, "id": index + 1 })
-
-            if (index == 4) {
-                groupNinjaAlt.add(ninja)
-            } else {
-                groupNinja.add(ninja)
-            }
-
-            if (index == 0) {
-                // directionalLight.target = ninja
-                console.log("light to the object")
-            }
-            // scene.add(ninja)
-            // console.log(ninja)
-
-            // tweensNinjaes.push(ninjaBouncing(ninja))
-            // createBoundingBox()
-
-            if (ninja.name == './SHOGUN_v8.gltf') {
-                // tweensNinjaes.push(ninjaBouncing(ninja))
-            }
-        })
-    })
-
-    directionalLight.target = groupNinja
-    directionalLightAlt.target = groupNinjaAlt
-    directionalLight.rotation.y = Math.PI / 4;
-
-    scene.add(groupNinja)
-    sceneAlt.add(groupNinjaAlt)
-    // RENDER LOOP
-
-    let counter = 0
-    let counterOver = 0
-    let counterClick = 0
-
-    // console.log(raycaster)
-    // console.log(aabb)
-
-    const geometryCube = new THREE.BoxGeometry(0.07, 0.07, 0.07)
-    const materialCube = new THREE.MeshMatcapMaterial({ color: 0xEAFC52 });
-    // 
-    const cubeOne = new THREE.Mesh(geometryCube, materialCube);
-
-    cubeOne.position.set(-0.4, 0.5, -2.7)
-
-    const boxForCube = new THREE.Box3().setFromObject(cubeOne)
-    const boxHelperCube = new THREE.Box3Helper(boxForCube, 0xEAFC52)
-
-    sceneAlt.add(cubeOne);
-    // sceneAl.add(boxHelperCube)
-
-    cubeOne.scale.set(0.7, 0.7, 0.7)
-    cubeOne.position.y = 0.525
-
-    let direction = -1
-
-    let pointerContainer = {
-        x: pointer.x,
-        y: pointer.y
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-        renderer.render(sceneAlt, cameraAlt)
-        counter++
-        counterClick++
-
-        cubeOne.position.y += 0.001 * direction
-        cubeOne.rotation.y += 0.01
-        cubeOne.rotation.x += 0.01
-        cubeOne.rotation.z += 0.01
-
-
-        if (counter == 35) {
-            // console.log('change direction')
-
-
-
-            direction = direction * (-1)
-
-            // console.log('change direction', direction)
-            counter = 0
-        }
-
-        // if (counter == 1) {
-        if (!isMobile) {
-            const intersects = raycaster.ray.intersectsBox(aabb)
-
-            if (intersects) {
-                INTERSECTED = true
-            } else if (!intersects) {
-                INTERSECTED = null
-            }
-        }
-        // console.log(intersects)
-
-
-
-        // counter = 0
-        // }
-
-        // animation maxima
-
-        if (mixers) {
-            for (let i = 0; i < mixers.length; i++) (
-                mixers[i].update(clocks[i].getDelta())
-            )
-        }
-
-        //  tween animation
-
-        if (tweenRotation) {
-            tweenRotation.update()
-        }
-
-        if (tweenCamPosition) {
-            tweenCamPosition.update()
-        }
-
-        if (tweensNinjaes.length) {
-            for (let tween of tweensNinjaes) {
-                tween.update()
-            }
-        }
-
-        // binding model to mouse
-        if (ninjaes.length > 4) {
-            for (const ninja of ninjaes) {
-
-                ninja.model.updateMatrixWorld()
-
-                if (ninja.id == level) {
-
-                    if (CLICKED) {
-                        // console.log('fire')
-                        ninja.model.rotation.y = ninja.model.rotation.y + (pointer.x - pointerContainer.x) * 1.75
-                    } else if (!CLICKED) {
-                        ninja.model.rotation.y = ninja.model.rotation.y + (pointer.x - pointerContainer.x) * 0.15
-
-                        // pointer
-                    } else {
-                        // ninja.model.rotation.y = ninja.model.rotation.y
-                    }
-
-                }
-            }
-        }
-
-        // update last pointer position
-        if (counterClick == 2) {
-            pointerContainer.x = pointer.x
-            pointerContainer.y = pointer.y
-
-            counterClick = 0
-        }
-
-        // gsap.to(camera.rotation, {
-        // y: camera.rotation.y + mouse.x * 0.001,
-        // y: ninja.model.rotation.y + mouseDiff.x * 10,
-        // x: mouse.y * 0.15,
-        // duration: 0.3,
-        // easy: "Power1.easyIn",
-        // })
-  });
-        // controls.update()
+            LOADING || (location.reload(), console.log(LOADING), console.log("restart because of not loading"));
+        }, 5e3),
+        (startTimer = new Date());
+    let e = document.createElement("div");
+    (e.id = "progress-bar-alt-width"), progressBarAlt.appendChild(e), detectMobileDevice();
+}),
+    (manager.onProgress = function (e, t, o) {
+        let n;
+        (LOADING = !0), (n = Math.floor((t / o) * 100)), console.log(n), progressBarAlt.style.setProperty("--p", n);
+    }),
+    (manager.onLoad = function (e, t, o) {
+        (LOADED = !0),
+            alert("the end"),
+            console.log("loading all models have complete"),
+            progressBarContainer.classList.add("progressbar-loaded"),
+            cursorContainer.classList.remove("cursor-container-loading"),
+            createBoundingBox(),
+            initHandlers(),
+            (endTimer = startTimer - new Date()),
+            console.log(`models was loaded in ${endTimer} time`);
     });
+const dracoLoader = new DRACOLoader().setDecoderPath("./js/libs/draco/"),
+    ktx2Loader = new KTX2Loader().setTranscoderPath("./js/libs/basis/").detectSupport(renderer),
+    gltfLoader = new GLTFLoader(manager).setPath("./models/");
+gltfLoader.setKTX2Loader(ktx2Loader), gltfLoader.setMeshoptDecoder(MeshoptDecoder), gltfLoader.setDRACOLoader(dracoLoader);
+const groupNinja = new THREE.Group(),
+    groupNinjaAlt = new THREE.Group();
+(groupNinja.rotation.y = Math.PI / 2), (groupNinjaAlt.rotation.y = Math.PI / 2);
+const groupRotation = { y: groupNinja.rotation.y },
+    groupRotationRound = Ola({ y: groupNinja.rotation.y }, 500);
+function centerModel(e) {
+    const t = new THREE.Box3().setFromObject(e).getCenter(new THREE.Vector3());
+    console.log("consolelogdatablabla"), console.log(e.position.x, e.position.y, e.position.z), console.log(t.x, t.y, t.z), console.log(e), (e.position.x -= t.x), (e.position.y -= t.y), (e.position.z -= t.z);
+}
+async function loadModel({ x: e, y: t, z: o, ry: n, scale: i, url: a, animation: r, layers: l }) {
+    const s = await gltfLoader.loadAsync(a),
+        c = s.scene;
+    return (
+        "./new/smtv_44_p.glb" == a && centerModel(c),
+        c.scale.set(1 * i, 1 * i, 1 * i),
+        (c.position.y += c.position.y + t),
+        (c.position.x += c.position.x + e),
+        (c.position.z += c.position.z + o),
+        c.rotation.set(0, n, 0),
+        (c.name = a),
+        "./new/KATANA_v24.glb" == a && c.rotation.set(0, n, Math.PI / 3),
+        s.animations.length && r && loadAnimation(s),
+        console.log(a),
+        c.traverse(function (e) {
+            if ((e.isMesh && ((e.castShadow = !0), (e.recieveShadow = !0), (e.frustumCulled = !1), l.includes(e.name), e.name), e.isMesh && e.material.metalness, e.isSkinnedMesh))
+                for (let t = 0; t < e.geometry.attributes.position.count; t++);
+        }),
+        c
+    );
+}
+let boxHelper,
+    aabb = new THREE.Box3(),
+    targetA = new THREE.Vector3();
+function createBoundingBox(e) {
+    let t;
+    aabb.makeEmpty(),
+        e
+            ? (t = e)
+            : ninjaes.forEach((e) => {
+                  e.id == level && ((t = e.model), console.log("great", e.id, level));
+              }),
+        (aabb = new THREE.Box3().setFromObject(t));
+}
+function loadAnimation(e) {
+    const t = e.animations;
+    let o = new THREE.AnimationMixer(e.scene),
+        n = new THREE.Clock();
+    const i = o.clipAction(t[0]);
+    mixers.push(o), clocks.push(n), i.play();
+}
+const n = 5,
+    rds = 5,
+    omega = (2 * Math.PI) / 5;
+function createCirclePoints() {
+    let e = [];
+    const t = function (e) {
+            return 5 * Math.cos(omega * e);
+        },
+        o = function (e) {
+            return 5 * Math.sin(omega * e);
+        };
+    for (let n = 0; n < 5; n++) e.push({ x: t(n), y: o(n), ry: Math.PI / 2 - omega * n + Math.PI });
+    return e;
+}
+function updateModelRotation() {
+    ninjaes.forEach((e) => {
+        e.id == level && (e.model.rotation.y = points[level - 1].ry);
+    });
+}
+const points = createCirclePoints();
+let p = 1.3,
+    delta = -0.3;
+const ninjaesObject = {
+        donatello: loadModel({ x: points[0].x, y: 0.75 + delta, z: points[0].y, ry: points[0].ry, scale: 0.095 * p, url: "./SHOGUN_v8.gltf", animation: !0, layers: [] }),
+        michelangelo: loadModel({ x: points[1].x, y: 0 + delta, z: points[1].y, ry: points[1].ry, scale: 1 * p, url: "./new/CSAMUR_v6.glb", animation: !0, layers: [] }),
+        rafhael: loadModel({ x: points[2].x, y: -0.5, z: points[2].y, ry: points[2].ry, scale: 1.6 * p, url: "./new/Ronin_9.glb", animation: !0, layers: [] }),
+        katana: loadModel({ x: points[3].x, y: 0.7, z: points[3].y, ry: points[3].ry + Math.PI, scale: 0.35, url: "./new/KATANA_v24.glb", animation: !0, layers: [] }),
+        shrader: loadModel({ x: points[4].x, y: 0 + delta, z: points[4].y, ry: points[4].ry, scale: 0.9 * p, url: "./new/smtv_44_p.glb", animation: !0, layers: [] }),
+    },
+    promises = Object.values(ninjaesObject),
+    cameraPosition = { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+    cameraPositionRound = Ola({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, 250),
+    ninjaes = [];
+let tweensNinjaes = [];
+promises.forEach((e, t) => {
+    e.then((e) => {
+        ninjaes.push({ model: e, id: t + 1 }), 4 == t ? groupNinjaAlt.add(e) : groupNinja.add(e), 0 == t && console.log("light to the object"), e.name;
+    });
+}),
+    (directionalLight.target = groupNinja),
+    (directionalLightAlt.target = groupNinjaAlt),
+    (directionalLight.rotation.y = Math.PI / 4),
+    scene.add(groupNinja),
+    sceneAlt.add(groupNinjaAlt);
+let counter = 0,
+    counterOver = 0,
+    counterClick = 0;
+const geometryCube = new THREE.BoxGeometry(0.07, 0.07, 0.07),
+    materialCube = new THREE.MeshMatcapMaterial({ color: 15400018 }),
+    cubeOne = new THREE.Mesh(geometryCube, materialCube);
+cubeOne.position.set(-0.4, 0.5, -2.7);
+const boxForCube = new THREE.Box3().setFromObject(cubeOne),
+    boxHelperCube = new THREE.Box3Helper(boxForCube, 15400018);
+sceneAlt.add(cubeOne), cubeOne.scale.set(0.7, 0.7, 0.7), (cubeOne.position.y = 0.525);
+let direction = -1,
+    pointerContainer = { x: pointer.x, y: pointer.y };
+function animate() {
+    if (
+        (requestAnimationFrame(animate),
+        renderer.render(scene, camera),
+        renderer.render(sceneAlt, cameraAlt),
+        counter++,
+        counterClick++,
+        (cubeOne.position.y += 0.001 * direction),
+        (cubeOne.rotation.y += 0.01),
+        (cubeOne.rotation.x += 0.01),
+        (cubeOne.rotation.z += 0.01),
+        35 == counter && ((direction *= -1), (counter = 0)),
+        !isMobile)
+    ) {
+        const e = raycaster.ray.intersectsBox(aabb);
+        e ? (INTERSECTED = !0) : e || (INTERSECTED = null);
+    }
+    if (mixers) for (let e = 0; e < mixers.length; e++) mixers[e].update(clocks[e].getDelta());
+    if ((tweenRotation && tweenRotation.update(), tweenCamPosition && tweenCamPosition.update(), tweensNinjaes.length)) for (let e of tweensNinjaes) e.update();
+    if (ninjaes.length > 4)
+        for (const e of ninjaes)
+            e.model.updateMatrixWorld(),
+                e.id == level && (CLICKED ? (e.model.rotation.y = e.model.rotation.y + 1.75 * (pointer.x - pointerContainer.x)) : CLICKED || (e.model.rotation.y = e.model.rotation.y + 0.15 * (pointer.x - pointerContainer.x)));
+    2 == counterClick && ((pointerContainer.x = pointer.x), (pointerContainer.y = pointer.y), (counterClick = 0));
+}
+
 
     animate();
 
