@@ -52,11 +52,21 @@
 				<div class="header_inner_item logo">
 					<img src="img/icon/logo.svg" alt="" />
 
-					<div data-js-title-id="1" class="active"></div>
-					<div data-js-title-id="2"></div>
-					<div data-js-title-id="3"></div>
-					<div data-js-title-id="4"></div>
-					<div data-js-title-id="5"></div>
+					<div class="intro_logo_choose active" data-js-title-id="1">
+						<img src="img/shogun.png" alt="">
+					</div>
+					<div class="intro_logo_choose " data-js-title-id="2">
+						<img src="img/samurai.png" alt="">
+					</div>
+					<div class="intro_logo_choose " data-js-title-id="3">
+					</div>
+					<div class="intro_logo_choose " data-js-title-id="4">
+						
+						<img src="img/katana.png" alt="">
+					</div>
+					<div class="intro_logo_choose " data-js-title-id="5">
+						<img src="img/shinobi.png" alt="">
+					</div>
 				</div>
 				<ul class="header_inner into">
 					<li class="header_inner_item btn anim into">
@@ -410,12 +420,13 @@
 					<a href="#" class="yelBtn intro">
 						<span> Подробнее</span>
 					</a>
-				</div></div>
+				</div>
 			</div>
 			<!-- 55555555555555555555555555555555555555555555555555555555555555555555555555555555 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
 					<h1>shinobi</h1>
+					<div class="text-block_inner">
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -485,7 +496,7 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
+			</div></div>
 			<div class="empty-block"></div>
 		</div>
 	</body>
@@ -869,10 +880,41 @@
 			console.log("cameraMoving");
 			let t = "right" == e ? 1 : -1,
 				multX = isMobile ? 0.5 : 1,
-				multY = isMobile ? 0 : 1;
+				multY = isMobile ? 0.2 : 1;
 			updateAspectRatio();
 
-			switch (level) {
+
+			if (window.innerWidth <= 768) {
+        // Код для мобильных устройств
+		switch (level) {
+				case 1:
+					moveX = 0 * multX;
+					moveY = 3.5 * multY;
+					moveZ = -1;
+					break;
+				case 2:
+				moveX = 0 * multX;
+					moveY = 3.5 * multY;
+					moveZ = -1;
+					break;
+				case 3:
+				moveX = 0 * multX;
+					moveY = 3.5 * multY;
+					moveZ = -1;
+					break;
+				case 4:
+				moveX = 0 * multX;
+					moveY = 3.5 * multY;
+					moveZ = -1;
+					break;
+				case 5:
+				moveX = 0 * multX;
+					moveY = 3.5 * multY;
+					moveZ = -1;
+			}
+    } else {
+        // Код для десктопных устройств
+		switch (level) {
 				case 1:
 					moveX = 0.8 * multX;
 					moveY = -0.1 * multY;
@@ -898,6 +940,8 @@
 					moveY = -0.4 * multY;
 					moveZ = 1;
 			}
+    }
+			
 			tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
 				.to(
 					{
