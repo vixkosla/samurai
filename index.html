@@ -50,14 +50,13 @@
 		<header class="header">
 			<div class="container">
 				<div class="header_inner_item logo">
+					<img src="img/icon/logo.svg" alt="" />
 
-					<div class="intro_logo_choose active" data-js-title-id="1" >
-						<img src="img/shogun.png" alt="">
-					</div>
-					<div class="intro_logo_choose" data-js-title-id="2"><img src="img/samurai.png" alt=""></div>
-					<div class="intro_logo_choose" data-js-title-id="3"><img src="" alt=""></div>
-					<div class="intro_logo_choose" data-js-title-id="4"><img src="img/katana.png" alt=""></div>
-					<div class="intro_logo_choose" data-js-title-id="5"><img src="img/shinobi.png" alt=""></div>
+					<div data-js-title-id="1" class="active"></div>
+					<div data-js-title-id="2"></div>
+					<div data-js-title-id="3"></div>
+					<div data-js-title-id="4"></div>
+					<div data-js-title-id="5"></div>
 				</div>
 				<ul class="header_inner into">
 					<li class="header_inner_item btn anim into">
@@ -114,9 +113,6 @@
 			<div class="model_container_inner open active open active container">
 				<div class="text-block">
 					<h1>SHOGUN</h1>
-					<div class="text-block_inner">
-
-				
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -186,13 +182,11 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
 			</div>
 			<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
 					<h1>Samurai</h1>
-					<div class="text-block_inner">
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -262,13 +256,11 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
 			</div>
 			<!-- 3333333333333333333333333333333333333333333333333333333333333333333333333 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
 					<h1>RONIN</h1>
-					<div class="text-block_inner">
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -338,14 +330,12 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
 			</div>
 			<!-- 4444444444444444444444444444444444444444444444444444444444444444444444444 -->
 
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
 					<h1>katana</h1>
-					<div class="text-block_inner">
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -415,13 +405,11 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
 			</div>
 			<!-- 55555555555555555555555555555555555555555555555555555555555555555555555555555555 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
 					<h1>shinobi</h1>
-					<div class="text-block_inner">
 					<p>
 						Crew brings people closer through fandom while giving artists new
 						ways to engage and monetize their most passionate fans. Connect
@@ -492,7 +480,6 @@
 					</a>
 				</div>
 			</div>
-		</div>
 			<div class="empty-block"></div>
 		</div>
 	</body>
@@ -734,12 +721,57 @@
 			yDelta = -0.2;
 
 		const ninjaesObject = {
-        donatello: loadModel({ x: points[0].x, y: 0.75 + delta, z: points[0].y, ry: points[0].ry, scale: 0.095 * p, url: "./SHOGUN_v8.gltf", animation: !0, layers: [] }),
-        michelangelo: loadModel({ x: points[1].x, y: 0 + delta, z: points[1].y, ry: points[1].ry, scale: 1 * p, url: "./new/CSAMUR_v6.glb", animation: !0, layers: [] }),
-        rafhael: loadModel({ x: points[2].x, y: -0.5, z: points[2].y, ry: points[2].ry, scale: 1.6 * p, url: "./new/Ronin_9.glb", animation: !0, layers: [] }),
-        katana: loadModel({ x: points[3].x, y: 0.7, z: points[3].y, ry: points[3].ry + Math.PI, scale: 0.35, url: "./new/KATANA_v24.glb", animation: !0, layers: [] }),
-        shrader: loadModel({ x: points[4].x, y: 0 + delta, z: points[4].y, ry: points[4].ry, scale: 0.9 * p, url: "./new/smtv_44_p.glb", animation: !0, layers: [] }),
-    },
+				shogun: loadModel({
+					x: points[0].x,
+					y: 0.45 + yDelta,
+					z: points[0].y,
+					ry: points[0].ry,
+					scale: 0.1 * scaleMult,
+					url: "./SHOGUN_v8.gltf",
+					animation: true,
+					layers: [],
+				}),
+				samurai: loadModel({
+					x: points[1].x,
+					y: -0.15 + yDelta,
+					z: points[1].y,
+					ry: points[1].ry,
+					scale: 1.05 * scaleMult,
+					url: "./new/CSAMUR_v6.glb",
+					animation: true,
+					layers: [],
+				}),
+				ronin: loadModel({
+					x: points[2].x,
+					y: -0.4 + yDelta,
+					z: points[2].y,
+					ry: points[2].ry,
+					scale: 1.4 * scaleMult,
+					url: "./new/Ronin_9.glb",
+					animation: true,
+					layers: [],
+				}),
+				katana: loadModel({
+					x: points[3].x,
+					y: yDelta,
+					z: points[3].y - 0.1,
+					ry: points[3].ry + Math.PI,
+					scale: 0.23 * scaleMult,
+					url: "./new/KATANA_v24.glb",
+					animation: true,
+					layers: [],
+				}),
+				shinobi: loadModel({
+					x: points[4].x,
+					y: -0.3 + yDelta,
+					z: points[4].y,
+					ry: points[4].ry,
+					scale: 1.05 * scaleMult,
+					url: "./new/Samurai_FixedMet_9.gltf",
+					animation: true,
+					layers: [],
+				}),
+			},
 			promises = Object.values(ninjaesObject),
 			cameraPosition = {
 				x: camera.position.x,
