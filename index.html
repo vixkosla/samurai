@@ -1,107 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
 
-<head>
-    <meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+		<link rel="stylesheet" href="./style.css" />
 
-    <link rel="stylesheet" href="./style.css">
+		<!-- normallized wheel -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/src/isEventSupported.min.js"></script> -->
 
-    <!-- normallized wheel -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/src/isEventSupported.min.js"></script> -->
+		<!-- ola -->
+		<script src="https://cdn.jsdelivr.net/npm/ola"></script>
 
-    <!-- ola -->
-    <script src="https://cdn.jsdelivr.net/npm/ola"></script>
+		<!-- threejs interaction -->
+		<!-- <script src="https://cdn.skypack.dev/three.interactive"></script> -->
 
-    <!-- threejs interaction -->
-    <!-- <script src="https://cdn.skypack.dev/three.interactive"></script> -->
+		<!-- gsap min -->
+		<script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
 
-    <!-- gsap min -->
-    <script src="https://assets.codepen.io/16327/gsap-latest-beta.min.js?r=3.11.5"></script>
+		<!-- tween -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
 
-    <!-- tween -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+		<!-- three -->
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://threejs.org/build/three.module.js",
+					"three/addons/": "https://threejs.org/examples/jsm/",
+					"normalizeWheel": "https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/+esm"
+				}
+			}
+		</script>
+		<!-- Remove this when import maps will be widely supported -->
 
-    <!-- three -->
-    <script type="importmap">{
-        "imports": {
-            "three": "https://threejs.org/build/three.module.js",
-            "three/addons/": "https://threejs.org/examples/jsm/",
-            "normalizeWheel": "https://cdn.jsdelivr.net/npm/normalize-wheel@1.0.1/+esm"
-        }
-    }</script><!-- Remove this when import maps will be widely supported -->
+		<script
+			async
+			src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"
+		></script>
 
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+		<!-- <script src="./js/libs/basis/basis_transcoder.js"></script> -->
 
-    <!-- <script src="./js/libs/basis/basis_transcoder.js"></script> -->
+		<style></style>
+	</head>
 
+	<body>
+		<header class="header">
+			<div class="container">
+				<div class="header_inner_item logo">
 
-    <style>
+					<div class="intro_logo_choose active" data-js-title-id="1" >
+						<img src="img/shogun.png" alt="">
+					</div>
+					<div class="intro_logo_choose" data-js-title-id="2"><img src="img/samurai.png" alt=""></div>
+					<div class="intro_logo_choose" data-js-title-id="3"><img src="" alt=""></div>
+					<div class="intro_logo_choose" data-js-title-id="4"><img src="img/katana.png" alt=""></div>
+					<div class="intro_logo_choose" data-js-title-id="5"><img src="img/shinobi.png" alt=""></div>
+				</div>
+				<ul class="header_inner into">
+					<li class="header_inner_item btn anim into">
+						<a href=""> Личный кабинет </a>
+					</li>
+				</ul>
 
-    </style>
-</head>
-
-<body>
-    <header class="header ">
-
-
-
-        <div class="container">
-
-            <div class="header_inner_item logo">
-                <img src="img/icon/logo.svg" alt="">
-            </div>
-            <ul class="header_inner into ">
-
-                <li class="header_inner_item btn anim into"><a href="">
-                        Личный кабинет
-                    </a>
-
-            </ul>
-            <div class="burger-menu anim">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-
-    </header>
-    <div class="progressbar-container">
-        <div class="progress-bar-alt" style="--p:0">
-            <div class="progress-bar-alt_label">
-                Progress
-            </div>
-        </div>
-        <!-- <div class="progressbar">
+				<div class="burger-menu anim">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+		</header>
+		<div class="progressbar-container">
+			<div class="progress-bar-alt" style="--p: 0">
+				<div class="progress-bar-alt_label">Progress</div>
+			</div>
+			<!-- <div class="progressbar">
             <label for="progress-bar">Loading...</label>
             <progress id="progress-bar" value="0" max="100"></progress>
 
         </div> -->
-    </div>
-    <div class="cursor-container cursor-container-loading">
-        <div class="cursor">
-            <svg viewBox="0 0 70 70" preserveAspectRatio="xMinYMin" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="35" cy="35" r="7" fill="lightgrey" />
-                <g class="cursor-bigPart">
-                    <circle class="point" cx="35" cy="35" r="35" fill="#EAFC52" />
-                    <!-- <rect class="line-v" x="34" y="20" width="3" height="30" fill="black" /> -->
-                    <!-- <rect class="line-h" x="50" y="34" width="3" height="30" transform="rotate(90 50 34)" -->
-                    fill="black" />
-                    <polygon points="20.5 24 36.5 48 52.5 24 36.5 34 20.5 24" fill="black" transform="rotate(90 35 35)"
-                        style="" />
-                </g>
-            </svg>
+		</div>
+		<div class="cursor-container cursor-container-loading">
+			<div class="cursor">
+				<svg
+					viewBox="0 0 70 70"
+					preserveAspectRatio="xMinYMin"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<circle cx="35" cy="35" r="7" fill="lightgrey" />
+					<g class="cursor-bigPart">
+						<circle class="point" cx="35" cy="35" r="35" fill="#EAFC52" />
+						<!-- <rect class="line-v" x="34" y="20" width="3" height="30" fill="black" /> -->
+						<!-- <rect class="line-h" x="50" y="34" width="3" height="30" transform="rotate(90 50 34)" -->
+						fill="black" />
+						<polygon
+							points="20.5 24 36.5 48 52.5 24 36.5 34 20.5 24"
+							fill="black"
+							transform="rotate(90 35 35)"
+							style=""
+						/>
+					</g>
+				</svg>
+			</div>
+		</div>
+		<div class="model-container">
+			<div class="model"></div>
+		</div>
 
-        </div>
-
-    </div>
-    <div class="model-container">
-        <div class="model"></div>
-    </div>
-<div class="text-container">
+		<div class="text-container">
 			<!-- 1111111111111111111111111111111111111111111111111111111111111111111111111 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block">
@@ -487,440 +495,674 @@
 		</div>
 			<div class="empty-block"></div>
 		</div>
-</body>
+	</body>
 
-<script type="module">
+	<script type="module">
+		import * as THREE from "three";
 
-    import * as THREE from 'three'
+		import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
+		import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+		import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
+		import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+		import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 
+		import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+		import Stats from "three/addons/libs/stats.module.js";
 
-    import {
-        OrbitControls
-    } from 'three/addons/controls/OrbitControls.js';
+		import * as normalizeWheel from "normalizeWheel";
 
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
-    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
-    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+		const textBlocks = document.querySelectorAll(".text-block"),
+			cursor = document.querySelector(".cursor"),
+			cursorBigPart = document.querySelector(".cursor-bigPart"),
+			model = document.querySelector(".model"),
+			modelContainer = document.querySelector(".model-container"),
+			cursorContainer = document.querySelector(".cursor-container"),
+			progressBarAlt = document.querySelector(".progress-bar-alt"),
+			progressBar = document.getElementById("progress-bar"),
+			progressBarContainer = document.querySelector(".progressbar-container"),
+			textBlock = document.querySelector(".text-block"),
+			titles = document.querySelectorAll("[data-js-title-id]"),
+			fov = 45,
+			exposure = 1.99005,
+			MAX_DEFLECTION_ANGLE = THREE.MathUtils.degToRad(60);
+		const LEVELMAX = 5,
+			LEVELMIN = 1,
+			scene = new THREE.Scene(),
+			sceneAlt = new THREE.Scene(),
+			manager = new THREE.LoadingManager(),
+			groupNinja = new THREE.Group(),
+			groupNinjaAlt = new THREE.Group();
 
-    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-    import Stats from 'three/addons/libs/stats.module.js';
+		let aspect = model.clientWidth / model.clientHeight,
+			aspectM = (aspect * model.clientHeight) / 768,
+			near = 0.1,
+			far = 100,
+			camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100),
+			cameraAlt = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+		camera.position.set(0, 1, -0.5);
+		camera.position.set(0, 1, -0.5);
 
-    import * as normalizeWheel from 'normalizeWheel';
+		const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		renderer.autoClear = false;
+		renderer.setSize(model.clientWidth, model.clientHeight);
+		model.appendChild(renderer.domElement);
 
-    // TEXT BLOCK BEHAVIOR
+		let mixers = [],
+			clocks = [],
+			isMoving = 0,
+			level = 1;
 
-  const textBlocks = document.querySelectorAll(".text-block");
-function changeTextBlock() {
-    textBlocks.forEach((e, t) => {
-        e.classList.contains("text-block-default") || e.classList.add("text-block_default"), t + 1 == level && e.classList.remove("text-block_default");
-    });
-}
-console.log(textBlocks);
-const model = document.querySelector(".model"),
-    modelContainer = document.querySelector(".model-container"),
-    fov = 45;
-let aspect = model.clientWidth / model.clientHeight,
-    aspectM = (aspect * model.clientHeight) / 768;
-function updateAspectRatio() {
-    (aspect = model.clientWidth / model.clientHeight), isPlayed || (aspectM = aspect);
-}
-const near = 0.1,
-    far = 100,
-    camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100),
-    cameraAlt = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
-(camera.position.z = -0.5), (camera.position.y = 1), (camera.position.x = 0), (cameraAlt.position.z = -0.5), (cameraAlt.position.y = 1), (cameraAlt.position.x = 0);
-const renderer = new THREE.WebGLRenderer({ antialias: !0, alpha: !0 });
-function onWindowResize() {
-    isPlayed && (clickHandler(), console.log("close")),
-        renderer.setSize(model.clientWidth, model.clientHeight),
-        updateAspectRatio(),
-        detectMobileDevice(),
-        (camera.aspect = aspect),
-        (cameraAlt.aspect = aspect),
-        camera.updateProjectionMatrix(),
-        cameraAlt.updateProjectionMatrix(),
-        renderer.render(scene, camera),
-        renderer.render(sceneAlt, cameraAlt);
-}
-(renderer.autoClear = !1), renderer.setSize(model.clientWidth, model.clientHeight), model.appendChild(renderer.domElement), window.addEventListener("resize", onWindowResize, !1);
-let mixers = [],
-    clocks = [],
-    isMoving = 0,
-    level = 1;
-const LEVELMAX = 5,
-    LEVELMIN = 1,
-    scene = new THREE.Scene(),
-    sceneAlt = new THREE.Scene();
-(scene.background = new THREE.Color(789518)), (THREE.ColorManagement.enabled = !0);
-const manager = new THREE.LoadingManager();
-new RGBELoader().setPath("textures/").load("royal_esplanade_1k.hdr", function (e) {
-    (e.mapping = THREE.EquirectangularReflectionMapping), (scene.environment = e);
-});
-const exposure = 1.99005;
-(renderer.toneMapping = THREE.ACESFilmicToneMapping),
-    (renderer.toneMappingExposure = 1.99005),
-    (renderer.useLegacyLights = !0),
-    (renderer.shadowMap.enabled = !0),
-    (renderer.shadowMap.type = THREE.PCFSoftShadowMap),
-    (THREE.ColorManagement.enabled = !0),
-    (renderer.outputColorSpace = THREE.LinearSRGBColorSpace);
-const color = 16777215,
-    intensity = 2.25,
-    width = 12,
-    height = 4,
-    RAlight = new THREE.RectAreaLight(color, 2.25, 12, 4);
-RAlight.position.set(0, 0, 0), (RAlight.rotation.x = THREE.MathUtils.degToRad(5));
-const pointLight = new THREE.PointLight(16777215, 0.74);
-pointLight.position.set(0, 5, 0), sceneAlt.add(pointLight);
-const directionalLight = new THREE.DirectionalLight(16777215, 1.4),
-    directionalLightAlt = new THREE.DirectionalLight(16777215, 1.05);
-directionalLight.position.set(-4, 2, 3), directionalLightAlt.position.set(0, 5, 3), scene.add(directionalLight), sceneAlt.add(directionalLightAlt);
-const ambientLight = new THREE.AmbientLight(16777215, 0.35);
-ambientLight.position.set(0, 7, 0);
-let raycaster = new THREE.Raycaster(),
-    pointer = new THREE.Vector2();
-const mouse = Ola({ x: void 0, y: void 0 }, 5),
-    position = Ola({ x: 0, y: 0 }, 5),
-    cursor = document.querySelector(".cursor"),
-    cursorBigPart = document.querySelector(".cursor-bigPart");
-let INTERSECTED = null,
-    CLICKED = null,
-    MOVING = null,
-    timer = null;
-window.addEventListener("mousedown", function (e) {
-    e.preventDefault(), (CLICKED = !0), MOVING++, (timer = new Date());
-}),
-    window.addEventListener("mouseup", function (e) {
-        (CLICKED = null), MOVING++, (timer -= new Date()), e.preventDefault();
-    });
-let isMobile = 0;
-function detectMobileDevice() {
-    let e = model.clientWidth;
-    console.log(e), e < 760 ? (console.log("mobile device"), console.log(e), (isMobile = !0)) : (isMobile = !1);
-}
-function intersectHandler(e) {}
-window.addEventListener("mousemove", function (e) {
-    event.preventDefault(),
-        position.set({ x: event.clientX, y: event.clientY }),
-        (cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`),
-        (pointer.x = (position.x / window.innerWidth) * 2 - 1),
-        (pointer.y = (-position.y / window.innerHeight) * 2 + 1),
-        mouse.set({ x: pointer.x, y: pointer.y }),
-        (camera.rotation.y = 0.01 * -mouse.x),
-        (camera.rotation.x = 0.01 * mouse.y),
-        INTERSECTED ? enterMouseHandler() : INTERSECTED || leaveMouseHandler(),
-        raycaster.setFromCamera(pointer, camera),
-        (MOVING = !1);
-});
-let moveX,
-    moveZ,
-    moveY,
-    tweenBouncing,
-    isPlayed = 0,
-    isPlaying = 0,
-    minWidth = 320;
-function createBouncing({ ninja: e, flag: t }) {
-    if (t) return ninjaBouncing(e);
-}
-function ninjaBouncing(e) {
-    let t = (Math.PI / 360) * 7.5,
-        o = { y: e.rotation.y - t };
-    return new TWEEN.Tween(o, !1)
-        .to({ y: e.rotation.y + 2 * t }, 6e3)
-        .easing(TWEEN.Easing.Linear.inOut)
-        .repeat(1 / 0)
-        .yoyo(!0)
-        .onUpdate(() => {
-            e.rotation.y = o.y;
-        })
-        .start();
-}
-function cameraMoving(e) {
-    let t;
-    switch (("right" == e && (t = 1), "left" == e && (t = -1), updateAspectRatio(), level)) {
-        case 1:
-            (moveX = (model.clientWidth - minWidth) / 900), (moveZ = 1.5), (moveY = -0.15);
-            break;
-        case 2:
-            (moveX = (model.clientWidth - minWidth) / 774), (moveZ = 1.5), (moveY = -0.35);
-            break;
-        case 3:
-            (moveX = (model.clientWidth - minWidth) / 588), (moveZ = 1), (moveY = -0.35);
-            break;
-        case 4:
-            (moveX = (model.clientWidth - minWidth) / 558), (moveZ = 0.1 * aspectM), (moveY = 0);
-            break;
-        case 5:
-            (moveX = 0.55 * aspectM), (moveX = (model.clientWidth - minWidth) / 914), (moveZ = 1), (moveY = -0.35);
-    }
-    console.log(model.clientWidth),
-        console.log(moveX),
-        (tweenCamPosition = new TWEEN.Tween(cameraPosition, !1)
-            .to({ x: camera.position.x + moveX * t, z: camera.position.z + moveZ * t, y: camera.position.y + moveY * t }, 1e3)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(() => {
-                (camera.position.x = cameraPositionRound.x),
-                    (camera.position.z = cameraPositionRound.z),
-                    (camera.position.y = cameraPositionRound.y),
-                    cameraPositionRound.set({ x: cameraPosition.x, y: cameraPosition.y, z: cameraPosition.z });
-            })
-            .start()
-            .onStart(() => {
-                (isMoving = 1), (isPlaying = 1);
-            })
-            .onComplete(() => {
-                console.log(level), (isMoving = 0), (isPlaying = 0);
-            }));
-}
-const textBlock = document.querySelector(".text-block");
-let tweenRotation,
-    tweenPosition,
-    tweenCamPosition,
-    touchStartX,
-    touchStartY,
-    touchEndX,
-    touchEndY,
-    deltaY,
-    tweenText = TweenMax.to(".text-block", { delay: (e) => 0.25, duration: 1.5, x: -50, opacity: 0, paused: !0, easy: Power4.easyInOut, immediateRender: !1 }).progress(1);
-function clickHandler() {
-    isMoving ||
-        (isPlayed || (cursorBigPart.style.transform += "rotate(90deg)"),
-        tweenText.play(),
-        isPlayed || isPlaying ? isPlaying || (cameraMoving("right"), tweenText.play(), (isPlayed = 0)) : (tweenText.reverse(), cameraMoving("left"), (isPlayed = 1)));
-}
-function enterMouseHandler() {
-    (cursorBigPart.style.transform = "scale(1)"), isPlayed && (cursorBigPart.style.transform += "rotate(135deg)");
-}
-function leaveMouseHandler() {
-    cursorBigPart.style.transform = "scale(0)";
-}
-function changeLightDirection() {
-    directionalLight.target = ninjaes[level].model;
-}
-function levelDetection(e, t) {
-    level == LEVELMAX && "left" == e ? (level = LEVELMIN) : level == LEVELMIN && "right" == e ? (level = LEVELMAX) : (level += 1 * t), console.log(level);
-}
-function groupRotate(e) {
-    let t;
-    "left" === e && (t = 1),
-        "right" === e && (t = -1),
-        (tweenRotation = new TWEEN.Tween(groupRotation, !1)
-            .to({ y: groupRotation.y + omega * t }, 3e3)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(() => {
-                (groupNinja.rotation.y = groupRotationRound.y), (groupNinjaAlt.rotation.y = groupRotationRound.y), groupRotationRound.set({ y: groupRotation.y });
-            })
-            .start()
-            .onStart(() => {
-                (isMoving = 1),
-                    setTimeout(() => {
-                        updateModelRotation();
-                    }, 2e3),
-                    setTimeout(() => {}, 1500);
-            })
-            .onComplete(() => {
-                levelDetection(e, t), createBoundingBox(), changeTextBlock(), (isMoving = 0);
-            }));
-}
-function touchStartHandler(e) {
-    e.touches[0];
-    (touchStartX = event.changedTouches[0].screenX), (touchStartY = event.changedTouches[0].screenY);
-}
-function touchEndHandler(e) {
-    (touchEndX = event.changedTouches[0].screenX), (touchEndY = event.changedTouches[0].screenY), handlerSwipe();
-}
-function handlerSwipe() {
-    let e = touchStartY - touchEndY;
-    isMoving || (e > 10 && e < 50 && !isMoving ? (groupRotate("right"), isPlayed && clickHandler()) : e < -10 && e < -50 && !isMoving && (groupRotate("left"), isPlayed && clickHandler()));
-}
-function wheelHandler(e) {
-    console.log("hey"),
-        console.log(e.deltaY),
-        e.deltaY > 30 && e.deltaY > 50 && !isMoving ? (groupRotate("right"), isPlayed && clickHandler()) : e.deltaY < -30 && e.deltaY < -50 && !isMoving && (groupRotate("left"), isPlayed && clickHandler());
-}
-function initHandlers() {
-    model.addEventListener("click", function () {
-        timer > -400 && 2 == MOVING && ((!isMobile && INTERSECTED) || isMobile) && (clickHandler(), (MOVING = 0));
-    }),
-        window.addEventListener("wheel", function (e) {
-            isMoving || wheelHandler(e);
-        });
-}
-let url = "./new/Samurai_FixedMet_11.glb",
-    m = 3;
-const cursorContainer = document.querySelector(".cursor-container"),
-    progressBarAlt = document.querySelector(".progress-bar-alt"),
-    progressBar = document.getElementById("progress-bar"),
-    progressBarContainer = document.querySelector(".progressbar-container");
-let LOADED, LOADING, startTimer, endTimer;
-(manager.onStart = function () {
-    setTimeout(() => {
-        LOADED || console.log("restart because of end over time");
-    }, 35e3),
-        setTimeout(() => {
-            LOADING || (location.reload(), console.log(LOADING), console.log("restart because of not loading"));
-        }, 5e3),
-        (startTimer = new Date());
-    let e = document.createElement("div");
-    (e.id = "progress-bar-alt-width"), progressBarAlt.appendChild(e), detectMobileDevice();
-}),
-    (manager.onProgress = function (e, t, o) {
-        let n;
-        (LOADING = !0), (n = Math.floor((t / o) * 100)), console.log(n), progressBarAlt.style.setProperty("--p", n);
-    }),
-    (manager.onLoad = function (e, t, o) {
-        (LOADED = !0),
-            alert("the end"),
-            console.log("loading all models have complete"),
-            progressBarContainer.classList.add("progressbar-loaded"),
-            cursorContainer.classList.remove("cursor-container-loading"),
-            createBoundingBox(),
-            initHandlers(),
-            (endTimer = startTimer - new Date()),
-            console.log(`models was loaded in ${endTimer} time`);
-    });
-const dracoLoader = new DRACOLoader().setDecoderPath("./js/libs/draco/"),
-    ktx2Loader = new KTX2Loader().setTranscoderPath("./js/libs/basis/").detectSupport(renderer),
-    gltfLoader = new GLTFLoader(manager).setPath("./models/");
-gltfLoader.setKTX2Loader(ktx2Loader), gltfLoader.setMeshoptDecoder(MeshoptDecoder), gltfLoader.setDRACOLoader(dracoLoader);
-const groupNinja = new THREE.Group(),
-    groupNinjaAlt = new THREE.Group();
-(groupNinja.rotation.y = Math.PI / 2), (groupNinjaAlt.rotation.y = Math.PI / 2);
-const groupRotation = { y: groupNinja.rotation.y },
-    groupRotationRound = Ola({ y: groupNinja.rotation.y }, 500);
-function centerModel(e) {
-    const t = new THREE.Box3().setFromObject(e).getCenter(new THREE.Vector3());
-    console.log("consolelogdatablabla"), console.log(e.position.x, e.position.y, e.position.z), console.log(t.x, t.y, t.z), console.log(e), (e.position.x -= t.x), (e.position.y -= t.y), (e.position.z -= t.z);
-}
-async function loadModel({ x: e, y: t, z: o, ry: n, scale: i, url: a, animation: r, layers: l }) {
-    const s = await gltfLoader.loadAsync(a),
-        c = s.scene;
-    return (
-        "./new/smtv_44_p.glb" == a && centerModel(c),
-        c.scale.set(1 * i, 1 * i, 1 * i),
-        (c.position.y += c.position.y + t),
-        (c.position.x += c.position.x + e),
-        (c.position.z += c.position.z + o),
-        c.rotation.set(0, n, 0),
-        (c.name = a),
-        "./new/KATANA_v24.glb" == a && c.rotation.set(0, n, Math.PI / 3),
-        s.animations.length && r && loadAnimation(s),
-        console.log(a),
-        c.traverse(function (e) {
-            if ((e.isMesh && ((e.castShadow = !0), (e.recieveShadow = !0), (e.frustumCulled = !1), l.includes(e.name), e.name), e.isMesh && e.material.metalness, e.isSkinnedMesh))
-                for (let t = 0; t < e.geometry.attributes.position.count; t++);
-        }),
-        c
-    );
-}
-let boxHelper,
-    aabb = new THREE.Box3(),
-    targetA = new THREE.Vector3();
-function createBoundingBox(e) {
-    let t;
-    aabb.makeEmpty(),
-        e
-            ? (t = e)
-            : ninjaes.forEach((e) => {
-                  e.id == level && ((t = e.model), console.log("great", e.id, level));
-              }),
-        (aabb = new THREE.Box3().setFromObject(t));
-}
-function loadAnimation(e) {
-    const t = e.animations;
-    let o = new THREE.AnimationMixer(e.scene),
-        n = new THREE.Clock();
-    const i = o.clipAction(t[0]);
-    mixers.push(o), clocks.push(n), i.play();
-}
-const n = 5,
-    rds = 5,
-    omega = (2 * Math.PI) / 5;
-function createCirclePoints() {
-    let e = [];
-    const t = function (e) {
-            return 5 * Math.cos(omega * e);
-        },
-        o = function (e) {
-            return 5 * Math.sin(omega * e);
-        };
-    for (let n = 0; n < 5; n++) e.push({ x: t(n), y: o(n), ry: Math.PI / 2 - omega * n + Math.PI });
-    return e;
-}
-function updateModelRotation() {
-    ninjaes.forEach((e) => {
-        e.id == level && (e.model.rotation.y = points[level - 1].ry);
-    });
-}
-const points = createCirclePoints();
-let p = 1.3,
-    delta = -0.3;
-const ninjaesObject = {
+		scene.background = new THREE.Color(0x333333); //, (THREE.ColorManagement.enabled = true);
+
+		new RGBELoader()
+			.setPath("textures/")
+			.load("royal_esplanade_1k.hdr", function (e) {
+				e.mapping = THREE.EquirectangularReflectionMapping;
+				scene.environment = e;
+				sceneAlt.environment = e;
+			});
+
+		renderer.toneMapping = THREE.ACESFilmicToneMapping;
+		renderer.toneMappingExposure = 1.99005;
+		renderer.useLegacyLights = true;
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap; //(THREE.ColorManagement.enabled = true),
+		renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+
+		const color = 0xffffff, // 16777215
+			intensity = 2.25, // 2.25
+			width = 12,
+			height = 4;
+		const RAlight = new THREE.RectAreaLight(color, intensity, width, height),
+			// pointLight = new THREE.PointLight(color, 1.3), //0.74
+			// directionalLight = new THREE.DirectionalLight(color, 0.7), //1.4
+			directionalLight = new THREE.DirectionalLight(color, 1.4),
+			pointLight = new THREE.PointLight(color, 1),
+			directionalLightAlt = new THREE.DirectionalLight(color, 1.5),
+			// ambientLight = new THREE.AmbientLight(color, 0.1); //0.35
+			ambientLight = new THREE.AmbientLight(color, 0.35);
+		let aabb = new THREE.Box3();
+
+		const mouse = Ola({ x: void 0, y: void 0 }, 5),
+			position = Ola({ x: 0, y: 0 }, 5);
+		let INTERSECTED = null,
+			CLICKED = null,
+			MOVING = null,
+			timer = null;
+		let raycaster = new THREE.Raycaster(),
+			pointer = new THREE.Vector2();
+		let moveX,
+			moveZ,
+			moveY,
+			tweenBouncing,
+			isPlayed = 0,
+			isPlaying = 0,
+			minWidth = 320;
+		let tweenRotation,
+			tweenPosition,
+			tweenCamPosition,
+			touchStartX,
+			touchStartY,
+			touchStartTime,
+			touchEndX,
+			touchEndY,
+			touchEndTime,
+			deltaY,
+			tweenText = TweenMax.to(".text-block", {
+				delay: (e) => 0.25,
+				duration: 1.5,
+				x: -50,
+				opacity: 0,
+				paused: true,
+				easy: Power4.easyInOut,
+				immediateRender: false,
+			}).progress(1);
+
+		let LOADED,
+			LOADING,
+			startTimer,
+			endTimer,
+			isMobile = 0,
+			counter = 0,
+			counterOver = 0,
+			counterClick = 0,
+			tweensNinjaes = [],
+			direction = -1;
+
+		RAlight.rotation.x = THREE.MathUtils.degToRad(5);
+		RAlight.position.set(0, 0, 0);
+		pointLight.position.set(0, 5, 0);
+		directionalLight.position.set(-4, 2, 3);
+		directionalLightAlt.position.set(0, 5, 3);
+		ambientLight.position.set(0, 7, 0);
+
+		scene.add(RAlight);
+		scene.add(directionalLight);
+		scene.add(ambientLight);
+		sceneAlt.add(pointLight);
+		sceneAlt.add(directionalLightAlt);
+
+		// -------------------------------------------- START LISTENERS -------------------------------------------- //
+		window.addEventListener("resize", onWindowResize, false);
+		window.addEventListener("mousedown", function (e) {
+			console.log(event);
+			e.preventDefault(), (CLICKED = true), MOVING++, (timer = new Date());
+		});
+		window.addEventListener("mouseup", function (e) {
+			console.log(event);
+			(CLICKED = null), MOVING++, (timer -= new Date()), e.preventDefault();
+		});
+		window.addEventListener("mousemove", function (e) {
+			// console.log(event);
+			event.preventDefault();
+			position.set({ x: event.clientX, y: event.clientY });
+			cursor.style.transform = `translate3D(${position.x}px,${position.y}px,0)`;
+			pointer.x = (position.x / window.innerWidth) * 2 - 1;
+			pointer.y = (-position.y / window.innerHeight) * 2 + 1;
+			mouse.set({ x: pointer.x, y: pointer.y });
+			camera.rotation.y = 0.01 * -mouse.x;
+			camera.rotation.x = 0.01 * mouse.y;
+			INTERSECTED ? enterMouseHandler() : leaveMouseHandler();
+			raycaster.setFromCamera(pointer, camera);
+			MOVING = false;
+		});
+
+		window.addEventListener("touchstart", function (e) {
+			touchStartHandler(e);
+			(CLICKED = true), MOVING++, (timer = new Date());
+		});
+		window.addEventListener("touchend", function (e) {
+			touchEndHandler(e);
+			(CLICKED = null), MOVING++, (timer -= new Date()), e.preventDefault();
+		});
+		window.addEventListener("touchmove", function (e) {
+			// console.log(event);
+			position.set({
+				x: event.touches[0].clientX,
+				y: event.touches[0].clientY,
+			}),
+				(pointer.x = (position.x / window.innerWidth) * 2 - 1),
+				(pointer.y = (-position.y / window.innerHeight) * 2 + 1),
+				// mouse.set({ x: pointer.x, y: pointer.y }),
+				// (camera.rotation.y = 0.01 * -mouse.x),
+				// (camera.rotation.x = 0.01 * mouse.y);
+				// INTERSECTED ? enterMouseHandler() : INTERSECTED || leaveMouseHandler(),
+				raycaster.setFromCamera(pointer, camera),
+				(MOVING = false);
+		});
+
+		// -------------------------------------------- END LISTENERS -------------------------------------------- //
+
+		manager.onStart = function () {
+			setTimeout(() => {
+				LOADED || console.log("restart because of end over time");
+			}, 35e3);
+			setTimeout(() => {
+				LOADING ||
+					(location.reload(),
+					console.log(LOADING),
+					console.log("restart because of not loading"));
+			}, 5e3);
+			let e = document.createElement("div");
+			(e.id = "progress-bar-alt-width"),
+				progressBarAlt.appendChild(e),
+				detectMobileDevice();
+		};
+
+		const dracoLoader = new DRACOLoader().setDecoderPath("./js/libs/draco/"),
+			ktx2Loader = new KTX2Loader()
+				.setTranscoderPath("./js/libs/basis/")
+				.detectSupport(renderer),
+			gltfLoader = new GLTFLoader(manager).setPath("./models/");
+		gltfLoader.setKTX2Loader(ktx2Loader);
+		gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+		gltfLoader.setDRACOLoader(dracoLoader);
+		groupNinja.rotation.y = groupNinjaAlt.rotation.y = Math.PI / 2;
+
+		const groupRotation = { y: groupNinja.rotation.y },
+			groupRotationRound = Ola({ y: groupNinja.rotation.y }, 500);
+
+		const n = 5,
+			rds = 5,
+			omega = (2 * Math.PI) / 5;
+		const points = createCirclePoints();
+
+		detectMobileDevice();
+
+		let scaleMult = isMobile ? 1.1 : 1.3,
+			yDelta = -0.2;
+
+		const ninjaesObject = {
         donatello: loadModel({ x: points[0].x, y: 0.75 + delta, z: points[0].y, ry: points[0].ry, scale: 0.095 * p, url: "./SHOGUN_v8.gltf", animation: !0, layers: [] }),
         michelangelo: loadModel({ x: points[1].x, y: 0 + delta, z: points[1].y, ry: points[1].ry, scale: 1 * p, url: "./new/CSAMUR_v6.glb", animation: !0, layers: [] }),
         rafhael: loadModel({ x: points[2].x, y: -0.5, z: points[2].y, ry: points[2].ry, scale: 1.6 * p, url: "./new/Ronin_9.glb", animation: !0, layers: [] }),
         katana: loadModel({ x: points[3].x, y: 0.7, z: points[3].y, ry: points[3].ry + Math.PI, scale: 0.35, url: "./new/KATANA_v24.glb", animation: !0, layers: [] }),
         shrader: loadModel({ x: points[4].x, y: 0 + delta, z: points[4].y, ry: points[4].ry, scale: 0.9 * p, url: "./new/smtv_44_p.glb", animation: !0, layers: [] }),
     },
-    promises = Object.values(ninjaesObject),
-    cameraPosition = { x: camera.position.x, y: camera.position.y, z: camera.position.z },
-    cameraPositionRound = Ola({ x: camera.position.x, y: camera.position.y, z: camera.position.z }, 250),
-    ninjaes = [];
-let tweensNinjaes = [];
-promises.forEach((e, t) => {
-    e.then((e) => {
-        ninjaes.push({ model: e, id: t + 1 }), 4 == t ? groupNinjaAlt.add(e) : groupNinja.add(e), 0 == t && console.log("light to the object"), e.name;
-    });
-}),
-    (directionalLight.target = groupNinja),
-    (directionalLightAlt.target = groupNinjaAlt),
-    (directionalLight.rotation.y = Math.PI / 4),
-    scene.add(groupNinja),
-    sceneAlt.add(groupNinjaAlt);
-let counter = 0,
-    counterOver = 0,
-    counterClick = 0;
-const geometryCube = new THREE.BoxGeometry(0.07, 0.07, 0.07),
-    materialCube = new THREE.MeshMatcapMaterial({ color: 15400018 }),
-    cubeOne = new THREE.Mesh(geometryCube, materialCube);
-cubeOne.position.set(-0.4, 0.5, -2.7);
-const boxForCube = new THREE.Box3().setFromObject(cubeOne),
-    boxHelperCube = new THREE.Box3Helper(boxForCube, 15400018);
-sceneAlt.add(cubeOne), cubeOne.scale.set(0.7, 0.7, 0.7), (cubeOne.position.y = 0.525);
-let direction = -1,
-    pointerContainer = { x: pointer.x, y: pointer.y };
-function animate() {
-    if (
-        (requestAnimationFrame(animate),
-        renderer.render(scene, camera),
-        renderer.render(sceneAlt, cameraAlt),
-        counter++,
-        counterClick++,
-        (cubeOne.position.y += 0.001 * direction),
-        (cubeOne.rotation.y += 0.01),
-        (cubeOne.rotation.x += 0.01),
-        (cubeOne.rotation.z += 0.01),
-        35 == counter && ((direction *= -1), (counter = 0)),
-        !isMobile)
-    ) {
-        const e = raycaster.ray.intersectsBox(aabb);
-        e ? (INTERSECTED = !0) : e || (INTERSECTED = null);
-    }
-    if (mixers) for (let e = 0; e < mixers.length; e++) mixers[e].update(clocks[e].getDelta());
-    if ((tweenRotation && tweenRotation.update(), tweenCamPosition && tweenCamPosition.update(), tweensNinjaes.length)) for (let e of tweensNinjaes) e.update();
-    if (ninjaes.length > 4)
-        for (const e of ninjaes)
-            e.model.updateMatrixWorld(),
-                e.id == level && (CLICKED ? (e.model.rotation.y = e.model.rotation.y + 1.75 * (pointer.x - pointerContainer.x)) : CLICKED || (e.model.rotation.y = e.model.rotation.y + 0.15 * (pointer.x - pointerContainer.x)));
-    2 == counterClick && ((pointerContainer.x = pointer.x), (pointerContainer.y = pointer.y), (counterClick = 0));
-}
+			promises = Object.values(ninjaesObject),
+			cameraPosition = {
+				x: camera.position.x,
+				y: camera.position.y,
+				z: camera.position.z,
+			},
+			cameraPositionRound = Ola(
+				{ x: camera.position.x, y: camera.position.y, z: camera.position.z },
+				250
+			),
+			ninjaes = [];
 
+		manager.onProgress = function (e, t, o) {
+			LOADING = true;
+			progressBarAlt.style.setProperty("--p", Math.floor((t / o) * 100));
+		};
 
-    animate();
+		manager.onLoad = async function (e, t, o) {
+			LOADED = true;
+			progressBarContainer.classList.add("progressbar-loaded");
+			cursorContainer.classList.remove("cursor-container-loading");
+			await Promise.all(promises);
+			createBoundingBox();
+			console.log("loading all models have complete");
+			initHandlers();
+		};
 
+		promises.forEach((e, t) => {
+			e.then((e) => {
+				ninjaes.push({ model: e, id: t + 1 });
+				3 == t ? groupNinjaAlt.add(e) : groupNinja.add(e);
+			});
+		});
+		directionalLight.target = groupNinja;
+		directionalLightAlt.target = groupNinjaAlt;
 
-</script>
+		directionalLight.rotation.y = Math.PI / 4;
+		scene.add(groupNinja);
+		sceneAlt.add(groupNinjaAlt);
 
+		let pointerContainer = { x: pointer.x, y: pointer.y };
+
+		animate();
+
+		function animate() {
+			requestAnimationFrame(animate);
+			renderer.render(scene, camera);
+			renderer.render(sceneAlt, cameraAlt);
+			counter++;
+			counterClick++;
+
+			35 == counter && ((direction *= -1), (counter = 0));
+			if (!isMobile) INTERSECTED = raycaster.ray.intersectsBox(aabb);
+			if (mixers)
+				for (let e = 0; e < mixers.length; e++)
+					mixers[e].update(clocks[e].getDelta());
+			if (
+				(tweenRotation && tweenRotation.update(),
+				tweenCamPosition && tweenCamPosition.update(),
+				tweensNinjaes.length)
+			)
+				for (let e of tweensNinjaes) e.update();
+
+			if (ninjaes.length > 4)
+				for (const e of ninjaes) {
+					e.model.updateMatrixWorld();
+					if (e.id == level) {
+						let deflection =
+							(CLICKED ? 1.75 : 0.15) * (pointer.x - pointerContainer.x);
+
+						if (
+							Math.abs(
+								e.model.rotation.y - e.model.rotation.default_y + deflection
+							) < MAX_DEFLECTION_ANGLE
+						) {
+							e.model.rotation.y +=
+								(CLICKED ? 1.75 : 0.15) * (pointer.x - pointerContainer.x);
+						}
+					}
+				}
+
+			if (2 == counterClick) {
+				pointerContainer.x = pointer.x;
+				pointerContainer.y = pointer.y;
+				counterClick = 0;
+			}
+		}
+		function cameraMoving(e) {
+			console.log("cameraMoving");
+			let t = "right" == e ? 1 : -1,
+				multX = isMobile ? 0.5 : 1,
+				multY = isMobile ? 0 : 1;
+			updateAspectRatio();
+
+			switch (level) {
+				case 1:
+					moveX = 0.8 * multX;
+					moveY = -0.1 * multY;
+					moveZ = 1.5;
+					break;
+				case 2:
+					moveX = 0.8 * multX;
+					moveY = -0.35 * multY;
+					moveZ = 1.5;
+					break;
+				case 3:
+					moveX = 1 * multX;
+					moveY = -0.1 * multY;
+					moveZ = 1.5;
+					break;
+				case 4:
+					moveX = 1 * multX;
+					moveY = 0 * multY;
+					moveZ = 0.45;
+					break;
+				case 5:
+					moveX = 0.8 * multX;
+					moveY = -0.4 * multY;
+					moveZ = 1;
+			}
+			tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
+				.to(
+					{
+						x: camera.position.x + moveX * t,
+						z: camera.position.z + moveZ * t,
+						y: camera.position.y + moveY * t,
+					},
+					1e3
+				)
+				.easing(TWEEN.Easing.Exponential.InOut)
+				.onUpdate(() => {
+					camera.position.x = cameraPositionRound.x;
+					camera.position.z = cameraPositionRound.z;
+					camera.position.y = cameraPositionRound.y;
+					cameraPositionRound.set({
+						x: cameraPosition.x,
+						y: cameraPosition.y,
+						z: cameraPosition.z,
+					});
+				})
+				.start()
+				.onStart(() => {
+					isMoving = isPlaying = 1;
+				})
+				.onComplete(() => {
+					isMoving = isPlaying = 0;
+				});
+		}
+		function centerModel(e) {
+			console.log("centerModel");
+			const t = new THREE.Box3().setFromObject(e);
+			let center = t.getCenter(e.position);
+
+			e.position.x -= center.x;
+			e.position.y -= center.y;
+			e.position.y -= center.z;
+		}
+		function changeLightDirection() {
+			console.log("changeLightDirection");
+			directionalLight.target = ninjaes[level].model;
+		}
+		function changeTextBlock() {
+			console.log("changeTextBlock");
+			textBlocks.forEach((e, t) => {
+				e.classList.contains("text-block-default") ||
+					e.classList.add("text-block_default"),
+					t + 1 == level && e.classList.remove("text-block_default");
+			});
+			titles.forEach((el) => {
+				level == el.dataset.jsTitleId
+					? el.classList.add("active")
+					: el.classList.remove("active");
+			});
+		}
+		function clickHandler() {
+			console.log("clickHandler");
+			isMoving ||
+				(isPlayed || (cursorBigPart.style.transform += "rotate(90deg)"),
+				tweenText.play(),
+				isPlayed || isPlaying
+					? isPlaying ||
+					  (cameraMoving("right"), tweenText.play(), (isPlayed = 0))
+					: (tweenText.reverse(), cameraMoving("left"), (isPlayed = 1)));
+		}
+		function createBoundingBox(e) {
+			let t;
+			aabb.makeEmpty(),
+				e
+					? (t = e)
+					: ninjaes.forEach((e) => {
+							e.id == level && (t = e.model);
+					  });
+			aabb = new THREE.Box3().setFromObject(t);
+		}
+		function createCirclePoints() {
+			let e = [];
+			const t = function (e) {
+					return 5 * Math.cos(omega * e);
+				},
+				o = function (e) {
+					return 5 * Math.sin(omega * e);
+				};
+			for (let n = 0; n < 5; n++)
+				e.push({ x: t(n), y: o(n), ry: (3 * Math.PI) / 2 - omega * n });
+			return e;
+		}
+		function detectMobileDevice() {
+			console.log("detectMobileDevice");
+			let e = model.clientWidth;
+			e < 760
+				? (console.log("mobile device"), console.log(e), (isMobile = true))
+				: (isMobile = false);
+
+			if (isMobile) cursorContainer.style.display = "none";
+		}
+		function enterMouseHandler() {
+			console.log("enterMouseHandler");
+			(cursorBigPart.style.transform = "scale(1)"),
+				isPlayed && (cursorBigPart.style.transform += "rotate(135deg)");
+		}
+		function groupRotate(direction) {
+			console.log("groupRotate");
+			let mult;
+			"left" === direction && (mult = 1);
+			"right" === direction && (mult = -1);
+			tweenRotation = new TWEEN.Tween(groupRotation, false)
+				.to({ y: groupRotation.y + omega * mult }, 2500)
+				.easing(TWEEN.Easing.Exponential.InOut)
+				.onUpdate(() => {
+					(groupNinja.rotation.y = groupRotationRound.y),
+						(groupNinjaAlt.rotation.y = groupRotationRound.y),
+						groupRotationRound.set({ y: groupRotation.y });
+				})
+				.start()
+				.onStart(() => {
+					isMoving = 1;
+					setTimeout(() => {
+						updateModelRotation();
+					}, 2000);
+				})
+				.onComplete(() => {
+					levelDetection(direction, mult);
+					createBoundingBox();
+					changeTextBlock();
+					isMoving = 0;
+				});
+		}
+		function handlerSwipe() {
+			let e = (touchStartY - touchEndY) / model.clientHeight;
+			const MIN_SWIPE_LENGTH = 0.1,
+				MAX_SWIPE_LENGTH = 0.5;
+			isMoving ||
+				(e > MIN_SWIPE_LENGTH && e < MAX_SWIPE_LENGTH && !isMoving
+					? (groupRotate("right"), isPlayed && clickHandler())
+					: e < -MIN_SWIPE_LENGTH &&
+					  e > -MAX_SWIPE_LENGTH &&
+					  !isMoving &&
+					  (groupRotate("left"), isPlayed && clickHandler()));
+		}
+		function initHandlers() {
+			model.addEventListener("click", function () {
+				console.log("addEventListener.click");
+
+				timer > -400 &&
+					2 == MOVING &&
+					((!isMobile && INTERSECTED) || isMobile) &&
+					(clickHandler(), (MOVING = 0));
+			});
+			model.addEventListener("touchstart", function (e) {
+				touchStartHandler(e);
+			});
+			model.addEventListener("touchend", function (e) {
+				touchEndHandler(e);
+				let touchRad = Math.sqrt(
+						(touchEndY - touchStartY) ** 2 + (touchEndX - touchStartX) ** 2
+					),
+					touchTime = touchEndTime - touchStartTime;
+				console.log(e.currentTarget.tagName === "CANVAS");
+
+				if (touchRad < 10 && touchTime < 200) clickHandler();
+			});
+			window.addEventListener("wheel", function (e) {
+				isMoving || wheelHandler(e);
+			});
+		}
+		function intersectHandler(e) {
+			console.log("intersectHandler");
+		}
+		function levelDetection(direction, summand) {
+			if (level == LEVELMAX && "left" == direction) {
+				level = LEVELMIN;
+			} else if (level == LEVELMIN && "right" == direction) {
+				level = LEVELMAX;
+			} else {
+				level += summand;
+			}
+		}
+		function leaveMouseHandler() {
+			console.log("leaveMouseHandler");
+			cursorBigPart.style.transform = "scale(0)";
+		}
+		function loadAnimation(e) {
+			const t = e.animations;
+			let o = new THREE.AnimationMixer(e.scene),
+				n = new THREE.Clock();
+			const i = o.clipAction(t[0]);
+			mixers.push(o), clocks.push(n), i.play();
+		}
+		function loadModel({
+			x: e,
+			y: t,
+			z: o,
+			ry: n,
+			scale: i,
+			url: a,
+			animation: r,
+			layers: l,
+		}) {
+			return new Promise(async (res, rej) => {
+				const s = await gltfLoader.loadAsync(a),
+					c = s.scene;
+
+				c.scale.set(i, i, i);
+				console.log(a);
+
+				// "./new/Samurai_FixedMet_10.gltf" == a && centerModel(c);
+
+				c.position.x += c.position.x + e;
+				c.position.y += c.position.y + t;
+				c.position.z += c.position.z + o;
+
+				c.rotation.default_x = 0;
+				c.rotation.default_y = n;
+				c.rotation.default_z = "./new/KATANA_v24.glb" == a ? Math.PI / 3 : 0;
+				c.rotation.set(
+					c.rotation.default_x,
+					c.rotation.default_y,
+					c.rotation.default_z
+				);
+				c.name = a;
+				s.animations.length && r && loadAnimation(s);
+
+				c.traverse(function (e) {
+					if (
+						(e.isMesh &&
+							((e.castShadow = true),
+							(e.recieveShadow = true),
+							(e.frustumCulled = false),
+							l.includes(e.name),
+							e.name),
+						e.isMesh && e.material.metalness,
+						e.isSkinnedMesh)
+					)
+						for (let t = 0; t < e.geometry.attributes.position.count; t++);
+				});
+				return res(c);
+			});
+		}
+		function onWindowResize() {
+			console.log("onWindowResize");
+			isPlayed && (clickHandler(), console.log("close")),
+				renderer.setSize(model.clientWidth, model.clientHeight),
+				updateAspectRatio(),
+				(camera.aspect = aspect),
+				(cameraAlt.aspect = aspect),
+				camera.updateProjectionMatrix(),
+				cameraAlt.updateProjectionMatrix(),
+				renderer.render(scene, camera),
+				renderer.render(sceneAlt, cameraAlt);
+		}
+		function touchEndHandler(e) {
+			console.log("touchend");
+			touchEndX = event.changedTouches[0].screenX;
+			touchEndY = event.changedTouches[0].screenY;
+			touchEndTime = new Date();
+			handlerSwipe();
+		}
+		function touchStartHandler(e) {
+			console.log("touchstart");
+			touchStartX = event.changedTouches[0].screenX;
+			touchStartY = event.changedTouches[0].screenY;
+			touchStartTime = new Date();
+		}
+		function updateAspectRatio() {
+			console.log("updateAspectRatio");
+			(aspect = model.clientWidth / model.clientHeight),
+				isPlayed || (aspectM = aspect);
+		}
+		function updateModelRotation() {
+			console.log("updateModelRotation");
+			ninjaes.forEach((e) => {
+				e.id == level && (e.model.rotation.y = e.model.rotation.default_y);
+			});
+		}
+		function wheelHandler(e) {
+			e.deltaY > 30 && e.deltaY > 50 && !isMoving
+				? (groupRotate("right"), isPlayed && clickHandler())
+				: e.deltaY < -30 &&
+				  e.deltaY < -50 &&
+				  !isMoving &&
+				  (groupRotate("left"), isPlayed && clickHandler());
+		}
+
+		// -------------------------------------------- UNUSED CODE -------------------------------------------- //
+		let url = "./new/Samurai_FixedMet_11.glb",
+			m = 3;
+		let boxHelper;
+		let targetA = new THREE.Vector3();
+		function createBouncing({ ninja: e, flag: t }) {
+			if (t) return ninjaBouncing(e);
+		}
+		function ninjaBouncing(e) {
+			let t = (Math.PI / 360) * 7.5,
+				o = { y: e.rotation.y - t };
+			return new TWEEN.Tween(o, false)
+				.to({ y: e.rotation.y + 2 * t }, 6e3)
+				.easing(TWEEN.Easing.Linear.inOut)
+				.repeat(1 / 0)
+				.yoyo(true)
+				.onUpdate(() => {
+					e.rotation.y = o.y;
+				})
+				.start();
+		}
+	</script>
 </html>
