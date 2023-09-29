@@ -2635,7 +2635,7 @@ f .header_inner_item.logo {
 	}
 
 	.text-block p {
-		margin-bottom: 30px;
+		margin-bottom: 0;
 		line-height: 1;
 	}
 
