@@ -4114,7 +4114,7 @@ progress {
 
 	.text-block p,
 	.image-box {
-		margin-bottom: 30px
+		margin-bottom: 0;
 	}
 
 	.text-block h1 {
