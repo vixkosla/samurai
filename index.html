@@ -877,12 +877,20 @@
 			}
 		}
 		function cameraMoving(e) {
+				if (window.innerWidth <= 768) {
 			console.log("cameraMoving");
 			let t = "right" == e ? 1 : -1,
 				multX = isMobile ? 0.5 : 1,
 				multY = isMobile ? 0.2 : 1;
 			updateAspectRatio();
-
+			}
+    } else {
+console.log("cameraMoving");
+			let t = "right" == e ? 1 : -1,
+				multX = isMobile ? 0.5 : 1,
+				multY = isMobile ? 0 : 1;
+			updateAspectRatio();
+		}
 
 			if (window.innerWidth <= 768) {
         // Код для мобильных устройств
