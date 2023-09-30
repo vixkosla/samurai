@@ -225,7 +225,7 @@ button {
 }
 .intro_logo_choose{
 	display: none;
-	margin-top: -20px;
+	margin-top: -30px;
 	width: 40px;
 	height: 40px;
 
@@ -549,7 +549,48 @@ f .header_inner_item.logo {
 	transform: scale(1.1);
 
 }
-
+.intro_next{
+	position: absolute;
+	right: 20%;
+	bottom: 15px;
+  margin-left: auto;
+	z-index: 1;
+	transition: all 0.3s ease;
+	width: 175px;
+	height: 80px;
+	border-radius: 30px;
+	background: #3F3F3F;
+  
+  }
+  .intro_next_orion{
+	cursor: pointer;
+	position: relative;
+	width: 50px;
+	height: 50px;
+	outline: 2px solid #fff;
+	border-radius: 100%;
+	margin: 15px auto 0;
+  }
+  .intro_next_orion img{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	animation: jump 1s infinite;
+  }
+  @keyframes jump{
+	0%{
+	  transform: translate(-50%, -30%);
+	}
+	50%{
+	  transform: translate(-50%, -70%);
+	}
+	100%{
+	  transform: translate(-50%, -30%);
+	}
+  }
 .advantages_item_spin_inner_arrow {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -1421,6 +1462,13 @@ f .header_inner_item.logo {
 }
 
 @media (max-width: 700px) {
+	.intro_logo_choose{
+		display: none;
+		margin-top: -20px;
+		width: 40px;
+		height: 40px;
+	
+	}
 	.circle--1 {
 		--size: calc(2vw * 1);
 	}
