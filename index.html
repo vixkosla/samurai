@@ -421,7 +421,7 @@
 						<span> Подробнее</span>
 					</a>
 				</div>
-			</div>
+			</div></div>
 			<!-- 55555555555555555555555555555555555555555555555555555555555555555555555555555555 -->
 			<div class="model_container_inner open active open active container">
 				<div class="text-block text-block_default">
@@ -497,8 +497,15 @@
 					</a>
 				</div>
 			</div></div>
-			<div class="empty-block"></div>
+			<div class="intro_next">
+				<div class="intro_next_orion">
+					<img src="img/just_arrow.png" alt="">
+				</div>
 		</div>
+			<div class="empty-block"></div>
+		
+		</div>
+
 	</body>
 
 	<script type="module">
@@ -784,7 +791,7 @@
 					z: points[4].y,
 					ry: points[4].ry,
 					scale: 1.05 * scaleMult,
-					url: "./new/Samurai_FixedMet_9.glb",
+					url: "./new/Samurai_FixedMet_12.gltf",
 					animation: true,
 					layers: [],
 				}),
@@ -877,19 +884,11 @@
 			}
 		}
 		function cameraMoving(e) {
-				if (window.innerWidth <= 768) {
 			console.log("cameraMoving");
 			let t = "right" == e ? 1 : -1,
 				multX = isMobile ? 0.5 : 1,
 				multY = isMobile ? 0.2 : 1;
 			updateAspectRatio();
-    } else {
-console.log("cameraMoving");
-			let t = "right" == e ? 1 : -1,
-				multX = isMobile ? 0.5 : 1,
-				multY = isMobile ? 0 : 1;
-			updateAspectRatio();
-		}
 
 			if (window.innerWidth <= 768) {
         // Код для мобильных устройств
@@ -923,7 +922,7 @@ console.log("cameraMoving");
         // Код для десктопных устройств
 		switch (level) {
 				case 1:
-					moveX = 0.8 * multX;
+					moveX = 1 * multX;
 					moveY = -0.1 * multY;
 					moveZ = 1.5;
 					break;
@@ -948,7 +947,7 @@ console.log("cameraMoving");
 					moveZ = 1;
 			}
     }
-			
+	
 			tweenCamPosition = new TWEEN.Tween(cameraPosition, false)
 				.to(
 					{
