@@ -556,7 +556,7 @@ f .header_inner_item.logo {
   margin-left: auto;
 	z-index: 1;
 	transition: all 0.3s ease;
-	width: 175px;
+	width: 150px;
 	height: 80px;
 	border-radius: 30px;
 	background: #3F3F3F;
